@@ -12,7 +12,7 @@
 <div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer">
   <div class="text-center mb-12 md:mb-16" in:flyAndScale={{ y: -20, duration: 500 }}>
     <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground">
-      Mon Infrastructure
+      Mon infrastructure
     </h1>
   </div>
 
