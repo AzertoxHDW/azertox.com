@@ -29,21 +29,11 @@
     }
   
     const rackDevicesData: RackDevice[] = [
-      { id: 'u28-pdu', name: 'PDU Top', uHeight: 1, uPosition: 28, type: 'pdu', description: 'Power Distribution Unit for upper equipment.', faceplate: { text: "PDU-01" } },
-      { id: 'u27-arm', name: 'ARM Cluster', uHeight: 1, uPosition: 27, type: 'arm-cluster', description: 'Raspberry Pi or similar ARM devices.', faceplate: { text: "Pi Rack", leds: [{color: 'green', count: 4}] } },
-      { id: 'u26-spacer1', name: 'Spacer', uHeight: 1, uPosition: 26, type: 'spacer', description: 'Blank panel for airflow or future use.'},
-      { id: 'u25-switch', name: 'Network Switch', uHeight: 1, uPosition: 25, type: 'switch', description: 'Main Gigabit Network Switch.', faceplate: { ports: { type: 'rj45', count: 24, arrangement: 'row' }, leds: [{color: 'green', count:24}]} , link: '/infra/networking'},
-      { id: 'u24-patchpanel1', name: 'Patch Panel CAT6A', uHeight: 1, uPosition: 24, type: 'patch-panel', description: 'Network Cabling Management.', faceplate: { ports: {type: 'rj45', count: 24, arrangement: 'row'}}},
-      { id: 'u23-spacer2', name: 'Spacer', uHeight: 1, uPosition: 23, type: 'spacer', description: 'Blank panel.'},
-      { id: 'u22-truenas', name: 'TrueNAS Server', uHeight: 2, uPosition: 22, type: 'storage-2u', description: 'Primary Network Attached Storage.', faceplate: { text: "TRUENAS-01", leds: [{color:'blue', count:1, blinking: true}, {color:'green', count:4}], vents: true }, link: '/infra/nas-truenas'},
-      { id: 'u20-spare', name: 'Spare Slot', uHeight: 2, uPosition: 20, type: 'spacer', description: 'Reserved for future expansion.'},
-      { id: 'u18-server1', name: 'Proxmox Node 1', uHeight: 2, uPosition: 18, type: 'server-2u', description: 'Virtualization Host 1.', faceplate: { text: "PVE-NODE-01", leds: [{color:'green', count:1}, {color:'amber', count:1, blinking:true}], vents: 'hexagonal'}, link: '/infra/proxmox-node1'},
-      { id: 'u16-server2', name: 'Proxmox Node 2', uHeight: 2, uPosition: 16, type: 'server-2u', description: 'Virtualization Host 2.', faceplate: { text: "PVE-NODE-02", leds: [{color:'green', count:2}], vents: 'hexagonal'}},
-      { id: 'u14-server3', name: 'Proxmox Node 3', uHeight: 2, uPosition: 14, type: 'server-2u', description: 'Virtualization Host 3.', faceplate: { text: "PVE-NODE-03", leds: [{color:'green', count:2}], vents: 'hexagonal'}},
-      { id: 'u12-storage-expansion1', name: 'Storage Array 1', uHeight: 4, uPosition: 12, type: 'storage-4u', description: 'Disk shelf for Proxmox cluster.', faceplate: { text: "DAS-01", vents: 'hexagonal', leds: [{color:'blue', count:16}]} },
-      { id: 'u08-storage-expansion2', name: 'Storage Array 2', uHeight: 4, uPosition: 8, type: 'storage-4u', description: 'Disk shelf for Proxmox cluster.', faceplate: { text: "DAS-02", vents: 'hexagonal', leds: [{color:'blue', count:16}]} },
-      { id: 'u04-spacer3', name: 'Spacer/Cable Management', uHeight: 2, uPosition: 4, type: 'spacer', description: 'Cable routing or blank.'},
-      { id: 'u02-ups', name: 'UPS Unit', uHeight: 2, uPosition: 2, type: 'ups', description: 'Uninterruptible Power Supply.', faceplate: { text: "CyberPower 1500VA", displayText: "100% | 980W", leds:[{color:'green', count:1}]} , link: '/infra/ups-details'},
+      { id: 'u2', name: 'Network switch', uHeight: 1, uPosition: 2, type: 'switch', description: 'Main switch', faceplate: { text: " ", ports: { type: 'rj45', count: 8, arrangement: 'row' }, leds: [{color: 'green', count:8, blinking: true}]} , link: '/infra/networking'},
+      { id: 'u3', name: 'Raspberry Pi', uHeight: 1, uPosition: 3, type: 'arm-cluster', description: 'Main local services host machine', status: 'Online', faceplate: { text: "PI-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
+      { id: 'u15', name: 'Dell Optiplex R230', uHeight: 1, uPosition: 15, type: 'server-1u', description: 'Unused server', status: 'Offline', faceplate: { text: "SPARE", leds: [{color: 'red', count:2}]}},
+      { id: 'u16', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 16, type: 'server-1u', description: 'TrueNAS storage server', status: 'Online', faceplate: { text: "TRUENAS", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
+      { id: 'u25', name: 'Sierra', uHeight: 4, uPosition: 25, type: 'server-4u', description: 'Game hosting server', status: 'Online', faceplate: { text: "PVE-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
     ];
   
     let currentHoveredItem: RackDevice | null = null;
@@ -119,18 +109,18 @@
         }
       }
     });
-    const reversedDisplayGrid = [...displayGrid];
+    const reversedDisplayGrid = [...displayGrid].reverse();
   </script>
   
   <svelte:head>
-    <title>Mon Rack Serveur Interactif (HTML) | Azertox.com</title>
+    <title>Mon rack | Azertox.com</title>
     <meta name="description" content="Diagramme interactif de mon infrastructure serveur et homelab." />
   </svelte:head>
   
   <div class="container mx-auto px-4 py-8 md:py-12">
     <div class="text-center mb-10 md:mb-12" in:flyAndScale={{ y: -20, duration: 500 }}>
       <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
-        Mon Installation Rack
+        Mon installation rack
       </h1>
       <p class="mt-3 text-lg text-muted-foreground">
         Survolez les équipements pour plus de détails.
