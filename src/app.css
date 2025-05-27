@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap");
+  @import url("https://rsms.me/inter/inter.css");
+
+  :root {
+    --background: 220 23% 95%;
+    --foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 233 13% 41%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --card: 220 22% 92%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --border: 266 85% 58%;
+    --input: 214.3 31.8% 91.4%;
+
+    --primary: 266 85% 58%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 231 97% 72%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 21% 15%;
+    --foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 227 35% 80%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --card: 240 21% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --border: 267 84% 81%;
+    --input: 217.2 32.6% 17.5%;
+
+    --primary: 267 84% 81%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 232.2 97% 85%;
+    --secondary-foreground: 210 40% 98%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 212.7 26.8% 83.9%;
+  }
+
+  @layer base {
+    /* Windows XP Theme */
+    .theme-xp {
+      --background: 0 0% 0%; /* Black for boot, can be XP blue for desktop */
+      --foreground: 0 0% 90%; /* Light gray / Off-white text */
+  
+      --card: 221 83% 53%; /* XP Blue for window bodies/cards */
+      --card-foreground: 0 0% 100%;
+  
+      --popover: 220 70% 95%;
+      --popover-foreground: 222.2 84% 4.9%;
+  
+      --primary: 210 100% 56%; /* Lighter blue for accents if needed */
+      --primary-foreground: 0 0% 100%;
+  
+      --secondary: 220 50% 70%;
+      --secondary-foreground: 0 0% 0%;
+  
+      --muted: 220 30% 80%;
+      --muted-foreground: 220 20% 40%;
+  
+      --accent: 210 40% 96.1%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+  
+      --destructive: 0 72.2% 50.6%;
+      --destructive-foreground: 0 0% 100%;
+  
+      --border: 220 80% 60%; /* XP window border blue */
+      --input: 0 0% 100%;
+      --ring: 210 100% 56%;
+  
+      --radius: 0.1rem; /* XP had sharper corners */
+  
+      /* XP Specific Font (Tahoma is ideal, Verdana as fallback) */
+      /* You might need to ensure these fonts are available or use webfonts */
+      /* For Tailwind, you'd configure this in tailwind.config.ts and apply font-xp class */
+      /* For now, components can specify this or you can try to override font-sans */
+      /* --font-sans: "Tahoma", "Verdana", sans-serif; */
+    }
+  
+    /* Windows 98 Theme (Placeholder - needs actual colors/fonts) */
+    .theme-win98 {
+      --background: 180 10% 75%; /* Classic Win95/98 Gray: #C0C0C0 */
+      --foreground: 0 0% 0%; /* Black text */
+  
+      --card: 180 10% 75%;
+      --card-foreground: 0 0% 0%;
+  
+      --primary: 240 100% 25%; /* Dark blue for title bars: #000080 */
+      --primary-foreground: 0 0% 100%; /* White text on title bars */
+  
+      --secondary: 180 10% 60%;
+      --secondary-foreground: 0 0% 0%;
+  
+      --border: 0 0% 0%; /* Black or dark gray borders */
+      --radius: 0rem; /* Sharp corners */
+      /* --font-sans: "MS Sans Serif", "Arial", sans-serif; */
+    }
+  
+    /* Windows Vista Theme (Placeholder - needs actual colors/fonts) */
+    .theme-vista {
+      --background: 210 30% 15%; /* Dark, slightly blueish black */
+      --foreground: 0 0% 95%;
+  
+      /* Aero Glass effect would be complex, simulate with semi-transparent dark */
+      --card: 210 25% 25% / 0.85; /* Semi-transparent dark card */
+      --card-foreground: 0 0% 95%;
+      
+      --primary: 200 100% 60%; /* Vista blue */
+      --primary-foreground: 0 0% 100%;
+  
+      --secondary: 210 20% 40%;
+      --secondary-foreground: 0 0% 95%;
+  
+      --border: 200 50% 50% / 0.5; /* Semi-transparent borders */
+      --radius: 0.375rem; /* Slightly rounded corners */
+      /* --font-sans: "Segoe UI", "Verdana", sans-serif; */
+    }
+  
+    /* Apply base font to html for themes to inherit if not overridden by components */
+    html.theme-xp {
+      font-family: "Tahoma", "Verdana", Inter, sans-serif;
+      cursor: url('/cursors/xp/xp_arrow.cur'), auto;
+    }
+    html.theme-win98 {
+      font-family: "MS Sans Serif", Arial, Inter, sans-serif; /* MS Sans Serif is tricky for web */
+      cursor: url('/cursors/win98/win98_arrow.cur'), auto;
+    }
+    html.theme-vista {
+      font-family: "Segoe UI", Verdana, Inter, sans-serif;
+      cursor: url('/cursors/vista/vista_arrow.cur'), auto;
+
+    }
+  }
+  
+  /* Ensure your existing body styles use these variables */
+  body {
+    @apply bg-background text-foreground;
+    /* font-family: var(--font-sans); /* This would make body font dynamic based on theme */
+    /* Your existing font-family for Inter can be the fallback if --font-sans is not set by theme */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+.font-mono {
+  font-family: "Share Tech Mono", monospace;
+}
+
