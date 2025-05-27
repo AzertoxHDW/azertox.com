@@ -119,18 +119,18 @@
         }
       }
     });
-    const reversedDisplayGrid = [...displayGrid].reverse();
+    const reversedDisplayGrid = [...displayGrid];
   </script>
   
   <svelte:head>
     <title>Mon Rack Serveur Interactif (HTML) | Azertox.com</title>
-    <meta name="description" content="Diagramme interactif de mon infrastructure serveur et homelab, construit en HTML." />
+    <meta name="description" content="Diagramme interactif de mon infrastructure serveur et homelab." />
   </svelte:head>
   
   <div class="container mx-auto px-4 py-8 md:py-12">
     <div class="text-center mb-10 md:mb-12" in:flyAndScale={{ y: -20, duration: 500 }}>
       <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
-        Mon Installation Serveur (Vue HTML)
+        Mon Installation Rack
       </h1>
       <p class="mt-3 text-lg text-muted-foreground">
         Survolez les équipements pour plus de détails.
@@ -140,14 +140,14 @@
     <div class="flex flex-col md:flex-row gap-8 items-start justify-center">
       <div class="relative w-full md:w-[350px] bg-card border-2 border-foreground/30 rounded-md p-2 shadow-xl rack-cabinet select-none" bind:this={rackWrapperEl}>
         {#each [0,1] as side}
-          <div class="absolute top-0 h-full w-6 {side === 0 ? 'left-1' : 'right-1'} flex flex-col-reverse justify-start items-center rack-rail">
-            {#each Array(TOTAL_U_SLOTS) as _, i (TOTAL_U_SLOTS-i)}
-              <div class="rack-u-marking text-xs text-muted-foreground/70" style="height: {U_HEIGHT_PX}px;">{TOTAL_U_SLOTS-i}</div>
+          <div class="absolute w-6 {side === 0 ? 'left-1' : 'right-1'} flex flex-col items-center rack-rail">
+            {#each Array(TOTAL_U_SLOTS) as _, i (1+i)}
+              <div class="rack-u-marking text-xs text-muted-foreground/70" style="height: {U_HEIGHT_PX}px;">{1+i}</div>
             {/each}
           </div>
         {/each}
   
-        <div class="mx-8 space-y-px rack-devices-column">
+        <div class="mx-8 rack-devices-column">
           {#each reversedDisplayGrid as deviceInSlot, slotIndex (TOTAL_U_SLOTS - slotIndex)}
             {@const currentU = slotIndex + 1} 
             {#if deviceInSlot && (deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller}
