@@ -6,6 +6,9 @@
   export let themeOption: ThemeOption;
   export let onComplete: () => void;
 
+  const boot2k = new Audio();
+  boot2k.src = '/sounds/2000.mp3';
+
   let showVisuals = false; // For initial fade-in of the boot screen itself
   let visualAnimationInProgress = true; // Tracks if the visual part of the animation is running
   
@@ -97,6 +100,7 @@
 
   onMount(() => {
     showVisuals = true;
+    boot2k.play();
     
     // Initialize sound flags for themes without sound
     if (!themeOption.sound) {
@@ -158,18 +162,6 @@
 >
   {#if themeOption.value === 'win2000'}
     <div class="win2000-boot-screen w-full h-full flex flex-col items-center justify-center text-center p-8">
-      <div class="win2000-logo-area mb-4">
-        <span class="win2000-text-microsoft">Microsoft<sub>&reg;</sub></span>
-        <span class="win2000-text-windows">Windows</span>
-        <span class="win2000-text-2000">2000</span>
-        <span class="win2000-text-edition">Professional</span>
-      </div>
-      <p class="win2000-text-starting mb-8">Starting up...</p>
-      <div class="win2000-progress-bar-container">
-        <div class="win2000-progress-slider">
-          {#each Array(6) as _} <div class="win2000-progress-block"></div> {/each}
-        </div>
-      </div>
     </div>
   {/if}
   </div>
@@ -177,10 +169,15 @@
 <style lang="postcss">
   /* Windows 2000 Boot Screen Styles */
   .win2000-boot-screen {
-    background-color: #000000; /* Black background */
+    background-image: url('/images/win2k2.png'), url('/images/win2kbar.gif');
+    background-color: white;
+    background-size: 40%, 100%;
+    background-repeat: no-repeat;
+    background-position: center, bottom;
     color: #BCBCBC; /* Light gray text */
     font-family: "Lucida Console", "Courier New", monospace; /* Monospaced font */
     font-size: 14px; /* Or system default for terminals */
+    
   }
   .win2000-logo-area {
     @apply flex flex-col items-center leading-none mb-6;

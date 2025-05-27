@@ -3,11 +3,12 @@
   import { Card, CardHeader, CardTitle, CardContent } from '$lib/components/ui/card';
   import { Button } from '$lib/components/ui/button';
   import { draggable } from '$lib/actions/draggable';
-  import { XIcon, ComputerIcon, FolderOpenIcon, GlobeIcon, FilesIcon, InfoIcon, Settings2Icon, LogOutIcon, Maximize2Icon, Minimize2Icon, ChevronsRightIcon, ServerIcon, UserCircle as UserCircleIcon } from 'lucide-svelte';
+  import { XIcon, ComputerIcon, FolderOpenIcon, GlobeIcon, FilesIcon, InfoIcon, Settings2Icon, LogOutIcon, Maximize2Icon, Minimize2Icon, ChevronsRightIcon, ServerIcon, UserCircle as UserCircleIcon, Icon } from 'lucide-svelte';
   import { writable, get } from 'svelte/store';
   import { BROWSER } from 'esm-env';
   import { currentTheme, setTheme, themes, type Theme, type ThemeOption } from "$lib/themeStore"; // For "Shut Down"
   import { flyAndScale } from '$lib/utils';
+	import { goto } from '$app/navigation';
 
   interface WindowInstance {
     id: number;
@@ -38,7 +39,7 @@
       icon: ComputerIcon, 
       action: () => openWindow({
         title: "My Computer", 
-        content: "C:\\ (Local Disk)\n3½ Floppy (A:)\nCD-ROM Drive (D:)\nControl Panel", 
+        content: "", 
         icon: ComputerIcon, 
         initialPos: {x: 50, y: 50}
       }) 
@@ -214,22 +215,28 @@
   let clockInterval: number;
   const TASKBAR_HEIGHT = 28; 
 
+  const logoff2k = new Audio();
+  logoff2k.src = '/sounds/2klogoff.mp3';
   const startMenuItems = [
-    { label: "Projets", icon: FolderOpenIcon, href: "/projets", action: () => {
-        setTheme('system'); 
+    { label: "Musée", icon: FolderOpenIcon, action: () => {
+        goto('/projets');
+        setTimeout(() => setTheme('system'), 500);
         showStartMenu.set(false);
     }},
     { label: "Infrastructure", icon: ServerIcon, href: "/infra", action: () => {
-        setTheme('system'); 
+        goto('/infra');
+        setTimeout(() => setTheme('system'), 500);
         showStartMenu.set(false);
     }},
-    { label: "À Propos de Moi", icon: UserCircleIcon, href: "/about", action: () => {
-        setTheme('system'); 
+    { label: "À propos de moi", icon: UserCircleIcon, href: "/about", action: () => {
+        goto('/about');
+        setTimeout(() => setTheme('system'), 500);
         showStartMenu.set(false);
     }},
     { isSeparator: true },
-    { label: "Se Déconnecter (Thème Système)", icon: LogOutIcon, action: () => {
-        setTheme('system'); 
+    { label: "Se Déconnecter", icon: LogOutIcon, action: () => {
+        setTheme('system');
+        logoff2k.play();
         showStartMenu.set(false);
     }}
   ];
@@ -341,7 +348,7 @@
     <div id="start-menu" class="win2000-start-menu fixed bottom-7 left-0 w-48 bg-gray-300 border-t-2 border-l-2 border-white border-r-2 border-b-2 border-gray-500 shadow-lg z-[10001] flex flex-col"
          use:flyAndScale={{y: 20, duration:150, start:0.9}}>
       <div class="start-menu-sidebar bg-blue-800 text-white p-2 flex items-center justify-center">
-        <span class="font-bold text-sm transform -rotate-90 whitespace-nowrap">Windows 2000</span>
+        <span class="font-bold text-sm transform whitespace-nowrap">Windown 2000</span>
       </div>
       <div class="start-menu-items flex-grow p-0.5">
         {#each startMenuItems as item, i (item.label || `sep-${i}`)}
@@ -369,7 +376,7 @@
       class="win2000-start-button text-xs font-bold px-2 py-0 h-[22px] flex items-center {$showStartMenu ? 'active' : ''}"
       on:click={() => showStartMenu.update(s => !s)}
     >
-      <svg width="16" height="16" viewBox="0 0 100 100" class="mr-1"><rect width="100" height="100" fill="#008080"/><text x="50" y="75" font-size="60" fill="white" text-anchor="middle" font-family="Arial Black, Arial Bold, Gadget, sans-serif" font-weight="900">S</text></svg>
+      <img src="/images/win2klogo.png" alt="windows logo" width="30px" class="-ml-2 mr-1">
       Démarrer
     </Button>
     <div class="taskbar-divider"></div>
@@ -393,7 +400,9 @@
 
 <style lang="postcss">
   .win2000-desktop {
-    background-color: #008080; /* Windows 2000 default teal wallpaper */
+    background-image: url('/images/win2kwallpaper.png');
+    background-size: cover;
+    background-position: 100%;
     font-family: "Tahoma", "MS Sans Serif", Arial, sans-serif; /* W2K fonts */
   }
 
@@ -424,8 +433,8 @@
   }
 
   .window-title-bar {
-    background-color: #808080; 
-    color: #C0C0C0; 
+    background-color: #C0C0C0; 
+    color: #808080; 
     padding: 2px 3px;
     height: 20px; 
     display: flex;
@@ -442,7 +451,7 @@
   .win2000-control-button {
     font-family: "Marlett", "Webdings"; 
     color: black;
-    background-color: #C0C0C0;
+    background-color: #808080;
     border-width: 1px;
     border-style: outset;
     border-color: #FFFFFF #808080 #808080 #FFFFFF; 

@@ -80,8 +80,8 @@ export const themes: ThemeOption[] = [
   {
     value: 'win2000',
     label: '💻 Windows 2000',
-    sound: '/sounds/win2000_startup.mp3', // Ensure this file exists in static/sounds/
-    animationDuration: 4500, // Adjust as needed for W2K boot animation
+    sound: '', // Ensure this file exists in static/sounds/
+    animationDuration: 2000, // Adjust as needed for W2K boot animation
     uiSounds: {
         click: '/sounds/ui/win2000/click.wav', // Example, ensure file exists
         error: '/sounds/ui/win2000/error.wav'  // Example, ensure file exists
