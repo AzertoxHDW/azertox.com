@@ -191,10 +191,6 @@
   {/if}
 </div>
 
-<footer class="bg-muted border-t border-border/40 text-muted-foreground py-4 text-sm text-center mt-16">
-  Tous les objets sont des souvenirs personnels. Aucune garantie de fonctionnement ! ;)
-</footer>
-
 <style lang="postcss">
   .museum-card {
     /* Ensures that the card itself takes up the full height if in a grid row */
