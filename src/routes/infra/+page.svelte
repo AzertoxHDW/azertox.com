@@ -100,13 +100,6 @@
   </div>
 </div>
 
-<footer class="bg-muted border-t border-border/40 text-muted-foreground py-4 text-sm text-center">
-  Dernière mise à jour du site: 26 juin 2024 &nbsp;|&nbsp; Code source:
-  <a href="https://github.com/AzertoxHDW/personnal-website" target="_blank" rel="noopener noreferrer" class="font-medium text-primary hover:underline underline-offset-4">
-    Github
-  </a>
-</footer>
-
 <style lang="postcss">
   .min-h-screen_minus_header_footer {
     min-height: calc(100vh - theme(spacing.20) - theme(spacing.10));
