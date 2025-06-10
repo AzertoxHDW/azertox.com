@@ -79,7 +79,7 @@
     { href: "/", label: "Accueil", icon: Home },
     { href: "/about", label: "À propos", icon: User },
     { href: "/infra", label: "Infrastructure", icon: ServerIconLucide },
-    { href: "/projets", label: "Projets", icon: CodeIconLucide },
+    { href: "/museum", label: "Musée", icon: CodeIconLucide },
   ];
 
 </script>

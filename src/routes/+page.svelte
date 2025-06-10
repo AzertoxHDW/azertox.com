@@ -23,7 +23,7 @@
         details: "Domaine: WORKGROUP | IP: Automatique",
     },
     {
-        href: "/projets",
+        href: "/museum",
         title: "Mes documents (Projets)",
         description: "Parcourir les projets et les développements en cours.",
         icon: FolderGit2,
