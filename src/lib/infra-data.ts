@@ -47,7 +47,7 @@ export const infrastructure: Machine[] = [
       { name: "NIC 1", value: "Onboard Dual Port 1GbE", icon: Network },
     ],
     software: [
-        { name: "Proxmox Virtual Environment", version: "8.3.4", notes: "" },
+        { name: "Proxmox Virtual Environment", version: "8", notes: "" },
     ],
     description: "Machine concue sur-mesure pour l'hébergement de serveurs de jeu. Pensée avec des composants low-cost et trouvables facilement, avec un bon compromis entre consommation et puissance.",
     notes: "",

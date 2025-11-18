@@ -4,7 +4,7 @@
   import BootAnimation from "$lib/components/BootAnimation.svelte";
   import Win2000Desktop from "$lib/components/desktop/Win2000Desktop.svelte";
   import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "$lib/components/ui/select";
-  import { Home, User, ServerIcon as ServerIconLucide, FolderGit2 as CodeIconLucide } from "lucide-svelte";
+  import { Home, User, ServerIcon as ServerIconLucide, FolderGit2 as CodeIconLucide, Gem } from "lucide-svelte";
   import { page } from '$app/stores';
   import { onMount } from "svelte";
   import type { Selected } from "bits-ui";
@@ -79,7 +79,8 @@
     { href: "/", label: "Accueil", icon: Home },
     { href: "/about", label: "À propos", icon: User },
     { href: "/infra", label: "Infrastructure", icon: ServerIconLucide },
-    { href: "/museum", label: "Musée", icon: CodeIconLucide },
+    { href: "/projects", label: "Projets", icon: CodeIconLucide },
+    { href: "/museum", label: "Musée", icon: Gem },
   ];
 
 </script>
