@@ -2,7 +2,7 @@
   import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "$lib/components/ui/card"; //
   import { Badge } from "$lib/components/ui/badge"; //
   import { Button } from "$lib/components/ui/button"; //
-  import { ExternalLink, Activity, ArrowRight } from "lucide-svelte";
+  import { ExternalLink, Activity, ArrowRight, ServerIcon } from "lucide-svelte";
   import { flyAndScale } from "$lib/utils"; //
   import { infrastructure, type Machine } from "$lib/infra-data"; // Import from the new module
 
@@ -11,9 +11,13 @@
 
 <div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer">
   <div class="text-center mb-12 md:mb-16" in:flyAndScale={{ y: -20, duration: 500 }}>
-    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground">
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground flex items-center justify-center">
+      <ServerIcon class="w-10 h-10 md:w-12 md:h-12 mr-3 text-primary" />
       Mon infrastructure
     </h1>
+    <p class="mt-3 text-lg md:text-xl text-muted-foreground">
+        Coup d'oeil sur mon infrastructure.
+    </p>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
@@ -83,6 +87,14 @@
         </Card>
       </div>
     {/each}
+  </div>
+
+  <div class="text-center mt-1 md:mt-2" in:flyAndScale|global={{ y: 20, duration: 300, delay: infrastructure.length * 100 + 200 }}>
+    <div class="p-10 pt-4">
+            <Button href={`/rack`} variant="outline" size="sm" class="p-6">
+              Afficher le diagramme du rack <ArrowRight class="ml-2 h-4 w-4" />
+            </Button>
+          </div>
   </div>
 
   <div class="text-center mt-16 md:mt-20" in:flyAndScale|global={{ y: 20, duration: 300, delay: infrastructure.length * 100 + 200 }}>
