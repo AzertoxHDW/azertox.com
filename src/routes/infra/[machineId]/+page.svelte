@@ -85,6 +85,12 @@
                     {machine.os.name}
                 </span>
             </div>
+            {#if machine.releaseDate}
+            <div class="flex justify-between">
+                <span class="text-muted-foreground">Année de fabrication:</span>
+                <span class="font-medium">{machine.releaseDate}</span>
+            </div>
+            {/if}
             {#if machine.purchaseDate}
             <div class="flex justify-between">
                 <span class="text-muted-foreground">Date d'acquisition:</span>

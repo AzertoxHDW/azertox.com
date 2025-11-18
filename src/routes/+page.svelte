@@ -4,38 +4,37 @@
   import { Button } from "$lib/components/ui/button/index.js";
   import { Card, CardHeader, CardTitle, CardContent } from "$lib/components/ui/card/index.js";
   import { flyAndScale } from "$lib/utils.js";
-  import { Terminal, UserCircle, ServerIcon, FolderGit2, ShieldCheck, ArrowRight } from "lucide-svelte";
+  import { Terminal, UserCircle, ServerIcon, FolderGit2, ArrowRight, Gem } from "lucide-svelte";
 
   // Dashboard links remain the same as previous version
   const dashboardLinks = [
     {
         href: "/about",
-        title: "Poste de travail",
-        description: "Afficher les informations sur cet utilisateur et ses documents.",
+        title: "Informations utilisateur",
+        description: "Afficher les informations sur cet utilisateur.",
         icon: UserCircle,
-        details: "Utilisateur: Azertox (Administrateur)",
+        details: "Utilisateur: Az' (Administrateur)",
     },
     {
         href: "/infra",
-        title: "Panneau de configuration Réseau",
-        description: "Configurer et afficher les connexions réseau et serveurs.",
+        title: "Poste de travail",
+        description: "Afficher les serveurs et l'infrastructure.",
         icon: ServerIcon, // Changed from Settings2 to ServerIcon for consistency
         details: "Domaine: WORKGROUP | IP: Automatique",
     },
     {
-        href: "/projets",
-        title: "Mes documents (Projets)",
+        href: "/projects",
+        title: "Mes projets",
         description: "Parcourir les projets et les développements en cours.",
         icon: FolderGit2,
-        details: "Espace libre: 420 Go / 1 To",
+        details: "Espace libre: 2.4TB",
     },
     {
-        href: "https://status.azertox.com/status/infra",
-        title: "Centre de sécurité & Statut",
-        description: "Vérifier l'état des services et la sécurité du système.",
-        icon: ShieldCheck,
-        details: "Pare-feu: Activé | Mises à jour: Auto",
-        external: true,
+        href: "/museum",
+        title: "Archives",
+        description: "Afficher les artefacts du musée.",
+        icon: Gem,
+        details: "Password: LOUVRE",
     }
   ];
 </script>
@@ -54,7 +53,7 @@
     <div class="w-full max-w-5xl space-y-10 md:space-y-16" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
       <header class="text-center space-y-2">
         <h1 class="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center">
-            <Terminal class="h-10 w-10 mr-3 text-primary" /> Interface Système: <span class="ml-2 text-primary">Azertox</span>
+            <Terminal class="h-10 w-10 mr-3 text-primary" /> Interface Système: <span class="ml-2 text-primary">Az'</span>
         </h1>
         <p class="text-muted-foreground md:text-lg">
           Tableau de bord opérationnel pour les ressources système et la navigation des projets.
@@ -85,8 +84,8 @@
         {/each}
       </div>
         <div class="text-center text-sm text-muted-foreground pt-8">
-            <p>&copy; {new Date().getFullYear()} Dylan "Azertox". Horloge système: {new Date().toLocaleTimeString('fr-BE')}. Tous systèmes nominaux.</p>
-            <p class="mt-1">Développé avec Svelte & TailwindCSS.</p>
+            <p>&copy; {new Date().getFullYear()} Dylan "Azertox" R. | Horloge système: {new Date().toLocaleTimeString('fr-BE')} | Source code: <a href="https://github.com/AzertoxHDW/azertox.com">Github</a></p>
+            <p class="mt-1">Développé avec Svelte & TailwindCSS</p>
         </div>
     </div>
 </div>

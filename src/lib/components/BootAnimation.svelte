@@ -1,198 +1,234 @@
 <script lang="ts">
-    import { onMount, onDestroy } from 'svelte';
-    import type { ThemeOption } from '$lib/themeStore'; // Import ThemeOption for type safety
+  import { onMount, onDestroy } from 'svelte';
+  import type { ThemeOption } from '$lib/themeStore'; // Assumes this path is correct
+  import { browser } from '$app/environment';
+
+  export let themeOption: ThemeOption;
+  export let onComplete: () => void;
+
+  const boot2k = new Audio();
+  boot2k.src = '/sounds/2000.mp3';
+
+  let showVisuals = false; // For initial fade-in of the boot screen itself
+  let visualAnimationInProgress = true; // Tracks if the visual part of the animation is running
   
-    export let themeOption: ThemeOption; // Pass the whole theme option
-    export let onComplete: () => void;
+  // Sound-related state
+  let soundIsPlaying = false; 
+  let soundHasConcluded = !themeOption.sound; // True if no sound, or if sound ended/failed
+  let playPromiseHasSettled = !themeOption.sound; // True if no sound, or if play() promise settled
+
+  let audio: HTMLAudioElement | undefined;
   
-    let showContent = false;
-    let audio: HTMLAudioElement | undefined;
-    let progressXP = 0; // For XP progress bar specifically
-  
-    let animationTimer: number;
-    let progressIntervalXP: number;
-  
-    onMount(() => {
-      showContent = true;
-  
-      if (browser && themeOption.sound && audio) {
-        audio.src = themeOption.sound; // Set src before playing
-        audio.play().catch(e => console.warn(`${themeOption.label} sound autoplay failed:`, e));
-      }
-  
-      const duration = themeOption.animationDuration || 3000; // Default if not specified
-  
-      // XP specific animation logic
-      if (themeOption.value === 'xp') {
-        progressIntervalXP = window.setInterval(() => {
-          if (progressXP < 100) {
-            progressXP += 10; // Faster fill for demo
-          } else {
-            clearInterval(progressIntervalXP);
+  // Timers
+  let visualAnimationTimer: number;
+  let onCompleteDebounceTimer: number; // To give a slight grace period for audio to finish
+
+  function tryToComplete() {
+    if (browser) window.clearTimeout(onCompleteDebounceTimer);
+    
+    // Debugging log
+    // console.log(`[BootAnimation] tryToComplete check: 
+    //   visualInProgress=${visualAnimationInProgress}, 
+    //   playPromiseSettled=${playPromiseHasSettled}, 
+    //   soundConcluded=${soundHasConcluded}, 
+    //   soundIsPlaying=${soundIsPlaying}`);
+    
+    if (!visualAnimationInProgress && playPromiseHasSettled && soundHasConcluded && !soundIsPlaying) {
+      // console.log('[BootAnimation] All conditions met for onComplete, setting debounce timer.');
+      if (browser) {
+        onCompleteDebounceTimer = window.setTimeout(() => {
+          // Re-check conditions in the timeout
+          if (!visualAnimationInProgress && playPromiseHasSettled && soundHasConcluded && !soundIsPlaying) {
+              // console.log('[BootAnimation] Debounced onComplete is being called.');
+              onComplete();
           }
-        }, 150); // Duration of progress bar fill
+        }, 150); // Grace period for audio to fully stop before unmount
       }
-  
-      // --- TODO: Add specific animation logic for 'win98' and 'vista' ---
-  
-      animationTimer = window.setTimeout(() => {
-        onComplete();
-      }, duration);
-  
-      return () => {
-        clearTimeout(animationTimer);
-        if (progressIntervalXP) clearInterval(progressIntervalXP);
-        if (audio) {
-          audio.pause();
-          audio.currentTime = 0;
-        }
+    }
+  }
+
+  function playSoundIfNeeded() {
+    if (browser && themeOption.sound) {
+      if (!audio) {
+        audio = new Audio(); 
+      }
+      audio.src = themeOption.sound;
+      audio.preload = "auto";
+
+      // Reset sound state flags before playing
+      soundIsPlaying = false;
+      soundHasConcluded = false;
+      playPromiseHasSettled = false;
+
+      audio.play()
+        .then(() => {
+          // console.log(`[BootAnimation] Sound '${themeOption.sound}' playback promise resolved.`);
+          soundIsPlaying = true; // Sound is now actively playing
+          playPromiseHasSettled = true; // Play attempt has settled
+          // soundHasConcluded remains false until onended or onerror
+        })
+        .catch(e => {
+          console.warn(`[BootAnimation] Sound '${themeOption.sound}' play() failed:`, e.message);
+          soundIsPlaying = false;
+          soundHasConcluded = true; // Playback failed, so sound part is "concluded"
+          playPromiseHasSettled = true;
+          tryToComplete(); // Check if we can complete now
+        });
+
+      audio.onended = () => {
+        // console.log(`[BootAnimation] Sound '${themeOption.sound}' ended.`);
+        soundIsPlaying = false;
+        soundHasConcluded = true; // Playback ended naturally
+        // playPromiseHasSettled should already be true
+        tryToComplete();
       };
-    });
-  
-    // Helper to avoid SSR errors with audio
-    import { browser } from '$app/environment';
-  </script>
-  
-  <div
-    class="fixed inset-0 z-[500] flex items-center justify-center transition-opacity duration-300 ease-in-out"
-    class:opacity-100={showContent}
-    class:opacity-0={!showContent}
-    aria-live="assertive"
-    aria-busy="true"
-  >
-    {#if themeOption.value === 'xp'}
-      <div class="xp-boot-screen w-full h-full flex flex-col items-center justify-center text-center p-8">
-        <div class="mb-12">
-          <p class="xp-microsoft-text">Microsoft<sup class="text-xs">&reg;</sup></p>
-          <h1 class="xp-windows-xp-text">Windows<sup class="text-xs">xp</sup></h1>
-        </div>
-        <div class="xp-progress-bar-indeterminate-container">
-          <div class="xp-progress-slider">
-            {#each Array(4) as _} <div class="xp-progress-block"></div> {/each}
-          </div>
-        </div>
-      </div>
-    {/if}
-  
-    {#if themeOption.value === 'win98'}
-      <div class="win98-boot-screen w-full h-full flex flex-col items-center justify-center text-center p-8">
-        <h1 class="win98-title-text">Microsoft<br />Windows 98</h1>
-        <div class="win98-logo">
-          <div class="flag-square red"></div>
-          <div class="flag-square green"></div>
-          <div class="flag-square blue"></div>
-          <div class="flag-square yellow"></div>
-        </div>
-        <p class="mt-8 text-lg">Starting Windows 98...</p>
-        <div class="win98-progress-bar-container mt-4">
-          <div class="win98-progress-bar-fill"></div>
-        </div>
-      </div>
-    {/if}
-  
-    {#if themeOption.value === 'vista'}
-      <div class="vista-boot-screen w-full h-full flex flex-col items-center justify-center text-center p-8">
-        <div class="vista-logo-placeholder mb-8">
-          <p class="text-3xl font-light">Windows Vista<sup>&trade;</sup></p>
-        </div>
-        <div class="vista-progress-orb-container">
-          <div class="vista-progress-orb"></div>
-        </div>
-      </div>
-    {/if}
-  </div>
-  
-  {#if browser}
-    <audio bind:this={audio} preload="auto"></audio>
+
+      audio.onerror = (e) => {
+        console.error(`[BootAnimation] Audio element error for '${themeOption.sound}':`, e);
+        soundIsPlaying = false;
+        soundHasConcluded = true; // Treat as concluded on error
+        playPromiseHasSettled = true;
+        tryToComplete();
+      };
+    } else {
+      // No sound for this theme, so sound part is immediately "settled" and "concluded"
+      playPromiseHasSettled = true;
+      soundHasConcluded = true;
+      // tryToComplete() will be called when visual animation ends
+    }
+  }
+
+  onMount(() => {
+    showVisuals = true;
+    boot2k.play();
+    
+    // Initialize sound flags for themes without sound
+    if (!themeOption.sound) {
+        playPromiseHasSettled = true;
+        soundHasConcluded = true;
+    }
+
+    // --- Visual Animation Handling ---
+    const visualDuration = themeOption.animationDuration || 3000; // Default visual duration
+    visualAnimationInProgress = true;
+
+    // The Windows 2000 progress bar is CSS animated, so no specific JS interval needed here for it.
+    // This timer is for the overall duration of the visual boot screen.
+
+    if (browser) {
+      visualAnimationTimer = window.setTimeout(() => {
+        // console.log('[BootAnimation] Visual animation timer ended.');
+        visualAnimationInProgress = false;
+        
+        // Now that visual animation is done, attempt to play the sound
+        playSoundIfNeeded();
+        
+        // Check if we can complete (e.g., if there was no sound to begin with,
+        // playSoundIfNeeded would have set soundHasConcluded and playPromiseHasSettled to true)
+        tryToComplete(); 
+      }, visualDuration);
+    }
+
+    // Initial check in case visual duration is 0 and there's no sound
+    if (visualDuration === 0 && !themeOption.sound) {
+        visualAnimationInProgress = false; // Ensure this is set
+        tryToComplete();
+    }
+
+    return () => {
+      // console.log('[BootAnimation] onDestroy cleanup.');
+      if (browser) {
+        window.clearTimeout(visualAnimationTimer);
+        window.clearTimeout(onCompleteDebounceTimer);
+      }
+      if (audio) {
+        audio.pause(); 
+        audio.currentTime = 0;
+        audio.onended = null; 
+        audio.onerror = null;
+        // console.log('[BootAnimation] Audio paused and listeners cleaned up on destroy.');
+      }
+      soundIsPlaying = false; // Reset state
+    };
+  });
+</script>
+
+<div
+  class="fixed inset-0 z-[500] flex items-center justify-center transition-opacity duration-300 ease-in-out"
+  class:opacity-100={showVisuals && !(!visualAnimationInProgress && soundHasConcluded && playPromiseHasSettled)} 
+  class:opacity-0={!showVisuals || (!visualAnimationInProgress && soundHasConcluded && playPromiseHasSettled)}
+  aria-live="assertive"
+  aria-busy="true"
+>
+  {#if themeOption.value === 'win2000'}
+    <div class="win2000-boot-screen w-full h-full flex flex-col items-center justify-center text-center p-8">
+    </div>
   {/if}
-  
-  <style lang="postcss">
-    /* XP Styles (from previous iteration) */
-    .xp-boot-screen {
-      background-color: #000000;
-      color: #E0E0E0;
-      font-family: "Tahoma", "Verdana", sans-serif;
+  </div>
+
+<style lang="postcss">
+  /* Windows 2000 Boot Screen Styles */
+  .win2000-boot-screen {
+    background-image: url('/images/win2k2.png'), url('/images/win2kbar.gif');
+    background-color: white;
+    background-size: 40%, 100%;
+    background-repeat: no-repeat;
+    background-position: center, bottom;
+    color: #BCBCBC; /* Light gray text */
+    font-family: "Lucida Console", "Courier New", monospace; /* Monospaced font */
+    font-size: 14px; /* Or system default for terminals */
+    
+  }
+  .win2000-logo-area {
+    @apply flex flex-col items-center leading-none mb-6;
+  }
+  .win2000-text-microsoft {
+    @apply text-xs text-gray-400 self-start ml-[20%]; /* Approximate position */
+  }
+  .win2000-text-windows {
+    @apply text-4xl font-bold text-white;
+  }
+  .win2000-text-2000 {
+    @apply text-4xl font-light text-white tracking-tight; /* 2000 was often lighter weight */
+  }
+  .win2000-text-edition {
+    @apply text-xs text-gray-300 mt-1;
+  }
+  .win2000-text-starting {
+    @apply text-sm text-gray-300;
+  }
+  .win2000-progress-bar-container {
+    width: 220px; /* Width of the track */
+    height: 18px; /* Height of the track */
+    background-color: #181818; /* Dark gray track */
+    border: 1px solid #5A5A5A; /* Mid-gray border */
+    overflow: hidden;
+    position: relative;
+    padding: 2px; /* Inner padding for effect */
+  }
+  .win2000-progress-slider {
+    position: absolute;
+    top: 2px; bottom: 2px; left: 2px; /* Respect padding */
+    width: 100%; /* Slider iterates across the container width */
+    height: calc(100% - 4px);
+    animation: win2000-slide 1.8s linear infinite;
+    display: flex;
+  }
+  .win2000-progress-block {
+    width: 10px; /* Width of each blue block */
+    height: 100%;
+    background-color: #0078D7; /* Windows Blue */
+    margin-right: 3px; /* Space between blocks */
+    flex-shrink: 0;
+  }
+  @keyframes win2000-slide {
+    0% {
+      transform: translateX(-60%); /* Start off-screen to the left (adjust based on number of blocks) */
     }
-    .xp-microsoft-text { @apply text-sm tracking-wider text-gray-300; }
-    .xp-windows-xp-text {
-      font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-      @apply text-4xl font-bold tracking-tight mt-1 text-white;
+    100% {
+      transform: translateX(110%); /* End off-screen to the right */
     }
-    .xp-windows-xp-text sup { @apply text-xs align-super; }
-    .xp-progress-bar-indeterminate-container {
-      width: 200px; height: 16px; background-color: #333333;
-      border: 1px solid #555555; border-radius: 1px;
-      overflow: hidden; position: relative;
-    }
-    .xp-progress-slider {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      display: flex; animation: xp-slide 2s linear infinite;
-    }
-    .xp-progress-block {
-      width: 8px; height: 100%; background-color: #39a93a;
-      margin-right: 2px; flex-shrink: 0;
-    }
-    @keyframes xp-slide {
-      0% { transform: translateX(-40%); }
-      100% { transform: translateX(100%); }
-    }
-  
-    /* Windows 98 Styles (Basic Placeholders) */
-    .win98-boot-screen {
-      background-color: #008080; /* Classic Teal */
-      color: #FFFFFF;
-      font-family: "MS Sans Serif", "Arial", sans-serif; /* MS Sans Serif is hard to get on web, Arial is fallback */
-    }
-    .win98-title-text {
-      @apply text-4xl font-bold mb-8 leading-tight;
-      text-shadow: 2px 2px #000000a0;
-    }
-    .win98-logo {
-      @apply grid grid-cols-2 gap-0.5 w-16 h-16 mb-4;
-    }
-    .win98-logo .flag-square { @apply w-full h-full; }
-    .win98-logo .red { background-color: #FF0000; }
-    .win98-logo .green { background-color: #00FF00; }
-    .win98-logo .blue { background-color: #0000FF; }
-    .win98-logo .yellow { background-color: #FFFF00; }
-    .win98-progress-bar-container {
-      width: 250px; height: 20px; background-color: #808080; /* Gray track */
-      border: 2px solid #FFFFFF; box-shadow: 2px 2px 0px #000000 inset, -2px -2px 0px #C0C0C0 inset;
-      padding: 2px;
-    }
-    .win98-progress-bar-fill {
-      width: 75%; /* Example fill */
-      height: 100%; background-color: #000080; /* Dark Blue fill */
-      /* TODO: Animate this if desired */
-    }
-  
-  
-    /* Windows Vista Styles (Basic Placeholders) */
-    .vista-boot-screen {
-      background-color: #000000;
-      color: #FFFFFF;
-      font-family: "Segoe UI", "Verdana", sans-serif;
-    }
-    .vista-logo-placeholder {
-      /* Placeholder for Vista logo/text */
-    }
-    .vista-progress-orb-container {
-      width: 80px;
-      height: 80px;
-      @apply mt-8;
-      /* Placeholder for Vista's circular progress/aurora */
-    }
-    .vista-progress-orb {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 4px solid transparent;
-      border-top-color: #3498db; /* Light blue for spinner part */
-      animation: vista-spin 1.5s linear infinite;
-    }
-    @keyframes vista-spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
-  
+  }
+
+  /* Ensure styles for other themes (XP, 98, Vista) are removed or commented out */
+</style>

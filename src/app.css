@@ -70,106 +70,44 @@
     --ring: 212.7 26.8% 83.9%;
   }
 
-  @layer base {
-    /* Windows XP Theme */
-    .theme-xp {
-      --background: 0 0% 0%; /* Black for boot, can be XP blue for desktop */
-      --foreground: 0 0% 90%; /* Light gray / Off-white text */
-  
-      --card: 221 83% 53%; /* XP Blue for window bodies/cards */
-      --card-foreground: 0 0% 100%;
-  
-      --popover: 220 70% 95%;
-      --popover-foreground: 222.2 84% 4.9%;
-  
-      --primary: 210 100% 56%; /* Lighter blue for accents if needed */
-      --primary-foreground: 0 0% 100%;
-  
-      --secondary: 220 50% 70%;
-      --secondary-foreground: 0 0% 0%;
-  
-      --muted: 220 30% 80%;
-      --muted-foreground: 220 20% 40%;
-  
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
-  
-      --destructive: 0 72.2% 50.6%;
-      --destructive-foreground: 0 0% 100%;
-  
-      --border: 220 80% 60%; /* XP window border blue */
-      --input: 0 0% 100%;
-      --ring: 210 100% 56%;
-  
-      --radius: 0.1rem; /* XP had sharper corners */
-  
-      /* XP Specific Font (Tahoma is ideal, Verdana as fallback) */
-      /* You might need to ensure these fonts are available or use webfonts */
-      /* For Tailwind, you'd configure this in tailwind.config.ts and apply font-xp class */
-      /* For now, components can specify this or you can try to override font-sans */
-      /* --font-sans: "Tahoma", "Verdana", sans-serif; */
-    }
-  
-    /* Windows 98 Theme (Placeholder - needs actual colors/fonts) */
-    .theme-win98 {
-      --background: 180 10% 75%; /* Classic Win95/98 Gray: #C0C0C0 */
-      --foreground: 0 0% 0%; /* Black text */
-  
-      --card: 180 10% 75%;
-      --card-foreground: 0 0% 0%;
-  
-      --primary: 240 100% 25%; /* Dark blue for title bars: #000080 */
-      --primary-foreground: 0 0% 100%; /* White text on title bars */
-  
-      --secondary: 180 10% 60%;
-      --secondary-foreground: 0 0% 0%;
-  
-      --border: 0 0% 0%; /* Black or dark gray borders */
-      --radius: 0rem; /* Sharp corners */
-      /* --font-sans: "MS Sans Serif", "Arial", sans-serif; */
-    }
-  
-    /* Windows Vista Theme (Placeholder - needs actual colors/fonts) */
-    .theme-vista {
-      --background: 210 30% 15%; /* Dark, slightly blueish black */
-      --foreground: 0 0% 95%;
-  
-      /* Aero Glass effect would be complex, simulate with semi-transparent dark */
-      --card: 210 25% 25% / 0.85; /* Semi-transparent dark card */
-      --card-foreground: 0 0% 95%;
-      
-      --primary: 200 100% 60%; /* Vista blue */
-      --primary-foreground: 0 0% 100%;
-  
-      --secondary: 210 20% 40%;
-      --secondary-foreground: 0 0% 95%;
-  
-      --border: 200 50% 50% / 0.5; /* Semi-transparent borders */
-      --radius: 0.375rem; /* Slightly rounded corners */
-      /* --font-sans: "Segoe UI", "Verdana", sans-serif; */
-    }
-  
-    /* Apply base font to html for themes to inherit if not overridden by components */
-    html.theme-xp {
-      font-family: "Tahoma", "Verdana", Inter, sans-serif;
-      cursor: url('/cursors/xp/xp_arrow.cur'), auto;
-    }
-    html.theme-win98 {
-      font-family: "MS Sans Serif", Arial, Inter, sans-serif; /* MS Sans Serif is tricky for web */
-      cursor: url('/cursors/win98/win98_arrow.cur'), auto;
-    }
-    html.theme-vista {
-      font-family: "Segoe UI", Verdana, Inter, sans-serif;
-      cursor: url('/cursors/vista/vista_arrow.cur'), auto;
+  /* Windows 2000 Theme */
+  .theme-win2000 {
+    --background: 210 11% 71%; /* Classic W2K gray background: HSL for #D4D0C8 */
+    --foreground: 0 0% 0%;   /* Black text */
 
-    }
+    --card: 210 11% 78%; /* Slightly lighter gray for card backgrounds: HSL for #DFDCD5 */
+    --card-foreground: 0 0% 0%;
+
+    --popover: 0 0% 100%; /* White popovers */
+    --popover-foreground: 0 0% 0%;
+
+    --primary: 220 60% 30%;  /* Darker, desaturated blue for title bars, buttons: HSL for approx #243C78 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 10% 85%; /* Lighter gray for some elements: HSL for #D2D2D7 */
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 210 10% 90%; /* Very light gray: HSL for #E1E1E6 */
+    --muted-foreground: 0 0% 25%; /* Darker gray text on muted: HSL for #404040 */
+
+    --accent: 210 15% 65%; /* A slightly different gray for accents: HSL for #989CA6 */
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 50%; /* Gray borders: #808080 */
+    --input: 0 0% 100%; /* White input backgrounds */
+    --ring: 220 60% 50%; /* Focus ring, a slightly lighter version of primary: HSL for #4C68B9 */
+
+    --radius: 0.125rem; /* Very slight rounding, W2K was mostly sharp */
   }
-  
-  /* Ensure your existing body styles use these variables */
-  body {
-    @apply bg-background text-foreground;
-    /* font-family: var(--font-sans); /* This would make body font dynamic based on theme */
-    /* Your existing font-family for Inter can be the fallback if --font-sans is not set by theme */
+
+  /* Apply base font to html for themes to inherit if not overridden by components */
+  html.theme-win2000 {
+    font-family: "Tahoma", "MS Sans Serif", Arial, Inter, sans-serif; /* Prioritize Tahoma/MS Sans Serif */
+    /* You can also add a W2K cursor here if you have one */
+    /* cursor: url('/cursors/win2000/arrow.cur'), auto; */
   }
 }
 
@@ -190,4 +128,3 @@
 .font-mono {
   font-family: "Share Tech Mono", monospace;
 }
-

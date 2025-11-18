@@ -20,101 +20,110 @@ export interface Machine {
   imageUrl?: string;
   gallery?: string[]; // Array of image URLs for a gallery on the detail page
   purchaseDate?: string;
+  releaseDate?: string;
   decommissionDate?: string;
 }
 
 // Your existing infrastructure data, now enhanced with more fields for detail pages
 export const infrastructure: Machine[] = [
   {
-    id: "proxmox-node1", // This ID will be used in the URL
-    name: "Hyperviseur Principal (PVE-01)",
-    role: "Hébergement de VMs & CTs",
+    id: "pve-01", // This ID will be used in the URL
+    name: "Sierra (PVE-01)",
+    role: "Serveur de jeu principal",
     status: "Online",
     os: { name: "Proxmox VE 8.x", icon: Server },
     specs: [ // Specs for the card view
-      { name: "CPU", value: "Intel Xeon E5-2690 v3 (2 Cores)", icon: Cpu },
-      { name: "RAM", value: "16 GB DDR4 ECC", icon: MemoryStick },
+      { name: "CPU", value: "2x Intel Xeon E5-2667 v2", icon: Cpu },
+      { name: "RAM", value: "32 GB DDR3 ECC", icon: MemoryStick },
       { name: "Stockage VMs", value: "1 TB SATA SSD", icon: HardDrive },
     ],
     moreSpecs: [ // Specs for the detail view
-      { name: "CPU Model", value: "Intel Xeon E5-2690 v3 @ 2.60GHz", icon: Cpu },
-      { name: "CPU Cores/Threads", value: "2 Cores / 4 Threads (allocated to this VM/CT if it's a VM itself, or total physical if bare metal)", icon: Cpu },
-      { name: "Motherboard", value: "Supermicro X10SRL-F", icon: Cpu }, // Placeholder icon
-      { name: "RAM Type", value: "16 GB DDR4 ECC @ 2133MHz", icon: MemoryStick },
-      { name: "Stockage OS", value: "256 GB NVMe SSD", icon: HardDrive },
-      { name: "Stockage VMs/Data", value: "1 TB SATA SSD (Samsung 870 QVO)", icon: HardDrive },
-      { name: "NIC 1", value: "Onboard Intel I350 Dual Port 1GbE", icon: Network },
-      { name: "NIC 2", value: "Intel X540-T2 Dual Port 10GbE", icon: Network },
+      { name: "CPU Model", value: "2x Intel Xeon E5-2667 v2 @ 3.30GHz", icon: Cpu },
+      { name: "CPU Cores/Threads", value: "16 Cores / 32 Threads", icon: Cpu },
+      { name: "Motherboard", value: "Huananzhi X79-8D", icon: Cpu }, // Placeholder icon
+      { name: "RAM Type", value: "32 GB DDR3 ECC @ 1600MHz", icon: MemoryStick },
+      { name: "Stockage VMs/Data", value: "1 TB SATA SSD (Crucial MX500)", icon: HardDrive },
+      { name: "Disque Backup", value: "1 TB HDD (WD Blue)", icon: HardDrive },
+      { name: "NIC 1", value: "Onboard Dual Port 1GbE", icon: Network },
     ],
     software: [
-        { name: "Docker Engine", version: "25.0.3", notes: "For containerized applications." },
-        { name: "QEMU/KVM", notes: "Core virtualization technology."}
+        { name: "Proxmox Virtual Environment", version: "8", notes: "" },
     ],
-    description: "Ce serveur est le cœur de mon infrastructure de virtualisation, hébergeant plusieurs machines virtuelles et conteneurs critiques pour mes projets personnels et services. Il est conçu pour une haute disponibilité et des performances robustes.",
-    notes: "Maintenance régulière effectuée tous les premiers dimanches du mois.",
-    imageUrl: "https://images.unsplash.com/photo-1611071549845-c5BCD7865332?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    description: "Machine concue sur-mesure pour l'hébergement de serveurs de jeu. Pensée avec des composants low-cost et trouvables facilement, avec un bon compromis entre consommation et puissance.",
+    notes: "",
+    imageUrl: "/images/sierra1.jpg",
     gallery: [
-        "https://images.unsplash.com/photo-1611071549845-c5BCD7865332?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1580582932707-520760047163?q=80&w=1200&auto=format&fit=crop",
+        "/images/sierra1.jpg",
+        "/images/sierra2.jpg",
+        "/images/sierra3.jpg",
+        "/images/sierra4.jpg",
+        "/images/sierra5.jpg",
     ],
-    purchaseDate: "2022-03-15",
+    releaseDate: "",
+    purchaseDate: "2021-09-09",
   },
   {
-    id: "nas-truenas",
+    id: "nas",
     name: "Serveur NAS (TRUENAS-01)",
-    role: "Stockage réseau & Backups",
+    role: "Stockage réseau & backups",
     status: "Online",
     os: { name: "TrueNAS SCALE", icon: HardDrive },
     specs: [
-      { name: "CPU", value: "Intel Core i3-8100", icon: Cpu },
-      { name: "RAM", value: "8 GB DDR4", icon: MemoryStick },
-      { name: "Capacité Totale", value: "12 TB (RAID-Z1)", icon: HardDrive },
+      { name: "CPU", value: "Intel Xeon E5-2407 v2", icon: Cpu },
+      { name: "RAM", value: "8 GB DDR4 ECC", icon: MemoryStick },
+      { name: "Capacité", value: "6 TB (RAID-Z1)", icon: HardDrive },
     ],
     moreSpecs: [
-        { name: "CPU Model", value: "Intel Core i3-8100 @ 3.60GHz", icon: Cpu },
-        { name: "Carte mère", value: "ASRock H370M-ITX/ac", icon: Cpu},
-        { name: "RAM Type", value: "8 GB DDR4 Non-ECC", icon: MemoryStick },
-        { name: "Disques de données", value: "4 x 4 TB WD Red Plus (RAID-Z1)", icon: HardDrive },
+        { name: "CPU Model", value: "Intel Xeon E5-2407 v2 @ 2.40GHz", icon: Cpu },
+        { name: "Carte mère", value: "Dell PowerEdge R320", icon: Cpu},
+        { name: "RAM Type", value: "8 GB DDR4 ECC", icon: MemoryStick },
+        { name: "Disques de données", value: "4 x 4 TB SATA HDD (RAID-Z1)", icon: HardDrive },
         { name: "Disque Système", value: "128GB SATA SSD", icon: HardDrive },
     ],
     software: [
         { name: "ZFS Filesystem", notes: "Pour l'intégrité des données et les snapshots." },
-        { name: "Syncthing", notes: "Synchronisation de fichiers distribuée." },
         { name: "Samba/NFS", notes: "Partages réseau."}
     ],
-    description: "Ce serveur NAS basé sur TrueNAS SCALE est essentiel pour la centralisation de toutes mes données importantes, photos, vidéos et sauvegardes de machines. Il utilise ZFS pour une robustesse maximale.",
-    notes: "Surveillance active des disques SMART.",
-    imageUrl: "https://images.unsplash.com/photo-1580827152745-51305767c10e?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    purchaseDate: "2021-07-20",
+    description: "Serveur NAS basé sur un Dell PowerEdge R320 récupéré. Configuré sur TrueNAS Scale, installé grâce à Clover Bootloader pour lui permettre de démarrer sur un disque NVMe. La configuration RAID-Z1 permet d'avoir 6TB d'espace de stockage en assurant la sécurité des données en cas de perte d'un disque.",
+    notes: "Surveillance active et vérification quotidienne automatisée de l'intégrité des disques via SMART.",
+    imageUrl: "/images/nas1.png",
+    gallery: [
+        "/images/nas1.png",
+        "/images/nas2.jpg",
+        "/images/nas3.jpg",
+        "/images/nas4.jpg",
+    ],
+    releaseDate: "2012",
+    purchaseDate: "2021-06-15",
   },
   {
-    id: "dev-station",
-    name: "Station de Développement",
-    role: "Poste de travail principal",
+    id: "snowflake",
+    name: "Snowflake 2.0",
+    role: "PC Principal",
     status: "Online",
-    os: { name: "Arch Linux (btw)", icon: Laptop },
+    os: { name: "CachyOS (Arch Linux)", icon: Laptop },
     specs: [
       { name: "CPU", value: "AMD Ryzen 7 5800X", icon: Cpu },
       { name: "RAM", value: "32 GB DDR4", icon: MemoryStick },
-      { name: "GPU", value: "NVIDIA RTX 3070", icon: Cpu },
+      { name: "GPU", value: "NVIDIA RTX 3090", icon: Cpu },
     ],
     moreSpecs: [
         { name: "CPU Model", value: "AMD Ryzen 7 5800X (8 Cores / 16 Threads)", icon: Cpu },
-        { name: "Carte mère", value: "MSI B550 TOMAHAWK", icon: Cpu},
-        { name: "RAM Type", value: "32 GB Corsair Vengeance LPX DDR4 3600MHz", icon: MemoryStick },
-        { name: "GPU Model", value: "NVIDIA GeForce RTX 3070 Founders Edition", icon: Cpu },
-        { name: "Stockage Principal", value: "1 TB NVMe SSD (Samsung 970 Evo Plus)", icon: HardDrive },
-        { name: "Stockage Secondaire", value: "2 TB SATA SSD (Crucial MX500)", icon: HardDrive },
-        { name: "Moniteurs", value: "2 x Dell S2721DGF (27\" 1440p 165Hz)", icon: Laptop}
+        { name: "Carte mère", value: "Asus ROG Strix B550-A Gaming", icon: Cpu},
+        { name: "RAM Type", value: "32 GB G.Skill Trident Z RGB 3200MHz CL14", icon: MemoryStick },
+        { name: "GPU Model", value: "NVIDIA GeForce RTX 3090 Founders Edition", icon: Cpu },
+        { name: "Stockage Principal", value: "2 TB NVMe SSD (Samsung 970 Evo Plus)", icon: HardDrive },
+        { name: "Moniteurs", value: 'Gigabyte G34WQC (UWQHD 3400x1440 / 144hz) || LG 24BK450H (FHD 1920x1080 / 60hz)', icon: Laptop}
     ],
-    software: [
-        { name: "VS Code", notes: "Éditeur de code principal." },
-        { name: "Docker Desktop", notes: "Pour le développement conteneurisé." },
-        { name: "GitKraken", notes: "Client Git GUI." },
-        { name: "OBS Studio", notes: "Pour enregistrement et streaming."}
+    description: "PC principal, utilisé majoritairement pour jouer, entre autres. Monté entièrement par mes soins, le tout sous refroidissement custom.",
+    imageUrl: "/images/sf1.JPG",
+    gallery: [
+        "/images/sf1.JPG",
+        "/images/sf2.jpg",
+        "/images/sf3.jpg",
+        "/images/sf4.jpg",
+        "/images/sf5.jpg",
     ],
-    description: "Ma station de travail principale où la magie opère ! Utilisée pour le développement logiciel, le montage vidéo, le gaming occasionnel et la gestion de toute mon infrastructure.",
-    imageUrl: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    purchaseDate: "2020-11-01",
+    purchaseDate: "2021-04-01",
   },
 ];

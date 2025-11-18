@@ -2,6 +2,21 @@
   import { Card, CardHeader, CardTitle, CardContent } from "$lib/components/ui/card/index.js"; //
   import { flyAndScale } from "$lib/utils"; //
   import { UserCircle, Briefcase, Terminal } from "lucide-svelte"; // Using UserCircle and Briefcase for semantic icons
+  const startDate = new Date('2003-06-11');
+  
+  const yearsSince = (): number => {
+    const now = new Date();
+    let years = now.getFullYear() - startDate.getFullYear();
+    
+    const monthDiff = now.getMonth() - startDate.getMonth();
+    const dayDiff = now.getDate() - startDate.getDate();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      years--;
+    }
+    
+    return years;
+  };
 </script>
 
 <style lang="postcss">
@@ -27,8 +42,9 @@
 
 <div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer">
   <div class="text-center mb-12 md:mb-16" in:flyAndScale={{ y: -20, duration: 500, start: 0.95 }}>
-    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground">
-      À Propos de Moi
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground flex items-center justify-center">
+      <UserCircle class="w-10 h-10 md:w-12 md:h-12 mr-3 text-primary" />
+      À propos de moi
     </h1>
     <p class="mt-3 text-lg md:text-xl text-muted-foreground">
         Un peu plus d'informations sur qui je suis et ce qui me passionne.
@@ -45,8 +61,7 @@
       <Card class="shadow-lg">
         <CardContent class="p-6 md:p-8">
           <p class="text-xl md:text-2xl text-muted-foreground leading-relaxed">
-            Je suis Dylan (ou Azertox, ou Az', sur internet). Je suis un jeune passionné de technologie qui,
-            depuis des années déjà, passe son temps à cultiver sa passion au travers de plus en plus de domaines.
+            Je suis Dylan R. (ou Az' sur internet), {yearsSince()} ans, passionné de technologie. Je passe mon temps à cultiver ma passion en tant qu'autodidacte au travers de plus en plus de domaines.
           </p>
         </CardContent>
       </Card>
@@ -61,7 +76,7 @@
       <Card class="shadow-lg">
         <CardContent class="p-6 md:p-8">
           <p class="text-xl md:text-2xl text-muted-foreground leading-relaxed">
-            Je cultive mes connaissances en tant qu'autodidacte dans plusieurs domaines tels que le développement, le "hardware", ou la gestion de serveurs
+            Je cultive mes connaissances depuis de nombreuses années dans plusieurs domaines tels que le développement, le "hardware", ou la gestion de serveurs
             informatiques, mais aussi dans d'autres domaines plus éloignés de l'informatique comme l'électronique ou la musique.
           </p>
         </CardContent>
