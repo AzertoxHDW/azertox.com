@@ -1,0 +1,36 @@
+name: Manual Deploy to Self-Hosted Alpine
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+        type: string
+  
+  # Optional: Uncomment to auto-deploy on push to dev
+  # push:
+  #   branches: [ "dev" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    
+    # Grant necessary permissions
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make deploy script executable
+        run: chmod +x ./scripts/deploy.sh
+
+      - name: Execute Deployment Script
+        run: ./scripts/deploy.sh "${{ inputs.branch || 'main' }}"
+        env:
+          # Set the directory name if different from default
+          SITE_DIR: "azertox.com"
