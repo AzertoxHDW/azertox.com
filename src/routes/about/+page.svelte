@@ -19,6 +19,11 @@
   };
 </script>
 
+<svelte:head>
+    <title>Az' - À propos de moi</title>
+    <meta name="description" content="Apprenez-en plus sur moi" />
+</svelte:head>
+
 <style lang="postcss">
   /* Adjust min-height to account for your global header/navbar and this page's footer if they have fixed heights */
   .min-h-screen_minus_header_footer {
