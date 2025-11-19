@@ -276,10 +276,8 @@
 
   /* Windows 2000 Theme Styles */
   .win2000-theme {
-    background-image: url('/images/win2kwallpaper.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    background-color: #008080;
+    background-image: none;
     font-family: "Tahoma", "MS Sans Serif", Arial, sans-serif;
   }
 
@@ -331,23 +329,9 @@
     font-weight: bold;
   }
 
-  /* Windows 2000 Control Buttons */
-  .win2000-theme .terminal-btn {
-    width: 14px;
-    height: 14px;
-    border-radius: 0;
-  }
-
-  .win2000-theme .terminal-btn.close {
-    background: transparent;
-  }
-
-  .win2000-theme .terminal-btn.minimize {
-    background: transparent;
-  }
-
-  .win2000-theme .terminal-btn.maximize {
-    background: transparent;
+  /* Windows 2000 Control Buttons - Hide them */
+  .win2000-theme .terminal-controls {
+    display: none;
   }
 
   /* Windows 2000 Content Area */
