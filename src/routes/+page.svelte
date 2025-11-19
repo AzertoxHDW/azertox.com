@@ -78,17 +78,20 @@
   let terminalElement: HTMLElement | null = null;
   let highestZIndex = 200; // Start at 200 to be above header (z-100) and footer (z-100)
   let showTerminal = false;
+  let activeWindowIndex: number | null = null;
 
   function bringToFront(index: number) {
     const element = cardElements[index];
     if (element) {
       element.style.zIndex = String(++highestZIndex);
+      activeWindowIndex = index;
     }
   }
 
   function bringTerminalToFront() {
     if (terminalElement) {
       terminalElement.style.zIndex = String(++highestZIndex);
+      activeWindowIndex = -1; // Use -1 to indicate terminal is active
     }
   }
 
@@ -123,7 +126,7 @@
     <!-- Terminal Toggle Button (Top Right) -->
     <button
       on:click={toggleTerminal}
-      class="fixed top-8 right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+      class="terminal-toggle-btn fixed top-8 right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
       aria-label="{showTerminal ? 'Fermer' : 'Ouvrir'} Terminal"
     >
       <Terminal class="h-5 w-5 text-primary" />
@@ -144,7 +147,7 @@
       {#each dashboardLinks as item, i}
         <div
           bind:this={cardElements[i]}
-          class="terminal-window absolute"
+          class="terminal-window absolute {activeWindowIndex === i ? 'active' : ''}"
           style="z-index: {10 + i}; width: {CARD_WIDTH}px;"
           in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
           use:draggable={{
@@ -193,7 +196,7 @@
     {#if showTerminal}
       <div
         bind:this={terminalElement}
-        class="terminal-window absolute"
+        class="terminal-window absolute {activeWindowIndex === -1 ? 'active' : ''}"
         style="z-index: 200; width: 700px;"
         in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
         use:draggable={{

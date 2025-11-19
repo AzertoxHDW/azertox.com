@@ -12,29 +12,26 @@
 
   let showBootUpAnimation = false;
   let currentBootThemeOption: ThemeOption | undefined = undefined;
-  
-  // Reactive statement to control desktop visibility
-  // It's true if the current theme is 'win2000' AND no boot animation is playing.
-  $: showWin2000Desktop = ($currentTheme === 'win2000' && !showBootUpAnimation);
+
+  // Reactive statement to check if win2000 theme is active
+  $: isWin2000Theme = ($currentTheme === 'win2000');
 
   function handleGlobalKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && showWin2000Desktop) {
-      setTheme('system'); // This will trigger the reactive update for showWin2000Desktop
+    if (event.key === 'Escape' && isWin2000Theme) {
+      setTheme('dark'); // Exit win2000 theme back to dark theme
     }
   }
 
   onMount(() => {
     const initialTheme = localStorage.getItem('selected-theme') as Theme || 'system';
     if ($currentTheme !== initialTheme) {
-        currentTheme.set(initialTheme); // This triggers the reactive $: showWin2000Desktop
+        currentTheme.set(initialTheme);
     }
-    // If initialTheme is 'win2000', the reactive statement will set showWin2000Desktop to true
-    // (assuming showBootUpAnimation is initially false).
 
     if (BROWSER) {
       window.addEventListener('keydown', handleGlobalKeyDown);
     }
-    return () => { // onDestroy equivalent for onMount
+    return () => {
         if (BROWSER) {
             window.removeEventListener('keydown', handleGlobalKeyDown);
         }
@@ -50,28 +47,22 @@
       if (selectedOption && selectedOption.value === 'win2000') {
         // If we are already on win2000 and select it again, don't re-boot.
         if ($currentTheme === 'win2000') {
-            if (!showWin2000Desktop) showWin2000Desktop = true; // Ensure desktop is shown if somehow hidden
             return;
         }
         currentBootThemeOption = selectedOption;
-        // showWin2000Desktop will become false when $currentTheme changes if it's not yet win2000,
-        // or if it changes from win2000 to something else then back to win2000.
         showBootUpAnimation = true;
-        currentTheme.set(newThemeValue); // Set theme to start boot
+        currentTheme.set(newThemeValue);
       } else if (selectedOption) {
-        currentTheme.set(newThemeValue); // For other themes, just set it.
-                                        // showWin2000Desktop will become false via reactive statement.
+        currentTheme.set(newThemeValue);
       }
     }
   }
 
   function onBootAnimationComplete() {
     if (currentBootThemeOption) {
-      // Ensure the theme is correctly set in the store.
-      // The reactive statement $: showWin2000Desktop will make the desktop visible.
       currentTheme.set(currentBootThemeOption.value);
     }
-    showBootUpAnimation = false; // This allows showWin2000Desktop to become true if $currentTheme is 'win2000'
+    showBootUpAnimation = false;
     currentBootThemeOption = undefined;
   }
 
@@ -85,9 +76,9 @@
 
 </script>
 
-<div class="flex flex-col min-h-screen bg-background text-foreground">
+<div class="flex flex-col min-h-screen bg-background text-foreground {isWin2000Theme ? 'win2000-theme' : ''}">
 
-  {#if !showWin2000Desktop && !showBootUpAnimation}
+  {#if !showBootUpAnimation}
     <header class="relative z-40 pt-6 pb-2 md:pt-8 md:pb-4 transition-opacity duration-300">
       <div class="container mx-auto flex items-center justify-center">
         <nav class="flex items-center space-x-1 sm:space-x-2 bg-background/80 dark:bg-muted/50 backdrop-blur-lg shadow-xl rounded-full px-3 py-2 border border-border/40">
@@ -114,10 +105,9 @@
     <BootAnimation themeOption={currentBootThemeOption} onComplete={onBootAnimationComplete} />
   {/if}
 
-  {#if showWin2000Desktop} <Win2000Desktop />
-  {:else if !showBootUpAnimation} <main 
-      class="flex-grow pt-4 md:pt-8 transition-opacity duration-300 ease-in-out
-             {showBootUpAnimation || showWin2000Desktop ? 'opacity-0 pointer-events-none absolute -z-10' : 'opacity-100'}"
+  {#if !showBootUpAnimation}
+    <main
+      class="flex-grow pt-4 md:pt-8 transition-opacity duration-300 ease-in-out {showBootUpAnimation ? 'opacity-0 pointer-events-none absolute -z-10' : 'opacity-100'}"
     >
       <slot />
     </main>

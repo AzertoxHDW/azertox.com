@@ -273,4 +273,105 @@
   .terminal-content {
     background: hsl(var(--card));
   }
+
+  /* Windows 2000 Theme Styles */
+  .win2000-theme {
+    background-image: url('/images/win2kwallpaper.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: "Tahoma", "MS Sans Serif", Arial, sans-serif;
+  }
+
+  /* Windows 2000 Terminal Window Styling */
+  .win2000-theme .terminal-window {
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-right: 2px solid #0A0A0A;
+    border-bottom: 2px solid #0A0A0A;
+    box-shadow: none;
+    border-radius: 0px;
+    background-color: #C0C0C0;
+    outline: 1px solid #808080;
+  }
+
+  .win2000-theme .terminal-window:hover {
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-right: 2px solid #0A0A0A;
+    border-bottom: 2px solid #0A0A0A;
+    box-shadow: none;
+  }
+
+  /* Windows 2000 Title Bar */
+  .win2000-theme .terminal-titlebar {
+    background: linear-gradient(to right, #808080 0%, #A0A0A0 50%, #C0C0C0 100%);
+    color: #C0C0C0;
+    padding: 2px 3px;
+    height: 18px;
+    border-bottom: 1px solid #FFFFFF;
+  }
+
+  .win2000-theme .terminal-window.active .terminal-titlebar {
+    background: linear-gradient(to right, #0A246A 0%, #0E4C9C 50%, #1084D0 100%);
+  }
+
+  /* Windows 2000 Title Text */
+  .win2000-theme .terminal-title {
+    color: #C0C0C0;
+    font-weight: normal;
+    font-size: 11px;
+    font-family: "Tahoma", "MS Sans Serif", Arial, sans-serif;
+    text-shadow: none;
+    letter-spacing: 0;
+  }
+
+  .win2000-theme .terminal-window.active .terminal-title {
+    color: #FFFFFF;
+    font-weight: bold;
+  }
+
+  /* Windows 2000 Control Buttons */
+  .win2000-theme .terminal-btn {
+    width: 14px;
+    height: 14px;
+    border-radius: 0;
+  }
+
+  .win2000-theme .terminal-btn.close {
+    background: transparent;
+  }
+
+  .win2000-theme .terminal-btn.minimize {
+    background: transparent;
+  }
+
+  .win2000-theme .terminal-btn.maximize {
+    background: transparent;
+  }
+
+  /* Windows 2000 Content Area */
+  .win2000-theme .terminal-content {
+    background: #C0C0C0;
+  }
+
+  /* Hide header in Windows 2000 theme */
+  .win2000-theme header {
+    display: none;
+  }
+
+  /* Hide footer in Windows 2000 theme */
+  .win2000-theme footer {
+    display: none;
+  }
+
+  /* Hide terminal toggle button in Windows 2000 theme */
+  .win2000-theme .terminal-toggle-btn {
+    display: none;
+  }
+
+  /* Adjust main content padding in Windows 2000 theme */
+  .win2000-theme main {
+    padding-top: 2rem;
+  }
 }
