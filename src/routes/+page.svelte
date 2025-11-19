@@ -11,12 +11,6 @@
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
 
-  interface CardPosition {
-    x: number;
-    y: number;
-    zIndex: number;
-  }
-
   const CARD_WIDTH = 450;
   const CARD_GAP = 40;
 
@@ -78,39 +72,26 @@
 
   let initialPositions = calculateInitialPositions();
 
-  let cardPositions = writable<Record<number, CardPosition>>(
+  // Only track z-index in store, let draggable handle positioning
+  let cardZIndices = writable<Record<number, number>>(
     dashboardLinks.reduce((acc, _, idx) => {
-      acc[idx] = {
-        x: initialPositions[idx].x,
-        y: initialPositions[idx].y,
-        zIndex: 10 + idx
-      };
+      acc[idx] = 10 + idx;
       return acc;
-    }, {} as Record<number, CardPosition>)
+    }, {} as Record<number, number>)
   );
 
   let highestZIndex = 10 + dashboardLinks.length;
 
   function bringToFront(index: number) {
-    cardPositions.update(positions => {
-      positions[index].zIndex = ++highestZIndex;
-      return positions;
+    cardZIndices.update(indices => {
+      indices[index] = ++highestZIndex;
+      return indices;
     });
   }
 
   onMount(() => {
     // Recalculate positions on mount to ensure proper centering
     initialPositions = calculateInitialPositions();
-    cardPositions.set(
-      dashboardLinks.reduce((acc, _, idx) => {
-        acc[idx] = {
-          x: initialPositions[idx].x,
-          y: initialPositions[idx].y,
-          zIndex: 10 + idx
-        };
-        return acc;
-      }, {} as Record<number, CardPosition>)
-    );
   });
 </script>
 
@@ -143,7 +124,7 @@
       {#each dashboardLinks as item, i}
         <div
           class="terminal-window absolute"
-          style="z-index: {$cardPositions[i].zIndex}; width: {CARD_WIDTH}px;"
+          style="z-index: {$cardZIndices[i]}; width: {CARD_WIDTH}px;"
           in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
           use:draggable={{
             handleSelector: '.terminal-titlebar',
