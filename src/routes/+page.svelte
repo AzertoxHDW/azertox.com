@@ -48,7 +48,7 @@
 <style lang="postcss">
   /* Styles for the icon wrappers in terminal cards */
   .icon-wrapper {
-    @apply mb-3 p-3 bg-primary/10 rounded-lg text-primary inline-flex;
+    @apply p-3 bg-primary/10 rounded-lg text-primary inline-flex;
   }
 </style>
 
@@ -79,14 +79,15 @@
               </div>
 
               <!-- Terminal Content -->
-              <div class="terminal-content terminal-screen-curve">
-                <div class="terminal-scanlines"></div>
+              <div class="terminal-content">
                 <Card class="h-full flex flex-col !border-0 !shadow-none !rounded-none">
                   <CardHeader>
-                    <div class="icon-wrapper">
-                        <svelte:component this={item.icon} class="h-7 w-7" />
+                    <div class="flex items-center gap-3">
+                      <div class="icon-wrapper">
+                          <svelte:component this={item.icon} class="h-7 w-7" />
+                      </div>
+                      <CardTitle class="text-xl !mt-0 group-hover:text-primary">{item.title}</CardTitle>
                     </div>
-                    <CardTitle class="text-xl !mt-2 group-hover:text-primary">{item.title}</CardTitle>
                   </CardHeader>
                   <CardContent class="flex-grow">
                     <p class="text-muted-foreground text-sm mb-3">{item.description}</p>
