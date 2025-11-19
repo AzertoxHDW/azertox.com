@@ -179,8 +179,8 @@
 @layer utilities {
   /* Smooth transitions for theme switching */
   .theme-transition {
-    transition: background-color 0.3s ease, 
-                color 0.3s ease, 
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
                 border-color 0.3s ease,
                 box-shadow 0.3s ease;
   }
@@ -188,4 +188,89 @@
 
 .font-mono {
   font-family: "Share Tech Mono", monospace;
+}
+
+/* Terminal Window Styles */
+@layer components {
+  .terminal-window {
+    position: relative;
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow:
+      0 1px 3px 0 rgb(0 0 0 / 0.1),
+      0 1px 2px -1px rgb(0 0 0 / 0.1);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .terminal-window:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  /* Terminal title bar */
+  .terminal-titlebar {
+    background: linear-gradient(180deg, hsl(var(--muted)) 0%, hsl(var(--card)) 100%);
+    border-bottom: 1px solid hsl(var(--border));
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2rem;
+    user-select: none;
+  }
+
+  .dark .terminal-titlebar {
+    background: linear-gradient(180deg, hsl(220 12% 10%) 0%, hsl(var(--card)) 100%);
+  }
+
+  /* Window control buttons */
+  .terminal-controls {
+    display: flex;
+    gap: 0.375rem;
+  }
+
+  .terminal-btn {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .terminal-btn:hover {
+    filter: brightness(1.2);
+    transform: scale(1.1);
+  }
+
+  .terminal-btn.close {
+    background: linear-gradient(135deg, #ff5f56 0%, #ff3b30 100%);
+  }
+
+  .terminal-btn.minimize {
+    background: linear-gradient(135deg, #ffbd2e 0%, #ffaa00 100%);
+  }
+
+  .terminal-btn.maximize {
+    background: linear-gradient(135deg, #27c93f 0%, #00d084 100%);
+  }
+
+  /* Terminal title */
+  .terminal-title {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.75rem;
+    color: hsl(var(--muted-foreground));
+    flex: 1;
+    text-align: center;
+    user-select: none;
+    letter-spacing: 0.025em;
+  }
+
+  /* Terminal content area */
+  .terminal-content {
+    background: hsl(var(--card));
+  }
 }
