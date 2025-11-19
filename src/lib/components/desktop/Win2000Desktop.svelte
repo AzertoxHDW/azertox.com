@@ -524,62 +524,43 @@
   }
 
   .window-controls-container {
-    padding: 0 2px 0 4px;
-    margin-right: 2px;
-    border-left: 1px solid #FFFFFF;
-    gap: 2px;
+    padding: 0 3px 0 0;
+    margin-left: 8px;
+    gap: 0;
   }
 
   .win2000-control-button {
     font-family: "Marlett", "Webdings";
-    color: black;
-    background-color: #C0C0C0;
-    border-width: 1px;
-    border-style: solid;
-    border-top-color: #DFDFDF;
-    border-left-color: #DFDFDF;
-    border-right-color: #404040;
-    border-bottom-color: #404040;
-    box-shadow:
-      inset 1px 1px 0 #FFFFFF,
-      inset -1px -1px 0 #808080;
-    width: 15px;
-    height: 13px;
-    min-width: 15px;
-    min-height: 13px;
-    max-width: 15px;
-    max-height: 13px;
+    color: #000000;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    width: 16px;
+    height: 14px;
+    min-width: 16px;
+    min-height: 14px;
+    max-width: 16px;
+    max-height: 14px;
     padding: 0 !important;
+    margin: 0 !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 8px;
-    margin: 0;
+    font-size: 10px;
+    font-weight: normal;
     border-radius: 0;
     line-height: 1;
   }
+  .win2000-window-card.active-window .win2000-control-button {
+    color: #FFFFFF;
+  }
   .win2000-control-button:hover {
-    background-color: #D4D4D4;
-    border-top-color: #FFFFFF;
-    border-left-color: #FFFFFF;
-    border-right-color: #000000;
-    border-bottom-color: #000000;
-    box-shadow:
-      inset 1px 1px 0 #DFDFDF,
-      inset -1px -1px 0 #808080;
+    background-color: transparent;
+    font-weight: bold;
   }
   .win2000-control-button:active {
-    border-top-color: #000000;
-    border-left-color: #000000;
-    border-right-color: #DFDFDF;
-    border-bottom-color: #DFDFDF;
-    box-shadow:
-      inset -1px -1px 0 #FFFFFF,
-      inset 1px 1px 0 #404040;
-    background-color: #C0C0C0;
-  }
-  .win2000-control-button.close:active {
-    background-color: #B0B0B0;
+    background-color: transparent;
+    transform: translateY(1px);
   }
   .win2000-window-content { }
 
