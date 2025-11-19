@@ -77,6 +77,7 @@
   let cardElements: (HTMLElement | null)[] = [];
   let terminalElement: HTMLElement | null = null;
   let highestZIndex = 200; // Start at 200 to be above header (z-100) and footer (z-100)
+  let showTerminal = false;
 
   function bringToFront(index: number) {
     const element = cardElements[index];
@@ -89,6 +90,14 @@
     if (terminalElement) {
       terminalElement.style.zIndex = String(++highestZIndex);
     }
+  }
+
+  function toggleTerminal() {
+    showTerminal = !showTerminal;
+  }
+
+  function closeTerminal() {
+    showTerminal = false;
   }
 
   onMount(() => {
@@ -119,6 +128,12 @@
       <p class="text-muted-foreground md:text-lg">
         Tableau de bord opérationnel pour les ressources système et la navigation des projets.
       </p>
+      <div class="flex justify-center mt-4">
+        <Button on:click={toggleTerminal} variant="outline" size="sm" class="gap-2">
+          <Terminal class="h-4 w-4" />
+          {showTerminal ? 'Fermer' : 'Ouvrir'} Terminal
+        </Button>
+      </div>
     </header>
 
     <!-- Draggable Cards Container -->
@@ -172,20 +187,22 @@
     </div>
 
     <!-- Terminal Window (Draggable) -->
-    <div
-      bind:this={terminalElement}
-      class="terminal-window absolute"
-      style="z-index: 200; width: 700px;"
-      in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95, delay: 400 }}
-      use:draggable={{
-        handleSelector: '.terminal-titlebar',
-        initialPosition: { x: browser ? (window.innerWidth - 700) / 2 : 250, y: 850 },
-        onDragStart: () => bringTerminalToFront()
-      }}
-      on:mousedown={() => bringTerminalToFront()}
-    >
-      <HomeTerminal onFocus={bringTerminalToFront} />
-    </div>
+    {#if showTerminal}
+      <div
+        bind:this={terminalElement}
+        class="terminal-window absolute"
+        style="z-index: 200; width: 700px;"
+        in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
+        use:draggable={{
+          handleSelector: '.terminal-titlebar',
+          initialPosition: { x: browser ? (window.innerWidth - 700) / 2 : 250, y: 300 },
+          onDragStart: () => bringTerminalToFront()
+        }}
+        on:mousedown={() => bringTerminalToFront()}
+      >
+        <HomeTerminal onFocus={bringTerminalToFront} onClose={closeTerminal} />
+      </div>
+    {/if}
 
     <!-- Footer -->
     <footer class="text-center text-sm text-muted-foreground py-8 relative z-[100]">

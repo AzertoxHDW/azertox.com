@@ -9,6 +9,7 @@
   let isFocused = false;
 
   export let onFocus: (() => void) | undefined = undefined;
+  export let onClose: (() => void) | undefined = undefined;
 
   onMount(() => {
     // Show welcome message
@@ -89,7 +90,7 @@
   <!-- Terminal Title Bar -->
   <div class="terminal-titlebar">
     <div class="terminal-controls">
-      <div class="terminal-btn close"></div>
+      <button class="terminal-btn close" on:click|stopPropagation={() => onClose && onClose()}></button>
       <div class="terminal-btn minimize"></div>
       <div class="terminal-btn maximize"></div>
     </div>
@@ -155,11 +156,11 @@
   }
 
   .terminal-btn {
-    @apply w-3 h-3 rounded-full;
+    @apply w-3 h-3 rounded-full border-0 p-0;
   }
 
   .terminal-btn.close {
-    @apply bg-red-500/80 hover:bg-red-500;
+    @apply bg-red-500/80 hover:bg-red-500 cursor-pointer;
   }
 
   .terminal-btn.minimize {
