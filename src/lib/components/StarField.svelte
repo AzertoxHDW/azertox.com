@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { browser } from '$app/environment';
 
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D | null;
@@ -22,6 +23,7 @@
   const starCount = 200;
 
   function initStars() {
+    if (!canvas) return;
     stars = [];
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -66,7 +68,7 @@
         ctx!.moveTo(mouseX, mouseY);
         ctx!.lineTo(star.x, star.y);
         ctx!.strokeStyle = `hsla(175, 60%, 45%, ${opacity})`;
-        ctx!.lineWidth = 0.7;
+        ctx!.lineWidth = 0.5;
         ctx!.stroke();
       }
     });
@@ -114,11 +116,13 @@
   });
 
   onDestroy(() => {
-    if (animationId) cancelAnimationFrame(animationId);
-    window.removeEventListener('mousemove', handleMouseMove);
-    window.removeEventListener('mouseleave', handleMouseLeave);
-    window.removeEventListener('resize', handleResize);
-  });
+    if (browser) { 
+        if (animationId) window.cancelAnimationFrame(animationId); 
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseleave', handleMouseLeave);
+        window.removeEventListener('resize', handleResize);
+    }
+});
 </script>
 
 <canvas

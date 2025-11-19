@@ -12,6 +12,7 @@ type FlyAndScaleParams = {
 	x?: number;
 	start?: number;
 	duration?: number;
+	delay?: number;
 };
 
 export const flyAndScale = (
