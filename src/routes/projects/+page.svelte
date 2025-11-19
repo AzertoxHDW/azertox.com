@@ -57,7 +57,7 @@
         categories: ["creative", "pro"],
         status: "active",
         //liveUrl: "https://aztone.be",
-        imageUrl: "src/routes/projects/logo yt.png",
+        imageUrl: "/images/logo yt.png",
         startDate: "2022-11",
       },
       {
@@ -67,7 +67,7 @@
         categories: ["pro"],
         status: "active",
         //liveUrl: "https://welovethenight.event",
-        imageUrl: "src/routes/projects/wltn logo 2024 v2.png",
+        imageUrl: "/images/wltn logo 2024 v2.png",
         startDate: "2022-12",
       },
       //{
