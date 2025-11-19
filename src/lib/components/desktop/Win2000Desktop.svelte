@@ -362,16 +362,16 @@
               {#if windowItem.icon} <svelte:component this={windowItem.icon} class="w-3 h-3 mr-1.5 flex-shrink-0" /> {/if}
               <span class="text-xs font-bold select-none truncate">{windowItem.title}</span>
             </div>
-            <div class="window-controls-container flex items-center flex-shrink-0">
-              <Button variant="ghost" size="sm" class="win2000-control-button" on:click={(e) => toggleMinimize(windowItem.id, e)} aria-label="Minimize window">
-                <span class="font-['Marlett'] text-[10px]">0</span>
-              </Button>
-              <Button variant="ghost" size="sm" class="win2000-control-button" on:click={(e) => toggleMaximize(windowItem.id, e)} aria-label={windowItem.isMaximized ? "Restore window" : "Maximize window"}>
-                <span class="font-['Marlett'] text-[10px]">{windowItem.isMaximized ? '2' : '1'}</span>
-              </Button>
-              <Button variant="ghost" size="sm" class="win2000-control-button close" on:click={(e) => closeWindow(windowItem.id, e)} aria-label="Close window">
-                <span class="font-['Marlett'] text-[10px]">r</span>
-              </Button>
+            <div class="window-controls-container">
+              <button class="win2000-control-button" on:click={(e) => toggleMinimize(windowItem.id, e)} aria-label="Minimize window">
+                <span class="font-['Marlett']">0</span>
+              </button>
+              <button class="win2000-control-button" on:click={(e) => toggleMaximize(windowItem.id, e)} aria-label={windowItem.isMaximized ? "Restore window" : "Maximize window"}>
+                <span class="font-['Marlett']">{windowItem.isMaximized ? '2' : '1'}</span>
+              </button>
+              <button class="win2000-control-button close" on:click={(e) => closeWindow(windowItem.id, e)} aria-label="Close window">
+                <span class="font-['Marlett']">r</span>
+              </button>
             </div>
           </div> 
           <CardContent class="{windowItem.component ? 'p-0' : 'p-2'} bg-white text-black flex-grow overflow-auto win2000-window-content">
@@ -524,44 +524,39 @@
   }
 
   .window-controls-container {
-    padding: 0 3px 0 0;
-    margin-left: 8px;
-    gap: 0;
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    padding-right: 2px;
   }
 
   .win2000-control-button {
-    font-family: "Marlett", "Webdings";
-    color: #000000;
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-    width: 16px;
-    height: 14px;
-    min-width: 16px;
-    min-height: 14px;
-    max-width: 16px;
-    max-height: 14px;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex;
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
-    font-weight: normal;
-    border-radius: 0;
+    width: 14px;
+    height: 14px;
+    font-family: "Marlett", "Webdings";
+    font-size: 11px;
     line-height: 1;
+    color: #000000;
+    user-select: none;
   }
+
   .win2000-window-card.active-window .win2000-control-button {
     color: #FFFFFF;
   }
+
   .win2000-control-button:hover {
-    background-color: transparent;
     font-weight: bold;
   }
+
   .win2000-control-button:active {
-    background-color: transparent;
     transform: translateY(1px);
   }
+
   .win2000-window-content { }
 
   .win2000-taskbar {
