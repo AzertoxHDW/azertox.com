@@ -72,21 +72,15 @@
 
   let initialPositions = calculateInitialPositions();
 
-  // Only track z-index in store, let draggable handle positioning
-  let cardZIndices = writable<Record<number, number>>(
-    dashboardLinks.reduce((acc, _, idx) => {
-      acc[idx] = 10 + idx;
-      return acc;
-    }, {} as Record<number, number>)
-  );
-
+  // Store DOM references for direct z-index manipulation
+  let cardElements: (HTMLElement | null)[] = [];
   let highestZIndex = 10 + dashboardLinks.length;
 
   function bringToFront(index: number) {
-    cardZIndices.update(indices => {
-      indices[index] = ++highestZIndex;
-      return indices;
-    });
+    const element = cardElements[index];
+    if (element) {
+      element.style.zIndex = String(++highestZIndex);
+    }
   }
 
   onMount(() => {
@@ -123,8 +117,9 @@
     <div class="flex-1 relative w-full" style="min-height: calc(100vh - 200px);">
       {#each dashboardLinks as item, i}
         <div
+          bind:this={cardElements[i]}
           class="terminal-window absolute"
-          style="z-index: {$cardZIndices[i]}; width: {CARD_WIDTH}px;"
+          style="z-index: {10 + i}; width: {CARD_WIDTH}px;"
           in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
           use:draggable={{
             handleSelector: '.terminal-titlebar',
