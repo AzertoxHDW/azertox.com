@@ -120,6 +120,15 @@
 
 <StarField />
 <div class="w-full min-h-screen flex flex-col text-foreground">
+    <!-- Terminal Toggle Button (Top Right) -->
+    <button
+      on:click={toggleTerminal}
+      class="fixed top-8 right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+      aria-label="{showTerminal ? 'Fermer' : 'Ouvrir'} Terminal"
+    >
+      <Terminal class="h-5 w-5 text-primary" />
+    </button>
+
     <!-- Header -->
     <header class="text-center space-y-2 py-8 relative z-[100]" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
       <h1 class="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center">
@@ -128,12 +137,6 @@
       <p class="text-muted-foreground md:text-lg">
         Tableau de bord opérationnel pour les ressources système et la navigation des projets.
       </p>
-      <div class="flex justify-center mt-4">
-        <Button on:click={toggleTerminal} variant="outline" size="sm" class="gap-2">
-          <Terminal class="h-4 w-4" />
-          {showTerminal ? 'Fermer' : 'Ouvrir'} Terminal
-        </Button>
-      </div>
     </header>
 
     <!-- Draggable Cards Container -->
