@@ -11,8 +11,8 @@ on:
         type: string
   
   # Optional: Uncomment to auto-deploy on push to dev
-  # push:
-  #   branches: [ "dev" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   deploy:
