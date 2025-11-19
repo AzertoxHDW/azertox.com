@@ -40,7 +40,7 @@
       if (command) {
         // Process command
         if (command === 'help') {
-          output = 'Available commands:\n  help         - Show this help message\n  cls          - Clear the terminal\n  theme <name> - Change theme (system, light, dark, win2000)\n  theme list   - List available themes\n  whoami       - Display current user';
+          output = 'Available commands:\n  help         - Show this help message\n  cls          - Clear the terminal\n  theme <name> - Change theme (light, dark)\n  whoami       - Display current user';
         } else if (command === 'cls' || command === 'clear') {
           commandHistory = [];
           inputValue = '';
@@ -49,17 +49,12 @@
           output = 'User: Az\' (Dylan R.)\nRole: Developer & System Administrator\nLocation: Belgium';
         } else if (command.startsWith('theme ')) {
           const themeName = command.substring(6).trim();
-
-          if (themeName === 'list') {
-            output = 'Available themes:\n' + themes.map(t => `  ${t.value.padEnd(10)} - ${t.label}`).join('\n');
+          const theme = themes.find(t => t.value === themeName);
+          if (theme) {
+            setTheme(theme.value);
+            output = `Theme changed to: ${theme.label}`;
           } else {
-            const theme = themes.find(t => t.value === themeName);
-            if (theme) {
-              setTheme(theme.value);
-              output = `Theme changed to: ${theme.label}`;
-            } else {
-              output = `Error: Theme "${themeName}" not found. Type "theme list" to see available themes.`;
-            }
+            output = `Error: Theme "${themeName}" not found. Available: light, dark`;
           }
         } else {
           output = `Command not found: ${command}\nType "help" for available commands.`;
