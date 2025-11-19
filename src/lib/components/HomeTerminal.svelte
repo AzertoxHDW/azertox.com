@@ -119,19 +119,22 @@
 
       <div class="terminal-line input-line">
         <span class="prompt">$</span>
-        <input
-          bind:this={inputElement}
-          bind:value={inputValue}
-          on:keydown={handleCommand}
-          on:focus={() => isFocused = true}
-          on:blur={handleBlur}
-          class="terminal-input"
-          spellcheck="false"
-          autocomplete="off"
-        />
-        {#if isFocused}
-          <span class="cursor">_</span>
-        {/if}
+        <div class="input-wrapper">
+          <input
+            bind:this={inputElement}
+            bind:value={inputValue}
+            on:keydown={handleCommand}
+            on:focus={() => isFocused = true}
+            on:blur={handleBlur}
+            class="terminal-input"
+            spellcheck="false"
+            autocomplete="off"
+            size={inputValue.length || 1}
+          />
+          {#if isFocused}
+            <span class="cursor">_</span>
+          {/if}
+        </div>
       </div>
     </div>
   </div>
@@ -201,14 +204,19 @@
     @apply text-muted-foreground whitespace-pre-wrap mb-2 ml-6;
   }
 
+  .input-wrapper {
+    @apply flex items-center flex-grow;
+  }
+
   .terminal-input {
     all: unset;
-    @apply flex-grow text-foreground bg-transparent;
+    @apply text-foreground bg-transparent;
     caret-color: transparent;
+    min-width: 1ch;
   }
 
   .cursor {
-    @apply text-primary ml-1;
+    @apply text-primary;
     animation: blink 1s infinite;
   }
 
