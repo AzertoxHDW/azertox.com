@@ -6,6 +6,7 @@
   import { flyAndScale } from "$lib/utils.js";
   import { Terminal, UserCircle, ServerIcon, FolderGit2, ArrowRight, Gem } from "lucide-svelte";
   import StarField from '$lib/components/StarField.svelte';
+  import HomeTerminal from '$lib/components/HomeTerminal.svelte';
   import { draggable } from '$lib/actions/draggable';
   import { writable } from 'svelte/store';
   import { onMount } from 'svelte';
@@ -161,6 +162,11 @@
           </div>
         </div>
       {/each}
+    </div>
+
+    <!-- Terminal Section -->
+    <div class="container mx-auto px-4 py-8 relative z-[100]" in:flyAndScale={{ y: 20, duration: 500, start: 0.95, delay: 400 }}>
+      <HomeTerminal />
     </div>
 
     <!-- Footer -->

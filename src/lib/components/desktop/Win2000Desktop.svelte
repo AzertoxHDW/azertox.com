@@ -12,10 +12,12 @@
 	import { goto } from '$app/navigation';
   import MyComputerWindow from './MyComputerWindow.svelte';
   import MyDocumentsWindow from './MyDocumentsWindow.svelte';
+  import TerminalWindow from './TerminalWindow.svelte';
   import MyComputerIcon from './icons/MyComputerIcon.svelte';
   import MyDocumentsIcon from './icons/MyDocumentsIcon.svelte';
   import InternetExplorerIcon from './icons/InternetExplorerIcon.svelte';
   import ControlPanelIcon from './icons/ControlPanelIcon.svelte';
+  import CommandPromptIcon from './icons/CommandPromptIcon.svelte';
 
   interface WindowInstance {
     id: number;
