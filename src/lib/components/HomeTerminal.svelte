@@ -40,13 +40,17 @@
       if (command) {
         // Process command
         if (command === 'help') {
-          output = 'Available commands:\n  help         - Show this help message\n  cls          - Clear the terminal\n  theme <name> - Change theme (light, dark)\n  whoami       - Display current user';
+          output = 'Available commands:\n  help         - Show this help message\n  cls          - Clear the terminal\n  light        - Switch to light theme\n  dark         - Switch to dark theme\n  whoami       - Display current user';
         } else if (command === 'cls' || command === 'clear') {
           commandHistory = [];
           inputValue = '';
           return;
         } else if (command === 'whoami') {
           output = 'User: Az\' (Dylan R.)\nRole: Developer & System Administrator\nLocation: Belgium';
+        } else if (command === 'light' || command === 'dark') {
+          setTheme(command);
+          const theme = themes.find(t => t.value === command);
+          output = theme ? `Theme changed to: ${theme.label}` : `Theme changed to: ${command}`;
         } else if (command.startsWith('theme ')) {
           const themeName = command.substring(6).trim();
           const theme = themes.find(t => t.value === themeName);
