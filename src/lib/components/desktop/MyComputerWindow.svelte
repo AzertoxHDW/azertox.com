@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { HardDriveIcon, FolderIcon, CdIcon, NetworkIcon } from 'lucide-svelte';
+  import { HardDriveIcon, FolderIcon, Disc, NetworkIcon } from 'lucide-svelte';
 </script>
 
 <div class="my-computer-content">
@@ -43,7 +43,7 @@
     <p class="text-xs font-bold mb-2">Devices with Removable Storage</p>
     <div class="drives-grid grid grid-cols-2 gap-3">
       <button class="drive-item flex flex-col items-center p-2 hover:bg-blue-100 border border-transparent hover:border-blue-300 rounded">
-        <CdIcon class="w-8 h-8 text-gray-700 mb-1" />
+        <Disc class="w-8 h-8 text-gray-700 mb-1" />
         <span class="text-xs font-bold">CD Drive (E:)</span>
       </button>
       <button class="drive-item flex flex-col items-center p-2 hover:bg-blue-100 border border-transparent hover:border-blue-300 rounded">
