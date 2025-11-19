@@ -39,6 +39,11 @@
   ];
 </script>
 
+<svelte:head>
+    <title>Az'</title>
+    <meta name="description" content="Salut ! Bienvenue sur mon site" />
+</svelte:head>
+
 <style lang="postcss">
   /* Styles for the dashboard cards, can be kept from previous version */
   .dashboard-card {
