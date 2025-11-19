@@ -353,23 +353,25 @@
         aria-modal="false"
       >
         <Card class="w-full h-full flex flex-col shadow-md win2000-window-card {windowItem.isActive ? 'active-window' : ''}">
-          <div 
+          <div
             class="window-title-bar p-1 flex items-center justify-between {windowItem.isMaximized ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'}"
             id="window-title-{windowItem.id}"
             on:dblclick={(e) => { if (!windowItem.isMaximized) toggleMaximize(windowItem.id, e); }}
           >
-            <div class="flex items-center pl-1 flex-grow min-w-0"> 
+            <div class="flex items-center pl-1 flex-grow min-w-0">
               {#if windowItem.icon} <svelte:component this={windowItem.icon} class="w-3 h-3 mr-1.5 flex-shrink-0" /> {/if}
               <span class="text-xs font-bold select-none truncate">{windowItem.title}</span>
             </div>
-            <div class="flex items-center flex-shrink-0"> 
+            <div class="window-controls-container flex items-center flex-shrink-0">
               <Button variant="ghost" size="sm" class="win2000-control-button" on:click={(e) => toggleMinimize(windowItem.id, e)} aria-label="Minimize window">
-                <span class="font-['Marlett'] text-[10px]">0</span> </Button>
+                <span class="font-['Marlett'] text-[10px]">0</span>
+              </Button>
               <Button variant="ghost" size="sm" class="win2000-control-button" on:click={(e) => toggleMaximize(windowItem.id, e)} aria-label={windowItem.isMaximized ? "Restore window" : "Maximize window"}>
-                <span class="font-['Marlett'] text-[10px]">{windowItem.isMaximized ? '2' : '1'}</span> 
+                <span class="font-['Marlett'] text-[10px]">{windowItem.isMaximized ? '2' : '1'}</span>
               </Button>
               <Button variant="ghost" size="sm" class="win2000-control-button close" on:click={(e) => closeWindow(windowItem.id, e)} aria-label="Close window">
-                <span class="font-['Marlett'] text-[10px]">r</span> </Button>
+                <span class="font-['Marlett'] text-[10px]">r</span>
+              </Button>
             </div>
           </div> 
           <CardContent class="{windowItem.component ? 'p-0' : 'p-2'} bg-white text-black flex-grow overflow-auto win2000-window-content">
@@ -521,12 +523,43 @@
       text-shadow: none;
   }
 
+  .window-controls-container {
+    padding: 0 2px 0 4px;
+    margin-right: 2px;
+    border-left: 1px solid #FFFFFF;
+    gap: 2px;
+  }
+
   .win2000-control-button {
     font-family: "Marlett", "Webdings";
     color: black;
     background-color: #C0C0C0;
     border-width: 1px;
     border-style: solid;
+    border-top-color: #DFDFDF;
+    border-left-color: #DFDFDF;
+    border-right-color: #404040;
+    border-bottom-color: #404040;
+    box-shadow:
+      inset 1px 1px 0 #FFFFFF,
+      inset -1px -1px 0 #808080;
+    width: 15px;
+    height: 13px;
+    min-width: 15px;
+    min-height: 13px;
+    max-width: 15px;
+    max-height: 13px;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    margin: 0;
+    border-radius: 0;
+    line-height: 1;
+  }
+  .win2000-control-button:hover {
+    background-color: #D4D4D4;
     border-top-color: #FFFFFF;
     border-left-color: #FFFFFF;
     border-right-color: #000000;
@@ -534,30 +567,16 @@
     box-shadow:
       inset 1px 1px 0 #DFDFDF,
       inset -1px -1px 0 #808080;
-    width: 16px;
-    height: 14px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-    margin-left: 2px;
-    border-radius: 0;
-    line-height: 1;
-  }
-  .win2000-control-button:hover {
-    background-color: #D0D0D0;
   }
   .win2000-control-button:active {
     border-top-color: #000000;
     border-left-color: #000000;
-    border-right-color: #FFFFFF;
-    border-bottom-color: #FFFFFF;
+    border-right-color: #DFDFDF;
+    border-bottom-color: #DFDFDF;
     box-shadow:
-      inset -1px -1px 0 #DFDFDF,
-      inset 1px 1px 0 #808080;
-    padding-left: 1px;
-    padding-top: 1px;
+      inset -1px -1px 0 #FFFFFF,
+      inset 1px 1px 0 #404040;
+    background-color: #C0C0C0;
   }
   .win2000-control-button.close:active {
     background-color: #B0B0B0;
