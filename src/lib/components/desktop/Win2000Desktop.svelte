@@ -489,84 +489,117 @@
   }
 
   .win2000-window-card {
-    border-top: 1px solid #FFFFFF;
-    border-left: 1px solid #FFFFFF;
-    border-right: 1px solid #404040;
-    border-bottom: 1px solid #404040;
-    box-shadow: 1px 1px 0px #808080; 
-    border-radius: 0px; 
-    background-color: #C0C0C0; 
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-right: 2px solid #0A0A0A;
+    border-bottom: 2px solid #0A0A0A;
+    box-shadow: none;
+    border-radius: 0px;
+    background-color: #C0C0C0;
+    outline: 1px solid #808080;
   }
   .win2000-window-card.active-window .window-title-bar {
-    background-color: #000080; 
+    background: linear-gradient(to right, #0A246A 0%, #0E4C9C 50%, #1084D0 100%);
   }
 
   .window-title-bar {
-    background-color: #C0C0C0; 
-    color: #808080; 
+    background: linear-gradient(to right, #808080 0%, #A0A0A0 50%, #C0C0C0 100%);
+    color: #C0C0C0;
     padding: 2px 3px;
-    height: 20px; 
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 1px solid #FFFFFF;
   }
   .win2000-window-card.active-window .window-title-bar span {
-      color: white; 
+      color: white;
+      font-weight: bold;
   }
   .window-title-bar span {
-      line-height: 1; 
+      line-height: 1;
+      text-shadow: none;
   }
 
   .win2000-control-button {
-    font-family: "Marlett", "Webdings"; 
+    font-family: "Marlett", "Webdings";
     color: black;
-    background-color: #808080;
+    background-color: #C0C0C0;
     border-width: 1px;
-    border-style: outset;
-    border-color: #FFFFFF #808080 #808080 #FFFFFF; 
+    border-style: solid;
+    border-top-color: #FFFFFF;
+    border-left-color: #FFFFFF;
+    border-right-color: #000000;
+    border-bottom-color: #000000;
+    box-shadow:
+      inset 1px 1px 0 #DFDFDF,
+      inset -1px -1px 0 #808080;
     width: 16px;
-    height: 16px;
+    height: 14px;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px; 
+    font-size: 9px;
     margin-left: 2px;
     border-radius: 0;
+    line-height: 1;
+  }
+  .win2000-control-button:hover {
+    background-color: #D0D0D0;
   }
   .win2000-control-button:active {
-      border-style: inset;
-      border-color: #808080 #FFFFFF #FFFFFF #808080;
-      background-color: #B0B0B0;
+    border-top-color: #000000;
+    border-left-color: #000000;
+    border-right-color: #FFFFFF;
+    border-bottom-color: #FFFFFF;
+    box-shadow:
+      inset -1px -1px 0 #DFDFDF,
+      inset 1px 1px 0 #808080;
+    padding-left: 1px;
+    padding-top: 1px;
   }
-  .win2000-control-button.close:hover {
-      background-color: #E04343; 
-      color: white;
+  .win2000-control-button.close:active {
+    background-color: #B0B0B0;
   }
   .win2000-window-content { }
 
   .win2000-taskbar {
-    background-color: #C0C0C0; 
-    border-top: 1px solid #FFFFFF;
-    box-shadow: inset 0 1px 0 #DFDFDF; 
+    background-color: #C0C0C0;
+    border-top: 2px solid #FFFFFF;
+    box-shadow: inset 0 1px 0 #DFDFDF;
   }
   .win2000-start-button {
     background-color: #C0C0C0;
     border: 1px solid;
-    border-color: #FFFFFF #808080 #808080 #FFFFFF; 
-    box-shadow: 1px 1px 1px #00000080; 
+    border-top-color: #FFFFFF;
+    border-left-color: #FFFFFF;
+    border-right-color: #000000;
+    border-bottom-color: #000000;
+    box-shadow:
+      inset 1px 1px 0 #DFDFDF,
+      inset -1px -1px 0 #808080;
     color: black;
+    font-weight: bold;
+  }
+  .win2000-start-button:hover {
+    background-color: #D0D0D0;
   }
   .win2000-start-button.active, /* Style for when start menu is open */
   .win2000-start-button:active {
-    border-color: #808080 #FFFFFF #FFFFFF #808080; 
-    background-color: #B0B0B0;
-    box-shadow: inset 1px 1px 0px #00000030; 
+    border-top-color: #000000;
+    border-left-color: #000000;
+    border-right-color: #FFFFFF;
+    border-bottom-color: #FFFFFF;
+    box-shadow:
+      inset -1px -1px 0 #DFDFDF,
+      inset 1px 1px 0 #808080;
+    background-color: #C0C0C0;
   }
   .taskbar-divider {
     border-left: 1px solid #808080;
     border-right: 1px solid #FFFFFF;
-    height: 80%; 
+    height: 80%;
     margin: 0 2px;
     align-self: center;
   }
@@ -574,23 +607,41 @@
   .taskbar-tab {
     background-color: #C0C0C0;
     border: 1px solid;
-    border-color: #FFFFFF #808080 #808080 #FFFFFF; 
-    box-shadow: 1px 1px 0 #00000030;
+    border-top-color: #FFFFFF;
+    border-left-color: #FFFFFF;
+    border-right-color: #808080;
+    border-bottom-color: #808080;
+    box-shadow:
+      inset 1px 1px 0 #DFDFDF,
+      inset -1px -1px 0 #404040;
     color: black;
-    margin-right: 1px; 
+    margin-right: 2px;
   }
-  .taskbar-tab.active { 
-    border-color: #808080 #FFFFFF #FFFFFF #808080; 
-    background-color: #B0B0B0; 
+  .taskbar-tab:hover {
+    background-color: #D0D0D0;
+  }
+  .taskbar-tab.active {
+    border-top-color: #808080;
+    border-left-color: #808080;
+    border-right-color: #FFFFFF;
+    border-bottom-color: #FFFFFF;
+    box-shadow:
+      inset -1px -1px 0 #DFDFDF,
+      inset 1px 1px 0 #404040;
+    background-color: #C0C0C0;
     font-weight: bold;
-    box-shadow: inset 1px 1px 1px #00000030; 
   }
   .system-tray {
     border: 1px solid;
-    border-color: #808080 #FFFFFF #FFFFFF #808080; 
+    border-top-color: #808080;
+    border-left-color: #808080;
+    border-right-color: #FFFFFF;
+    border-bottom-color: #FFFFFF;
+    box-shadow: inset 1px 1px 0 #404040;
     padding: 1px 4px;
-    margin: 1px 2px; 
+    margin: 1px 2px;
     color: black;
+    background-color: #C0C0C0;
   }
 
   /* Start Menu Styles */
