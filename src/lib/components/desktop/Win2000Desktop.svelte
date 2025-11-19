@@ -3,12 +3,15 @@
   import { Card, CardHeader, CardTitle, CardContent } from '$lib/components/ui/card';
   import { Button } from '$lib/components/ui/button';
   import { draggable } from '$lib/actions/draggable';
+  import { resizable } from '$lib/actions/resizable';
   import { XIcon, ComputerIcon, FolderOpenIcon, GlobeIcon, FilesIcon, InfoIcon, Settings2Icon, LogOutIcon, Maximize2Icon, Minimize2Icon, ChevronsRightIcon, ServerIcon, UserCircle as UserCircleIcon, Icon } from 'lucide-svelte';
   import { writable, get } from 'svelte/store';
   import { BROWSER } from 'esm-env';
   import { currentTheme, setTheme, themes, type Theme, type ThemeOption } from "$lib/themeStore"; // For "Shut Down"
   import { flyAndScale } from '$lib/utils';
 	import { goto } from '$app/navigation';
+  import MyComputerWindow from './MyComputerWindow.svelte';
+  import MyDocumentsWindow from './MyDocumentsWindow.svelte';
 
   interface WindowInstance {
     id: number;
@@ -32,37 +35,40 @@
   let highestZIndex = 10; 
 
   let showStartMenu = writable(false);
+  let selectedIconIndex: number | null = null;
 
   const desktopIcons = [
-    { 
-      name: "My Computer", 
-      icon: ComputerIcon, 
+    {
+      name: "My Computer",
+      icon: ComputerIcon,
       action: () => openWindow({
-        title: "My Computer", 
-        content: "", 
-        icon: ComputerIcon, 
-        initialPos: {x: 50, y: 50}
-      }) 
+        title: "My Computer",
+        component: MyComputerWindow,
+        icon: ComputerIcon,
+        initialPos: {x: 50, y: 50},
+        initialSize: {width: "550px", height: "450px"}
+      })
     },
-    { 
-      name: "My Documents", 
-      icon: FolderOpenIcon, 
+    {
+      name: "My Documents",
+      icon: FolderOpenIcon,
       action: () => openWindow({
-        title: "My Documents", 
-        content: "Projects\nArticles\nPersonal Files...", 
+        title: "My Documents",
+        component: MyDocumentsWindow,
         icon: FolderOpenIcon,
-        initialPos: {x: 100, y: 100}
-      }) 
+        initialPos: {x: 100, y: 100},
+        initialSize: {width: "500px", height: "400px"}
+      })
     },
-    { 
+    {
       name: "Internet Explorer",
-      icon: GlobeIcon, 
+      icon: GlobeIcon,
       action: () => openWindow({
-        title: "Azertox Web Browser", 
-        content: "Welcome to the Azertox Web!\n\nNavigating to: azertox.com...\n\n(This is a simulated browser window)", 
+        title: "Azertox Web Browser",
+        content: "Welcome to the Azertox Web!\n\nNavigating to: azertox.com...\n\n(This is a simulated browser window)",
         icon: GlobeIcon,
         initialPos: {x: 150, y: 150}
-      }) 
+      })
     },
     {
       name: "Control Panel",
@@ -258,6 +264,24 @@
     }
   }
 
+  function handleIconClick(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    selectedIconIndex = index;
+  }
+
+  function handleIconDoubleClick(index: number) {
+    selectedIconIndex = null;
+    desktopIcons[index].action();
+  }
+
+  function handleDesktopClick(event: MouseEvent) {
+    // Deselect icon when clicking on desktop background
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('win2000-desktop') || target.classList.contains('desktop-icons-container')) {
+      selectedIconIndex = null;
+    }
+  }
+
   onMount(() => {
     if (BROWSER) {
       clockInterval = window.setInterval(() => {
@@ -276,16 +300,17 @@
 
 </script>
 
-<div class="win2000-desktop fixed inset-0 overflow-hidden select-none" bind:this={desktopEl}>
+<div class="win2000-desktop fixed inset-0 overflow-hidden select-none" bind:this={desktopEl} on:click={handleDesktopClick}>
   <div class="desktop-icons-container p-4 flex flex-col flex-wrap items-start content-start h-full gap-y-1 gap-x-1">
-    {#each desktopIcons as item (item.name)}
+    {#each desktopIcons as item, i (item.name)}
       <button
-        class="desktop-icon flex flex-col items-center w-[72px] text-center p-1 rounded hover:bg-blue-700/30 focus:bg-blue-700/50 focus:outline-none"
-        on:click={item.action}
-        on:dblclick={item.action} title={item.name}
+        class="desktop-icon flex flex-col items-center w-[72px] text-center p-1 rounded {selectedIconIndex === i ? 'selected' : ''}"
+        on:click={(e) => handleIconClick(i, e)}
+        on:dblclick={() => handleIconDoubleClick(i)}
+        title={item.name}
       >
         <svelte:component this={item.icon} class="w-8 h-8 mb-0.5 text-white" stroke-width="1.5"/>
-        <span class="text-xs text-white truncate w-full bg-transparent px-0.5 py-px">{item.name}</span>
+        <span class="text-xs text-white truncate w-full px-0.5 py-px">{item.name}</span>
       </button>
     {/each}
   </div>
@@ -293,21 +318,33 @@
   {#if BROWSER} {#each $openWindows as windowItem (windowItem.id)}
       <div
         class="window-wrapper absolute {windowItem.isMinimized ? 'hidden' : 'block'} {windowItem.isMaximized ? 'maximized-window' : ''}"
-        use:draggable={{ 
-            handleSelector: '.window-title-bar', 
+        use:draggable={{
+            handleSelector: '.window-title-bar',
             initialPosition: {x: windowItem.x, y: windowItem.y },
-            bounds: desktopEl, 
+            bounds: desktopEl,
             disabled: windowItem.isMaximized,
             onDragStart: () => bringToFront(windowItem.id),
             onDragEnd: (_, node, newPos) => {
                 openWindows.update(ws => ws.map(w => w.id === windowItem.id ? {...w, x: newPos.x, y: newPos.y} : w));
             }
         }}
+        use:resizable={{
+            minWidth: 300,
+            minHeight: 200,
+            disabled: windowItem.isMaximized,
+            onResizeEnd: (_, node, newSize) => {
+                openWindows.update(ws => ws.map(w => w.id === windowItem.id ? {
+                    ...w,
+                    width: `${newSize.width}px`,
+                    height: `${newSize.height}px`
+                } : w));
+            }
+        }}
         style="width: {windowItem.width}; height: {windowItem.height}; z-index: {windowItem.zIndex}; left: {windowItem.x}px; top: {windowItem.y}px;"
         on:mousedown={() => bringToFront(windowItem.id)}
         role="dialog"
         aria-labelledby="window-title-{windowItem.id}"
-        aria-modal="false" 
+        aria-modal="false"
       >
         <Card class="w-full h-full flex flex-col shadow-md win2000-window-card {windowItem.isActive ? 'active-window' : ''}">
           <div 
@@ -329,7 +366,7 @@
                 <span class="font-['Marlett'] text-[10px]">r</span> </Button>
             </div>
           </div> 
-          <CardContent class="p-2 bg-white text-black flex-grow overflow-auto win2000-window-content">
+          <CardContent class="{windowItem.component ? 'p-0' : 'p-2'} bg-white text-black flex-grow overflow-auto win2000-window-content">
             {#if windowItem.component}
               <svelte:component this={windowItem.component} />
             {:else if windowItem.title === "Azertox Web Browser" && windowItem.content?.includes("azertox.com")}
@@ -345,26 +382,40 @@
   {/if}
 
   {#if $showStartMenu && BROWSER}
-    <div id="start-menu" class="win2000-start-menu fixed bottom-7 left-0 w-48 bg-gray-300 border-t-2 border-l-2 border-white border-r-2 border-b-2 border-gray-500 shadow-lg z-[10001] flex flex-col"
+    <div id="start-menu" class="win2000-start-menu fixed bottom-7 left-0 w-52 bg-gray-300 shadow-lg z-[10001] flex"
          use:flyAndScale={{y: 20, duration:150, start:0.9}}>
-      <div class="start-menu-sidebar bg-blue-800 text-white p-2 flex items-center justify-center">
-        <span class="font-bold text-sm transform whitespace-nowrap">Windown 2000</span>
+      <div class="start-menu-sidebar">
+        <span class="font-bold text-sm whitespace-nowrap">Windows 2000</span>
       </div>
-      <div class="start-menu-items flex-grow p-0.5">
-        {#each startMenuItems as item, i (item.label || `sep-${i}`)}
-          {#if item.isSeparator}
-            <hr class="border-t-gray-500 border-b-white my-0.5" />
-          {:else}
-            <button 
-              class="start-menu-item w-full text-left px-2 py-1 hover:bg-blue-700 hover:text-white focus:bg-blue-700 focus:text-white focus:outline-none text-xs flex items-center"
-              on:click={() => handleStartMenuClick(item.action, item.href)}
-            >
-              {#if item.icon} <svelte:component this={item.icon} class="w-4 h-4 mr-2" /> {/if}
-              {item.label}
-              {#if item.href && !item.action} <ChevronsRightIcon class="w-3 h-3 ml-auto opacity-70" /> {/if}
-            </button>
-          {/if}
-        {/each}
+      <div class="start-menu-content flex-grow flex flex-col">
+        <div class="start-menu-header px-3 py-2 bg-gradient-to-b from-blue-600 to-blue-700 text-white border-b border-blue-900">
+          <div class="flex items-center gap-2">
+            <UserCircleIcon class="w-8 h-8" />
+            <div class="text-xs">
+              <div class="font-bold">Administrateur</div>
+            </div>
+          </div>
+        </div>
+        <div class="start-menu-items flex-grow p-1">
+          {#each startMenuItems as item, i (item.label || `sep-${i}`)}
+            {#if item.isSeparator}
+              <div class="separator-container px-1 my-1">
+                <hr class="separator-line" />
+              </div>
+            {:else}
+              <button
+                class="start-menu-item w-full text-left px-3 py-1.5 text-xs flex items-center gap-2 rounded-sm"
+                on:click={() => handleStartMenuClick(item.action, item.href)}
+              >
+                <div class="icon-box flex items-center justify-center w-5 h-5 flex-shrink-0">
+                  {#if item.icon} <svelte:component this={item.icon} class="w-4 h-4" /> {/if}
+                </div>
+                <span class="flex-grow">{item.label}</span>
+                {#if item.href && !item.action} <ChevronsRightIcon class="w-3 h-3 opacity-70" /> {/if}
+              </button>
+            {/if}
+          {/each}
+        </div>
       </div>
     </div>
   {/if}
@@ -407,11 +458,23 @@
   }
 
   .desktop-icons-container { }
-  .desktop-icon { color: white; }
-  .desktop-icon:focus span, 
-  .desktop-icon:active span {
-      background-color: #000080; 
-      color: white;
+  .desktop-icon {
+    color: white;
+    transition: background-color 0.1s;
+  }
+  .desktop-icon:hover {
+    background-color: rgba(0, 0, 128, 0.3);
+  }
+  .desktop-icon.selected {
+    background-color: #000080;
+  }
+  .desktop-icon.selected span {
+    background-color: #000080;
+    color: white;
+  }
+  .desktop-icon:focus {
+    outline: 1px dotted rgba(255, 255, 255, 0.5);
+    outline-offset: -2px;
   }
 
   .window-wrapper.maximized-window {
@@ -526,31 +589,76 @@
 
   /* Start Menu Styles */
   .win2000-start-menu {
-    display: flex; /* Uses flex for sidebar and items */
-    height: auto; /* Adjust height based on content, or set a max-height */
-    max-height: 400px; /* Example max height */
+    display: flex;
+    height: auto;
+    max-height: 500px;
+    border-top: 2px solid #FFFFFF;
+    border-left: 2px solid #FFFFFF;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
   }
   .start-menu-sidebar {
-    width: 24px; /* Width of the vertical "Windows 2000" text bar */
-    writing-mode: vertical-rl; /* Rotate text */
+    width: 26px;
+    background: linear-gradient(to bottom, #1e3a8a 0%, #1e40af 50%, #1e3a8a 100%);
+    writing-mode: vertical-rl;
     text-orientation: mixed;
-    transform: rotate(180deg); /* Correct orientation after rotation */
+    transform: rotate(180deg);
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-right: 1px solid #808080; /* Separator */
+    justify-content: flex-start;
+    padding: 8px 2px;
+    color: white;
+    border-right: 1px solid #000;
   }
   .start-menu-sidebar span {
-      letter-spacing: 1px;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+  .start-menu-content {
+    background-color: #D4D0C8;
+  }
+  .start-menu-header {
+    min-height: 48px;
   }
   .start-menu-items {
-    /* flex-grow takes remaining space */
+    background-color: #D4D0C8;
   }
   .start-menu-item {
-    border: 1px solid transparent; /* For focus indication */
+    border: 1px solid transparent;
+    transition: all 0.05s;
+    color: #000;
   }
-  .start-menu-item:hover, .start-menu-item:focus {
-    background-color: #000080; /* W2K selection blue */
+  .start-menu-item:hover {
+    background-color: #000080;
     color: white;
+  }
+  .start-menu-item:hover .icon-box {
+    filter: brightness(1.2);
+  }
+  .start-menu-item:active {
+    background-color: #00006B;
+  }
+  .separator-container {
+    pointer-events: none;
+  }
+  .separator-line {
+    border: none;
+    border-top: 1px solid #808080;
+    border-bottom: 1px solid #FFFFFF;
+    height: 2px;
+    margin: 0;
+  }
+
+  /* Resize Handle Styles */
+  :global(.window-wrapper .resize-handle) {
+    background-color: transparent;
+  }
+  :global(.window-wrapper .resize-se) {
+    /* Bottom-right corner gets a visible indicator */
+    cursor: nwse-resize !important;
+  }
+  :global(.window-wrapper:hover .resize-handle) {
+    /* Optional: make handles slightly visible on hover */
   }
 </style>
