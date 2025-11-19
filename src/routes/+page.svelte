@@ -46,11 +46,8 @@
 </svelte:head>
 
 <style lang="postcss">
-  /* Styles for the dashboard cards, can be kept from previous version */
-  .dashboard-card {
-    @apply bg-card border border-border hover:border-primary/70 hover:shadow-xl transition-all duration-300 ease-in-out;
-  }
-  .dashboard-card .icon-wrapper {
+  /* Styles for the icon wrappers in terminal cards */
+  .icon-wrapper {
     @apply mb-3 p-3 bg-primary/10 rounded-lg text-primary inline-flex;
   }
 </style>
@@ -70,23 +67,39 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8">
         {#each dashboardLinks as item, i}
         <div in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}>
-            <Card class="dashboard-card h-full flex flex-col">
-              <CardHeader>
-                <div class="icon-wrapper">
-                    <svelte:component this={item.icon} class="h-7 w-7" />
+            <div class="terminal-window h-full">
+              <!-- Terminal Title Bar -->
+              <div class="terminal-titlebar">
+                <div class="terminal-controls">
+                  <div class="terminal-btn close"></div>
+                  <div class="terminal-btn minimize"></div>
+                  <div class="terminal-btn maximize"></div>
                 </div>
-                <CardTitle class="text-xl !mt-2 group-hover:text-primary">{item.title}</CardTitle>
-              </CardHeader>
-              <CardContent class="flex-grow">
-                <p class="text-muted-foreground text-sm mb-3">{item.description}</p>
-                <p class="text-xs font-mono text-primary/80 bg-muted/50 p-2 rounded">{item.details}</p>
-              </CardContent>
-              <div class="p-4 pt-2">
-                <Button href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} class="w-full" variant="outline">
-                  {item.external ? 'Accéder' : 'Explorer'} <ArrowRight class="ml-2 h-4 w-4" />
-                </Button>
+                <div class="terminal-title">~ {item.title.toLowerCase().replace(/\s+/g, '-')} ~</div>
               </div>
-            </Card>
+
+              <!-- Terminal Content -->
+              <div class="terminal-content terminal-screen-curve">
+                <div class="terminal-scanlines"></div>
+                <Card class="h-full flex flex-col !border-0 !shadow-none !rounded-none">
+                  <CardHeader>
+                    <div class="icon-wrapper">
+                        <svelte:component this={item.icon} class="h-7 w-7" />
+                    </div>
+                    <CardTitle class="text-xl !mt-2 group-hover:text-primary">{item.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent class="flex-grow">
+                    <p class="text-muted-foreground text-sm mb-3">{item.description}</p>
+                    <p class="text-xs font-mono text-primary/80 bg-muted/50 p-2 rounded">{item.details}</p>
+                  </CardContent>
+                  <div class="p-4 pt-2">
+                    <Button href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} class="w-full" variant="outline">
+                      {item.external ? 'Accéder' : 'Explorer'} <ArrowRight class="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </Card>
+              </div>
+            </div>
           </div>
         {/each}
       </div>
