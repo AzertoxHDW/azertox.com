@@ -29,8 +29,8 @@ ssh -o StrictHostKeyChecking=no "$REMOTE_USER@$REMOTE_HOST" << EOF
     fi
 
     # Ensure parent directory exists
-    mkdir -p "/var/www"
-    cd "/var/www"
+    mkdir -p "/root/"
+    cd "/root/"
 
     # Clone the repository
     echo "Cloning repository..."
