@@ -220,6 +220,7 @@
     align-items: center;
     gap: 0.5rem;
     height: 2rem;
+    user-select: none;
   }
 
   .dark .terminal-titlebar {

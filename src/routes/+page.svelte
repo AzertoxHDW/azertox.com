@@ -6,8 +6,16 @@
   import { flyAndScale } from "$lib/utils.js";
   import { Terminal, UserCircle, ServerIcon, FolderGit2, ArrowRight, Gem } from "lucide-svelte";
   import StarField from '$lib/components/StarField.svelte';
+  import { draggable } from '$lib/actions/draggable';
+  import { writable } from 'svelte/store';
 
-  // Dashboard links remain the same as previous version
+  interface CardPosition {
+    x: number;
+    y: number;
+    zIndex: number;
+  }
+
+  // Dashboard links with initial positions
   const dashboardLinks = [
     {
         href: "/about",
@@ -15,13 +23,17 @@
         description: "Afficher les informations sur cet utilisateur.",
         icon: UserCircle,
         details: "Utilisateur: Az' (Administrateur)",
+        initialX: 100,
+        initialY: 100,
     },
     {
         href: "/infra",
         title: "Poste de travail",
         description: "Afficher les serveurs et l'infrastructure.",
-        icon: ServerIcon, // Changed from Settings2 to ServerIcon for consistency
+        icon: ServerIcon,
         details: "Domaine: WORKGROUP | IP: Automatique",
+        initialX: 500,
+        initialY: 100,
     },
     {
         href: "/projects",
@@ -29,6 +41,8 @@
         description: "Parcourir les projets et les développements en cours.",
         icon: FolderGit2,
         details: "Espace libre: 2.4TB",
+        initialX: 100,
+        initialY: 400,
     },
     {
         href: "/museum",
@@ -36,8 +50,26 @@
         description: "Afficher les artefacts du musée.",
         icon: Gem,
         details: "Password: LOUVRE",
+        initialX: 500,
+        initialY: 400,
     }
   ];
+
+  let cardPositions = writable<Record<number, CardPosition>>(
+    dashboardLinks.reduce((acc, link, idx) => {
+      acc[idx] = { x: link.initialX, y: link.initialY, zIndex: 10 + idx };
+      return acc;
+    }, {} as Record<number, CardPosition>)
+  );
+
+  let highestZIndex = 10 + dashboardLinks.length;
+
+  function bringToFront(index: number) {
+    cardPositions.update(positions => {
+      positions[index].zIndex = ++highestZIndex;
+      return positions;
+    });
+  }
 </script>
 
 <svelte:head>
@@ -53,60 +85,69 @@
 </style>
 
 <StarField />
-<div class="w-full min-h-[calc(100vh-10rem)] flex flex-col items-center justify-center text-foreground p-4">
-    <div class="w-full max-w-5xl space-y-10 md:space-y-16" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
-      <header class="text-center space-y-2">
-        <h1 class="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center">
-            <Terminal class="h-10 w-10 mr-3 text-primary" /> Interface Système: <span class="ml-2 text-primary">Az'</span>
-        </h1>
-        <p class="text-muted-foreground md:text-lg">
-          Tableau de bord opérationnel pour les ressources système et la navigation des projets.
-        </p>
-      </header>
+<div class="w-full min-h-screen flex flex-col text-foreground">
+    <!-- Header -->
+    <header class="text-center space-y-2 py-8 relative z-[100]" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center">
+          <Terminal class="h-10 w-10 mr-3 text-primary" /> Interface Système: <span class="ml-2 text-primary">Az'</span>
+      </h1>
+      <p class="text-muted-foreground md:text-lg">
+        Tableau de bord opérationnel pour les ressources système et la navigation des projets.
+      </p>
+    </header>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8">
-        {#each dashboardLinks as item, i}
-        <div in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}>
-            <div class="terminal-window h-full">
-              <!-- Terminal Title Bar -->
-              <div class="terminal-titlebar">
-                <div class="terminal-controls">
-                  <div class="terminal-btn close"></div>
-                  <div class="terminal-btn minimize"></div>
-                  <div class="terminal-btn maximize"></div>
-                </div>
-                <div class="terminal-title">~ {item.title.toLowerCase().replace(/\s+/g, '-')} ~</div>
-              </div>
-
-              <!-- Terminal Content -->
-              <div class="terminal-content">
-                <Card class="h-full flex flex-col !border-0 !shadow-none !rounded-none">
-                  <CardHeader>
-                    <div class="flex items-center gap-3">
-                      <div class="icon-wrapper">
-                          <svelte:component this={item.icon} class="h-7 w-7" />
-                      </div>
-                      <CardTitle class="text-xl !mt-0 group-hover:text-primary">{item.title}</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent class="flex-grow">
-                    <p class="text-muted-foreground text-sm mb-3">{item.description}</p>
-                    <p class="text-xs font-mono text-primary/80 bg-muted/50 p-2 rounded">{item.details}</p>
-                  </CardContent>
-                  <div class="p-4 pt-2">
-                    <Button href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} class="w-full" variant="outline">
-                      {item.external ? 'Accéder' : 'Explorer'} <ArrowRight class="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
-                </Card>
-              </div>
+    <!-- Draggable Cards Container -->
+    <div class="flex-1 relative w-full" style="min-height: calc(100vh - 200px);">
+      {#each dashboardLinks as item, i}
+        <div
+          class="terminal-window absolute"
+          style="z-index: {$cardPositions[i].zIndex}; width: 380px;"
+          in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
+          use:draggable={{
+            handleSelector: '.terminal-titlebar',
+            initialPosition: { x: item.initialX, y: item.initialY }
+          }}
+          on:mousedown={() => bringToFront(i)}
+        >
+          <!-- Terminal Title Bar -->
+          <div class="terminal-titlebar">
+            <div class="terminal-controls">
+              <div class="terminal-btn close"></div>
+              <div class="terminal-btn minimize"></div>
+              <div class="terminal-btn maximize"></div>
             </div>
+            <div class="terminal-title">~ {item.title.toLowerCase().replace(/\s+/g, '-')} ~</div>
           </div>
-        {/each}
-      </div>
-        <div class="text-center text-sm text-muted-foreground pt-8">
-            <p>&copy; {new Date().getFullYear()} Dylan "Azertox" R. | Horloge système: {new Date().toLocaleTimeString('fr-BE')} | Source code: <a href="https://github.com/AzertoxHDW/azertox.com">Github</a></p>
-            <p class="mt-1">Développé avec Svelte & TailwindCSS</p>
+
+          <!-- Terminal Content -->
+          <div class="terminal-content">
+            <Card class="h-full flex flex-col !border-0 !shadow-none !rounded-none">
+              <CardHeader>
+                <div class="flex items-center gap-3">
+                  <div class="icon-wrapper">
+                      <svelte:component this={item.icon} class="h-7 w-7" />
+                  </div>
+                  <CardTitle class="text-xl !mt-0 group-hover:text-primary">{item.title}</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent class="flex-grow">
+                <p class="text-muted-foreground text-sm mb-3">{item.description}</p>
+                <p class="text-xs font-mono text-primary/80 bg-muted/50 p-2 rounded">{item.details}</p>
+              </CardContent>
+              <div class="p-4 pt-2">
+                <Button href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} class="w-full" variant="outline">
+                  {item.external ? 'Accéder' : 'Explorer'} <ArrowRight class="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </Card>
+          </div>
         </div>
+      {/each}
     </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-sm text-muted-foreground py-8 relative z-[100]">
+        <p>&copy; {new Date().getFullYear()} Dylan "Azertox" R. | Horloge système: {new Date().toLocaleTimeString('fr-BE')} | Source code: <a href="https://github.com/AzertoxHDW/azertox.com">Github</a></p>
+        <p class="mt-1">Développé avec Svelte & TailwindCSS</p>
+    </footer>
 </div>
