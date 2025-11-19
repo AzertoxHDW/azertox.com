@@ -23,20 +23,34 @@
   }
 
   const retiredHardwareItems: RetiredHardware[] = [
-    // {
-    //   id: "soundblaster-awe32",
-    //   name: "Sound Blaster AWE32",
-    //   type: "Sound Card",
-    //   icon: ZapIcon,
-    //   era: "Mid 1990s",
-    //   yearAcquired: 1996,
-    //   yearRetired: 2002,
-    //   imageUrl: "/images/museum/sound_blaster_awe32.png",
-    //   specs: ["ISA Interface", "32-voice polyphony", "EMU8000 sampler", "1MB RAM (expandable)"],
-    //   story: "This was my first real sound card! Saved up for months. The difference in DOS games was incredible – from PC speaker beeps to full orchestral scores with General MIDI. Many hours spent configuring IRQs and DMAs!",
-    //   reasonForRetirement: "Upgraded to a PCI sound card with better Windows XP support.",
-    //   statusAfterRetirement: "Kept in anti-static bag for nostalgia."
-    // },
+     {
+       id: "skylight",
+       name: "Skylight (original)",
+       type: "PC",
+       icon: ZapIcon,
+       era: "Mid 2010",
+       yearAcquired: 2019,
+       yearRetired: 2021,
+       imageUrl: "src/routes/museum/kpe3.png",
+       specs: ["Intel Core i9-7980XE", "EVGA GeForce GTX 980Ti KINGPIN", "SuperFlower Leadex 2000W", "32GB DDR4"],
+       story: "Premier PC avec un processeur Intel que j'ai possédé. Légendaire de par son processeur ultra haut de gamme, sa carte graphique de collection et tous les composants démesurés autour. Une pièce autant visuelle que fonctionnelle.",
+       reasonForRetirement: "Remplacé par Snowflake après que la carte graphique soit partie en fumée et le kit processeur/carte mère ait été vendu.",
+       statusAfterRetirement: "Remis en service en 2025 en tant que station de travail, après remplacement de quelques pièces."
+     },
+     {
+       id: "kpe",
+       name: "GTX 980Ti KINGPIN",
+       type: "GPU",
+       icon: ZapIcon,
+       era: "Mid 2010",
+       yearAcquired: 2019,
+       yearRetired: 2021,
+       imageUrl: "src/routes/museum/kpe1.png",
+       specs: ["GM200", "6GB GDDR5", "Radiateur en cuivre"],
+       story: "Carte graphique légendaire. Edition limitée assez rare de la GTX 980Ti produite par EVGA en collaboration avec l'overclockeur KINGPIN.",
+       reasonForRetirement: "Défaut connu sur cette série de cartes qui l'a amené à brûler.",
+       statusAfterRetirement: "Affiché comme artéfact dans une vitrine."
+     },
   ];
 
   let visibleItems = writable<RetiredHardware[]>([]);
