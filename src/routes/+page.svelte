@@ -76,7 +76,7 @@
   // Store DOM references for direct z-index manipulation
   let cardElements: (HTMLElement | null)[] = [];
   let terminalElement: HTMLElement | null = null;
-  let highestZIndex = 10 + dashboardLinks.length + 1; // +1 for terminal
+  let highestZIndex = 200; // Start at 200 to be above header (z-100) and footer (z-100)
 
   function bringToFront(index: number) {
     const element = cardElements[index];
@@ -175,7 +175,7 @@
     <div
       bind:this={terminalElement}
       class="terminal-window absolute"
-      style="z-index: {10 + dashboardLinks.length}; width: 700px;"
+      style="z-index: 200; width: 700px;"
       in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95, delay: 400 }}
       use:draggable={{
         handleSelector: '.terminal-titlebar',

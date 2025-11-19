@@ -120,6 +120,7 @@
       <div class="terminal-line input-line">
         <span class="prompt">$</span>
         <div class="input-wrapper">
+          <span class="input-sizer">{inputValue}&nbsp;</span>
           <input
             bind:this={inputElement}
             bind:value={inputValue}
@@ -129,7 +130,6 @@
             class="terminal-input"
             spellcheck="false"
             autocomplete="off"
-            size={inputValue.length || 1}
           />
           {#if isFocused}
             <span class="cursor">_</span>
@@ -205,14 +205,19 @@
   }
 
   .input-wrapper {
-    @apply flex items-center flex-grow;
+    @apply flex items-center flex-grow relative;
+  }
+
+  .input-sizer {
+    @apply invisible;
+    white-space: pre;
   }
 
   .terminal-input {
     all: unset;
-    @apply text-foreground bg-transparent;
+    @apply text-foreground bg-transparent absolute left-0;
     caret-color: transparent;
-    min-width: 1ch;
+    width: 100%;
   }
 
   .cursor {
