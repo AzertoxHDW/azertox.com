@@ -56,6 +56,10 @@
           return;
         } else if (command === 'whoami') {
           output = 'User: Az\' (Dylan R.)\nRole: Developer & System Administrator\nLocation: Belgium';
+        } else if (command === 'win') {
+          // Hidden MS-DOS style command for Windows 2000 theme
+          setThemeWithAnimation('win2000');
+          output = 'Starting Microsoft Windows 2000...';
         } else if (command === 'light' || command === 'dark') {
           // If switching from win2000, play shutdown sound
           if ($currentTheme === 'win2000') {
