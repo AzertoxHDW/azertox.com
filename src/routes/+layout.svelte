@@ -29,6 +29,12 @@
 
   function handleGlobalKeyDown(event: KeyboardEvent) {
     if (event.key === 'Escape' && isWin2000Theme) {
+      // Play Windows 2000 shutdown sound
+      if (BROWSER) {
+        const audio = new Audio('/sounds/2klogoff.mp3');
+        audio.volume = 0.5;
+        audio.play().catch(err => console.log('Audio playback failed:', err));
+      }
       setTheme('dark'); // Exit win2000 theme back to dark theme
     }
   }
@@ -72,13 +78,7 @@
   function onBootAnimationComplete() {
     if (currentBootThemeOption) {
       currentTheme.set(currentBootThemeOption.value);
-
-      // Play Windows 2000 startup sound
-      if (currentBootThemeOption.value === 'win2000' && BROWSER) {
-        const audio = new Audio('/sounds/2000.mp3');
-        audio.volume = 0.5;
-        audio.play().catch(err => console.log('Audio playback failed:', err));
-      }
+      // Note: BootAnimation component already plays the startup sound
     }
     showBootUpAnimation = false;
     currentBootThemeOption = undefined;

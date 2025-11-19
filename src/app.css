@@ -349,11 +349,6 @@
     display: none;
   }
 
-  /* Hide terminal toggle button in Windows 2000 theme */
-  .win2000-theme .terminal-toggle-btn {
-    display: none;
-  }
-
   /* Adjust main content padding in Windows 2000 theme */
   .win2000-theme main {
     padding-top: 2rem;
