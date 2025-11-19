@@ -5,6 +5,7 @@
   import { Card, CardHeader, CardTitle, CardContent } from "$lib/components/ui/card/index.js";
   import { flyAndScale } from "$lib/utils.js";
   import { Terminal, UserCircle, ServerIcon, FolderGit2, ArrowRight, Gem } from "lucide-svelte";
+  import StarField from '$lib/components/StarField.svelte';
 
   // Dashboard links remain the same as previous version
   const dashboardLinks = [
@@ -54,6 +55,7 @@
   }
 </style>
 
+<StarField />
 <div class="w-full min-h-[calc(100vh-10rem)] flex flex-col items-center justify-center text-foreground p-4">
     <div class="w-full max-w-5xl space-y-10 md:space-y-16" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
       <header class="text-center space-y-2">
