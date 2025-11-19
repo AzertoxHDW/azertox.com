@@ -174,12 +174,12 @@
     <!-- Terminal Window (Draggable) -->
     <div
       bind:this={terminalElement}
-      class="terminal-window absolute max-w-4xl"
-      style="z-index: {10 + dashboardLinks.length}; width: 800px; left: 50%; transform: translateX(-50%); top: 800px;"
+      class="terminal-window absolute"
+      style="z-index: {10 + dashboardLinks.length}; width: 700px;"
       in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95, delay: 400 }}
       use:draggable={{
         handleSelector: '.terminal-titlebar',
-        initialPosition: { x: browser ? (window.innerWidth - 800) / 2 : 200, y: 800 },
+        initialPosition: { x: browser ? (window.innerWidth - 700) / 2 : 250, y: 750 },
         onDragStart: () => bringTerminalToFront()
       }}
       on:mousedown={() => bringTerminalToFront()}

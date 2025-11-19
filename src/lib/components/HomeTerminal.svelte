@@ -174,7 +174,7 @@
   .terminal-content {
     @apply p-4 font-mono text-sm overflow-y-auto cursor-text;
     @apply bg-card/50 backdrop-blur-sm;
-    height: 300px;
+    height: 220px;
   }
 
   .terminal-body {
