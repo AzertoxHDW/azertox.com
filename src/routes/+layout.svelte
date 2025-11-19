@@ -106,24 +106,6 @@
             </a>
           {/each}
         </nav>
-        <div class="absolute top-4 right-4 md:top-6 md:right-6 z-50">
-            <Select
-              selected={$currentTheme ? { value: $currentTheme, label: themes.find(t => t.value === $currentTheme)?.label || $currentTheme } : undefined}
-              onSelectedChange={handleThemeChange}
-            >
-                <SelectTrigger class="w-[200px] bg-background/80 dark:bg-muted/50 backdrop-blur-md shadow-md">
-                    <SelectValue placeholder="Choisir un thème" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectGroup>
-                        <SelectLabel>Thèmes Disponibles</SelectLabel>
-                        {#each themes as themeOption (themeOption.value)}
-                            <SelectItem value={themeOption.value}>{themeOption.label}</SelectItem>
-                        {/each}
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
-        </div>
       </div>
     </header>
   {/if}

@@ -6,6 +6,7 @@
   import { flyAndScale } from "$lib/utils.js";
   import { Terminal, UserCircle, ServerIcon, FolderGit2, ArrowRight, Gem } from "lucide-svelte";
   import StarField from '$lib/components/StarField.svelte';
+  import HomeTerminal from '$lib/components/HomeTerminal.svelte';
   import { draggable } from '$lib/actions/draggable';
   import { writable } from 'svelte/store';
   import { onMount } from 'svelte';
@@ -74,13 +75,29 @@
 
   // Store DOM references for direct z-index manipulation
   let cardElements: (HTMLElement | null)[] = [];
-  let highestZIndex = 10 + dashboardLinks.length;
+  let terminalElement: HTMLElement | null = null;
+  let highestZIndex = 200; // Start at 200 to be above header (z-100) and footer (z-100)
+  let showTerminal = false;
 
   function bringToFront(index: number) {
     const element = cardElements[index];
     if (element) {
       element.style.zIndex = String(++highestZIndex);
     }
+  }
+
+  function bringTerminalToFront() {
+    if (terminalElement) {
+      terminalElement.style.zIndex = String(++highestZIndex);
+    }
+  }
+
+  function toggleTerminal() {
+    showTerminal = !showTerminal;
+  }
+
+  function closeTerminal() {
+    showTerminal = false;
   }
 
   onMount(() => {
@@ -103,6 +120,15 @@
 
 <StarField />
 <div class="w-full min-h-screen flex flex-col text-foreground">
+    <!-- Terminal Toggle Button (Top Right) -->
+    <button
+      on:click={toggleTerminal}
+      class="fixed top-8 right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+      aria-label="{showTerminal ? 'Fermer' : 'Ouvrir'} Terminal"
+    >
+      <Terminal class="h-5 w-5 text-primary" />
+    </button>
+
     <!-- Header -->
     <header class="text-center space-y-2 py-8 relative z-[100]" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
       <h1 class="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center">
@@ -162,6 +188,24 @@
         </div>
       {/each}
     </div>
+
+    <!-- Terminal Window (Draggable) -->
+    {#if showTerminal}
+      <div
+        bind:this={terminalElement}
+        class="terminal-window absolute"
+        style="z-index: 200; width: 700px;"
+        in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
+        use:draggable={{
+          handleSelector: '.terminal-titlebar',
+          initialPosition: { x: browser ? (window.innerWidth - 700) / 2 : 250, y: 300 },
+          onDragStart: () => bringTerminalToFront()
+        }}
+        on:mousedown={() => bringTerminalToFront()}
+      >
+        <HomeTerminal onFocus={bringTerminalToFront} onClose={closeTerminal} />
+      </div>
+    {/if}
 
     <!-- Footer -->
     <footer class="text-center text-sm text-muted-foreground py-8 relative z-[100]">
