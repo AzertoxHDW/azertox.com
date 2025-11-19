@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { setTheme, themes, currentTheme } from '$lib/themeStore';
+  import { setTheme, setThemeWithAnimation, themes, currentTheme } from '$lib/themeStore';
 
   let inputValue = '';
   let commandHistory: Array<{ command: string; output: string }> = [];
@@ -55,7 +55,11 @@
           const themeName = command.substring(6).trim();
           const theme = themes.find(t => t.value === themeName);
           if (theme) {
-            setTheme(theme.value);
+            if (theme.value === 'win2000') {
+              setThemeWithAnimation(theme.value);
+            } else {
+              setTheme(theme.value);
+            }
             output = `Theme changed to: ${theme.label}`;
           } else {
             output = `Error: Theme "${themeName}" not found. Available: light, dark`;

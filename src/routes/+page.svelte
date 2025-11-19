@@ -11,6 +11,7 @@
   import { writable } from 'svelte/store';
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
+  import { currentTheme } from '$lib/themeStore';
 
   const CARD_WIDTH = 450;
   const CARD_GAP = 40;
@@ -121,7 +122,9 @@
   }
 </style>
 
-<StarField />
+{#if $currentTheme !== 'win2000'}
+  <StarField />
+{/if}
 <div class="w-full min-h-screen flex flex-col text-foreground">
     <!-- Terminal Toggle Button (Top Right) -->
     <button

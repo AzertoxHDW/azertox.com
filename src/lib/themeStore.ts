@@ -33,6 +33,9 @@ function getInitialTheme(): Theme {
 // Create a writable store for the current theme
 export const currentTheme = writable<Theme>(getInitialTheme());
 
+// Create a store to trigger boot animations
+export const bootAnimationTrigger = writable<{ theme: Theme; timestamp: number } | null>(null);
+
 // Subscribe to theme changes to update localStorage and apply class to <html>
 currentTheme.subscribe((theme) => {
   if (browser) {
@@ -92,6 +95,17 @@ export const themes: ThemeOption[] = [
 // Function to explicitly set the theme (e.g., from the dropdown)
 export function setTheme(theme: Theme) {
   currentTheme.set(theme);
+}
+
+// Function to set theme with boot animation (for win2000)
+export function setThemeWithAnimation(theme: Theme) {
+  if (theme === 'win2000') {
+    // Trigger boot animation
+    bootAnimationTrigger.set({ theme, timestamp: Date.now() });
+  } else {
+    // For other themes, just set directly
+    currentTheme.set(theme);
+  }
 }
 
 // Listener for system theme changes if 'system' is selected

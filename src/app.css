@@ -276,9 +276,14 @@
 
   /* Windows 2000 Theme Styles */
   .win2000-theme {
-    background-color: #008080;
-    background-image: none;
+    background-color: #008080 !important;
+    background-image: none !important;
     font-family: "Tahoma", "MS Sans Serif", Arial, sans-serif;
+  }
+
+  /* Ensure main also has teal background */
+  .win2000-theme main {
+    background-color: #008080 !important;
   }
 
   /* Windows 2000 Terminal Window Styling */
@@ -337,11 +342,6 @@
   /* Windows 2000 Content Area */
   .win2000-theme .terminal-content {
     background: #C0C0C0;
-  }
-
-  /* Hide header in Windows 2000 theme */
-  .win2000-theme header {
-    display: none;
   }
 
   /* Hide footer in Windows 2000 theme */

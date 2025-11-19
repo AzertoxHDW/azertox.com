@@ -1,6 +1,6 @@
 <script lang="ts">
   import "../app.css"; // Your global styles, including theme variables
-  import { currentTheme, setTheme, themes, type Theme, type ThemeOption } from "$lib/themeStore";
+  import { currentTheme, setTheme, themes, type Theme, type ThemeOption, bootAnimationTrigger } from "$lib/themeStore";
   import BootAnimation from "$lib/components/BootAnimation.svelte";
   import Win2000Desktop from "$lib/components/desktop/Win2000Desktop.svelte";
   import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "$lib/components/ui/select";
@@ -15,6 +15,17 @@
 
   // Reactive statement to check if win2000 theme is active
   $: isWin2000Theme = ($currentTheme === 'win2000');
+
+  // Listen for boot animation triggers from terminal
+  $: if ($bootAnimationTrigger && $bootAnimationTrigger.theme === 'win2000') {
+    const selectedOption = themes.find(t => t.value === 'win2000');
+    if (selectedOption && $currentTheme !== 'win2000') {
+      currentBootThemeOption = selectedOption;
+      showBootUpAnimation = true;
+      // Clear the trigger
+      bootAnimationTrigger.set(null);
+    }
+  }
 
   function handleGlobalKeyDown(event: KeyboardEvent) {
     if (event.key === 'Escape' && isWin2000Theme) {
