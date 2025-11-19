@@ -1,7 +1,7 @@
 name: Manual Deploy to Self-Hosted Alpine
 
 on:
-  # Allows you to run this workflow manually from the Actions tab
+  # Manual trigger from GitHub Actions tab
   workflow_dispatch:
     inputs:
       branch:
@@ -10,15 +10,16 @@ on:
         default: 'main'
         type: string
   
-  # Optional: Uncomment to auto-deploy on push to dev
+  # Auto-deploy on PR merge to main (Optional)
   pull_request:
+    types: [closed]
     branches: [ "main" ]
 
 jobs:
   deploy:
+    # This targets your Debian LXC runner
     runs-on: self-hosted
     
-    # Grant necessary permissions
     permissions:
       contents: read
 
@@ -26,11 +27,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup SSH Agent
+        # This loads your SSH private key into the runner's session
+        # allowing the deploy.sh script to SSH into 192.168.0.102
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Make deploy script executable
         run: chmod +x ./scripts/deploy.sh
 
       - name: Execute Deployment Script
+        # Pass the branch name to the script
         run: ./scripts/deploy.sh "${{ inputs.branch || 'main' }}"
-        env:
-          # Set the directory name if different from default
-          SITE_DIR: "azertox.com"
