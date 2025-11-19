@@ -179,7 +179,7 @@
       in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95, delay: 400 }}
       use:draggable={{
         handleSelector: '.terminal-titlebar',
-        initialPosition: { x: browser ? (window.innerWidth - 700) / 2 : 250, y: 750 },
+        initialPosition: { x: browser ? (window.innerWidth - 700) / 2 : 250, y: 850 },
         onDragStart: () => bringTerminalToFront()
       }}
       on:mousedown={() => bringTerminalToFront()}
