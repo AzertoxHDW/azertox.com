@@ -147,9 +147,9 @@
           in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
           use:draggable={{
             handleSelector: '.terminal-titlebar',
-            initialPosition: { x: initialPositions[i].x, y: initialPositions[i].y }
+            initialPosition: { x: initialPositions[i].x, y: initialPositions[i].y },
+            onDragStart: () => bringToFront(i)
           }}
-          on:mousedown={() => bringToFront(i)}
         >
           <!-- Terminal Title Bar -->
           <div class="terminal-titlebar">
@@ -162,7 +162,7 @@
           </div>
 
           <!-- Terminal Content -->
-          <div class="terminal-content">
+          <div class="terminal-content" on:mousedown={() => bringToFront(i)}>
             <Card class="h-full flex flex-col !border-0 !shadow-none !rounded-none">
               <CardHeader>
                 <div class="flex items-center gap-3">
