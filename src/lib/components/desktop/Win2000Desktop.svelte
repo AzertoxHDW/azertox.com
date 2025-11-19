@@ -12,6 +12,10 @@
 	import { goto } from '$app/navigation';
   import MyComputerWindow from './MyComputerWindow.svelte';
   import MyDocumentsWindow from './MyDocumentsWindow.svelte';
+  import MyComputerIcon from './icons/MyComputerIcon.svelte';
+  import MyDocumentsIcon from './icons/MyDocumentsIcon.svelte';
+  import InternetExplorerIcon from './icons/InternetExplorerIcon.svelte';
+  import ControlPanelIcon from './icons/ControlPanelIcon.svelte';
 
   interface WindowInstance {
     id: number;
@@ -40,7 +44,7 @@
   const desktopIcons = [
     {
       name: "My Computer",
-      icon: ComputerIcon,
+      icon: MyComputerIcon,
       action: () => openWindow({
         title: "My Computer",
         component: MyComputerWindow,
@@ -51,7 +55,7 @@
     },
     {
       name: "My Documents",
-      icon: FolderOpenIcon,
+      icon: MyDocumentsIcon,
       action: () => openWindow({
         title: "My Documents",
         component: MyDocumentsWindow,
@@ -62,7 +66,7 @@
     },
     {
       name: "Internet Explorer",
-      icon: GlobeIcon,
+      icon: InternetExplorerIcon,
       action: () => openWindow({
         title: "Azertox Web Browser",
         content: "Welcome to the Azertox Web!\n\nNavigating to: azertox.com...\n\n(This is a simulated browser window)",
@@ -72,7 +76,7 @@
     },
     {
       name: "Control Panel",
-      icon: Settings2Icon,
+      icon: ControlPanelIcon,
       action: () => openWindow({
         title: "Control Panel",
         content: "Appearance and Themes\nNetwork Connections\nAdd or Remove Programs\nUser Accounts",
@@ -304,12 +308,14 @@
   <div class="desktop-icons-container p-4 flex flex-col flex-wrap items-start content-start h-full gap-y-1 gap-x-1">
     {#each desktopIcons as item, i (item.name)}
       <button
-        class="desktop-icon flex flex-col items-center w-[72px] text-center p-1 rounded {selectedIconIndex === i ? 'selected' : ''}"
+        class="desktop-icon flex flex-col items-center w-[80px] text-center p-1 rounded {selectedIconIndex === i ? 'selected' : ''}"
         on:click={(e) => handleIconClick(i, e)}
         on:dblclick={() => handleIconDoubleClick(i)}
         title={item.name}
       >
-        <svelte:component this={item.icon} class="w-8 h-8 mb-0.5 text-white" stroke-width="1.5"/>
+        <div class="w-12 h-12 mb-1">
+          <svelte:component this={item.icon} />
+        </div>
         <span class="text-xs text-white truncate w-full px-0.5 py-px">{item.name}</span>
       </button>
     {/each}
