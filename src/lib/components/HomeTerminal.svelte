@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import { setTheme, setThemeWithAnimation, themes, currentTheme } from '$lib/themeStore';
+  import { browser } from '$app/environment';
 
   let inputValue = '';
   let commandHistory: Array<{ command: string; output: string }> = [];
@@ -31,6 +32,14 @@
     isFocused = false;
   }
 
+  function playShutdownSound() {
+    if (browser) {
+      const audio = new Audio('/sounds/2klogoff.mp3');
+      audio.volume = 0.5;
+      audio.play().catch(err => console.log('Audio playback failed:', err));
+    }
+  }
+
   async function handleCommand(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -48,6 +57,10 @@
         } else if (command === 'whoami') {
           output = 'User: Az\' (Dylan R.)\nRole: Developer & System Administrator\nLocation: Belgium';
         } else if (command === 'light' || command === 'dark') {
+          // If switching from win2000, play shutdown sound
+          if ($currentTheme === 'win2000') {
+            playShutdownSound();
+          }
           setTheme(command);
           const theme = themes.find(t => t.value === command);
           output = theme ? `Theme changed to: ${theme.label}` : `Theme changed to: ${command}`;
@@ -58,6 +71,10 @@
             if (theme.value === 'win2000') {
               setThemeWithAnimation(theme.value);
             } else {
+              // If switching from win2000, play shutdown sound
+              if ($currentTheme === 'win2000') {
+                playShutdownSound();
+              }
               setTheme(theme.value);
             }
             output = `Theme changed to: ${theme.label}`;

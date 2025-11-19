@@ -278,7 +278,8 @@
   .win2000-theme {
     background-color: #008080 !important;
     background-image: none !important;
-    font-family: "Tahoma", "MS Sans Serif", Arial, sans-serif;
+    font-family: "Tahoma", "Microsoft Sans Serif", "MS Sans Serif", "Segoe UI", sans-serif;
+    font-size: 11px;
   }
 
   /* Ensure main also has teal background */
@@ -324,7 +325,7 @@
     color: #C0C0C0;
     font-weight: normal;
     font-size: 11px;
-    font-family: "Tahoma", "MS Sans Serif", Arial, sans-serif;
+    font-family: "Tahoma", "Microsoft Sans Serif", "MS Sans Serif", "Segoe UI", sans-serif;
     text-shadow: none;
     letter-spacing: 0;
   }
@@ -342,6 +343,22 @@
   /* Windows 2000 Content Area */
   .win2000-theme .terminal-content {
     background: #C0C0C0;
+    font-size: 11px;
+  }
+
+  /* Windows 2000 Typography Overrides */
+  .win2000-theme h1,
+  .win2000-theme h2,
+  .win2000-theme h3,
+  .win2000-theme h4,
+  .win2000-theme p,
+  .win2000-theme span,
+  .win2000-theme button {
+    font-family: "Tahoma", "Microsoft Sans Serif", "MS Sans Serif", "Segoe UI", sans-serif;
+  }
+
+  .win2000-theme button {
+    font-size: 11px;
   }
 
   /* Hide footer in Windows 2000 theme */
