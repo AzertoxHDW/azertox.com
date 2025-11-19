@@ -8,6 +8,8 @@
   import StarField from '$lib/components/StarField.svelte';
   import { draggable } from '$lib/actions/draggable';
   import { writable } from 'svelte/store';
+  import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
 
   interface CardPosition {
     x: number;
@@ -15,7 +17,10 @@
     zIndex: number;
   }
 
-  // Dashboard links with initial positions
+  const CARD_WIDTH = 450;
+  const CARD_GAP = 40;
+
+  // Dashboard links data
   const dashboardLinks = [
     {
         href: "/about",
@@ -23,8 +28,6 @@
         description: "Afficher les informations sur cet utilisateur.",
         icon: UserCircle,
         details: "Utilisateur: Az' (Administrateur)",
-        initialX: 100,
-        initialY: 100,
     },
     {
         href: "/infra",
@@ -32,8 +35,6 @@
         description: "Afficher les serveurs et l'infrastructure.",
         icon: ServerIcon,
         details: "Domaine: WORKGROUP | IP: Automatique",
-        initialX: 500,
-        initialY: 100,
     },
     {
         href: "/projects",
@@ -41,8 +42,6 @@
         description: "Parcourir les projets et les développements en cours.",
         icon: FolderGit2,
         details: "Espace libre: 2.4TB",
-        initialX: 100,
-        initialY: 400,
     },
     {
         href: "/museum",
@@ -50,14 +49,42 @@
         description: "Afficher les artefacts du musée.",
         icon: Gem,
         details: "Password: LOUVRE",
-        initialX: 500,
-        initialY: 400,
     }
   ];
 
+  // Calculate centered initial positions
+  function calculateInitialPositions() {
+    if (!browser) {
+      // Default positions for SSR
+      return [
+        { x: 100, y: 50 },
+        { x: 550, y: 50 },
+        { x: 100, y: 400 },
+        { x: 550, y: 400 }
+      ];
+    }
+
+    const viewportWidth = window.innerWidth;
+    const totalWidth = (CARD_WIDTH * 2) + CARD_GAP;
+    const startX = (viewportWidth - totalWidth) / 2;
+
+    return [
+      { x: startX, y: 50 },
+      { x: startX + CARD_WIDTH + CARD_GAP, y: 50 },
+      { x: startX, y: 400 },
+      { x: startX + CARD_WIDTH + CARD_GAP, y: 400 }
+    ];
+  }
+
+  let initialPositions = calculateInitialPositions();
+
   let cardPositions = writable<Record<number, CardPosition>>(
-    dashboardLinks.reduce((acc, link, idx) => {
-      acc[idx] = { x: link.initialX, y: link.initialY, zIndex: 10 + idx };
+    dashboardLinks.reduce((acc, _, idx) => {
+      acc[idx] = {
+        x: initialPositions[idx].x,
+        y: initialPositions[idx].y,
+        zIndex: 10 + idx
+      };
       return acc;
     }, {} as Record<number, CardPosition>)
   );
@@ -70,6 +97,21 @@
       return positions;
     });
   }
+
+  onMount(() => {
+    // Recalculate positions on mount to ensure proper centering
+    initialPositions = calculateInitialPositions();
+    cardPositions.set(
+      dashboardLinks.reduce((acc, _, idx) => {
+        acc[idx] = {
+          x: initialPositions[idx].x,
+          y: initialPositions[idx].y,
+          zIndex: 10 + idx
+        };
+        return acc;
+      }, {} as Record<number, CardPosition>)
+    );
+  });
 </script>
 
 <svelte:head>
@@ -101,11 +143,11 @@
       {#each dashboardLinks as item, i}
         <div
           class="terminal-window absolute"
-          style="z-index: {$cardPositions[i].zIndex}; width: 380px;"
+          style="z-index: {$cardPositions[i].zIndex}; width: {CARD_WIDTH}px;"
           in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
           use:draggable={{
             handleSelector: '.terminal-titlebar',
-            initialPosition: { x: item.initialX, y: item.initialY }
+            initialPosition: { x: initialPositions[i].x, y: initialPositions[i].y }
           }}
           on:mousedown={() => bringToFront(i)}
         >
