@@ -3,6 +3,7 @@
   import { Button } from '$lib/components/ui/button';
   import { Home, Terminal, AlertTriangle } from 'lucide-svelte';
   import { currentTheme } from '$lib/themeStore';
+  import StarField from '$lib/components/StarField.svelte';
   import { onMount } from 'svelte';
 
   let errorCode = $page.status;
@@ -15,18 +16,24 @@
 
   // Terminal ASCII art for 404
   const ascii404 = `
-  ┌─────────────────────────────────────────┐
-  │                                         │
-  │   ██╗  ██╗ ██████╗ ██╗  ██╗            │
-  │   ██║  ██║██╔═████╗██║  ██║            │
-  │   ███████║██║██╔██║███████║            │
-  │   ╚════██║████╔╝██║╚════██║            │
-  │        ██║╚██████╔╝     ██║            │
-  │        ╚═╝ ╚═════╝      ╚═╝            │
-  │                                         │
-  │   PAGE NOT FOUND                        │
-  │                                         │
-  └─────────────────────────────────────────┘
+    ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+    █                                                  █
+    █     ██╗  ██╗  ██████╗  ██╗  ██╗                █
+    █     ██║  ██║ ██╔═████╗ ██║  ██║                █
+    █     ███████║ ██║██╔██║ ███████║                █
+    █     ╚════██║ ████╔╝██║ ╚════██║                █
+    █          ██║ ╚██████╔╝      ██║                █
+    █          ╚═╝  ╚═════╝       ╚═╝                █
+    █                                                  █
+    █         ⚠  ERROR: PAGE NOT FOUND  ⚠            █
+    █                                                  █
+    █   ┌─────────────────────────────────────────┐  █
+    █   │  [FATAL] Resource unavailable           │  █
+    █   │  [INFO]  404 :: Not Found                │  █
+    █   │  [WARN]  Unable to locate requested path │  █
+    █   └─────────────────────────────────────────┘  █
+    █                                                  █
+    ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
   `;
 
   let glitchOffset = 0;
@@ -45,6 +52,11 @@
     };
   });
 </script>
+
+<!-- StarField background for non-win2000 themes -->
+{#if $currentTheme !== 'win2000'}
+  <StarField />
+{/if}
 
 {#if $currentTheme === 'win2000'}
   <!-- Windows 2000 BSOD -->
@@ -108,7 +120,7 @@
         <div class="bg-card p-6 md:p-8 font-mono text-sm min-h-[500px] flex flex-col">
           <div class="flex-1">
             <!-- ASCII Art with glitch effect -->
-            <pre class="text-primary text-xs leading-tight mb-6" style="transform: translateX({glitchOffset}px)">{ascii404}</pre>
+            <pre class="text-primary text-[10px] leading-[1.2] mb-6 overflow-x-auto" style="transform: translateX({glitchOffset}px)">{ascii404}</pre>
 
             <div class="space-y-3 text-muted-foreground">
               <p class="flex items-start gap-2">
