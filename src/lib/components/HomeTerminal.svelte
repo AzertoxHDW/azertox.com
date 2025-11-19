@@ -6,6 +6,9 @@
   let commandHistory: Array<{ command: string; output: string }> = [];
   let terminalContent: HTMLDivElement;
   let inputElement: HTMLInputElement;
+  let isFocused = false;
+
+  export let onFocus: (() => void) | undefined = undefined;
 
   onMount(() => {
     // Show welcome message
@@ -19,7 +22,12 @@
   function focusInput() {
     if (inputElement) {
       inputElement.focus();
+      isFocused = true;
     }
+  }
+
+  function handleBlur() {
+    isFocused = false;
   }
 
   async function handleCommand(event: KeyboardEvent) {
@@ -71,64 +79,106 @@
 
   function handleTerminalClick() {
     focusInput();
+    if (onFocus) {
+      onFocus();
+    }
   }
 </script>
 
-<div
-  class="home-terminal"
-  on:click={handleTerminalClick}
-  on:keydown={() => {}}
-  role="button"
-  tabindex="0"
->
-  <div class="terminal-header">
-    <span class="terminal-header-title">terminal@azertox:~</span>
+<div class="terminal-window-wrapper">
+  <!-- Terminal Title Bar -->
+  <div class="terminal-titlebar">
+    <div class="terminal-controls">
+      <div class="terminal-btn close"></div>
+      <div class="terminal-btn minimize"></div>
+      <div class="terminal-btn maximize"></div>
+    </div>
+    <div class="terminal-title">~ terminal ~</div>
   </div>
-  <div class="terminal-body" bind:this={terminalContent}>
-    {#each commandHistory as entry}
-      {#if entry.command}
-        <div class="terminal-line">
-          <span class="prompt">$</span>
-          <span class="command">{entry.command}</span>
-        </div>
-      {/if}
-      {#if entry.output}
-        <div class="output">{entry.output}</div>
-      {/if}
-    {/each}
 
-    <div class="terminal-line input-line">
-      <span class="prompt">$</span>
-      <input
-        bind:this={inputElement}
-        bind:value={inputValue}
-        on:keydown={handleCommand}
-        class="terminal-input"
-        spellcheck="false"
-        autocomplete="off"
-        placeholder="Type a command..."
-      />
-      <span class="cursor">_</span>
+  <!-- Terminal Content -->
+  <div
+    class="terminal-content"
+    on:click={handleTerminalClick}
+    on:keydown={() => {}}
+    role="button"
+    tabindex="0"
+  >
+    <div class="terminal-body" bind:this={terminalContent}>
+      {#each commandHistory as entry}
+        {#if entry.command}
+          <div class="terminal-line">
+            <span class="prompt">$</span>
+            <span class="command">{entry.command}</span>
+          </div>
+        {/if}
+        {#if entry.output}
+          <div class="output">{entry.output}</div>
+        {/if}
+      {/each}
+
+      <div class="terminal-line input-line">
+        <span class="prompt">$</span>
+        <input
+          bind:this={inputElement}
+          bind:value={inputValue}
+          on:keydown={handleCommand}
+          on:focus={() => isFocused = true}
+          on:blur={handleBlur}
+          class="terminal-input"
+          spellcheck="false"
+          autocomplete="off"
+        />
+        {#if isFocused}
+          <span class="cursor">_</span>
+        {/if}
+      </div>
     </div>
   </div>
 </div>
 
 <style lang="postcss">
-  .home-terminal {
-    @apply w-full max-w-4xl mx-auto bg-card border border-border rounded-lg overflow-hidden shadow-lg cursor-text;
+  .terminal-window-wrapper {
+    @apply w-full;
   }
 
-  .terminal-header {
-    @apply bg-muted border-b border-border px-4 py-2 flex items-center;
+  .terminal-titlebar {
+    @apply bg-primary/20 border-b border-primary/30 px-3 py-2 flex items-center justify-between;
+    @apply cursor-grab active:cursor-grabbing;
   }
 
-  .terminal-header-title {
-    @apply text-sm font-mono text-foreground;
+  .terminal-controls {
+    @apply flex gap-2;
+  }
+
+  .terminal-btn {
+    @apply w-3 h-3 rounded-full;
+  }
+
+  .terminal-btn.close {
+    @apply bg-red-500/80 hover:bg-red-500;
+  }
+
+  .terminal-btn.minimize {
+    @apply bg-yellow-500/80 hover:bg-yellow-500;
+  }
+
+  .terminal-btn.maximize {
+    @apply bg-green-500/80 hover:bg-green-500;
+  }
+
+  .terminal-title {
+    @apply text-sm font-mono text-primary absolute left-1/2 -translate-x-1/2 pointer-events-none;
+  }
+
+  .terminal-content {
+    @apply p-4 font-mono text-sm overflow-y-auto cursor-text;
+    @apply bg-card/50 backdrop-blur-sm;
+    height: 300px;
   }
 
   .terminal-body {
-    @apply p-4 font-mono text-sm overflow-y-auto;
-    max-height: 400px;
+    @apply h-full overflow-y-auto;
   }
 
   .terminal-line {
@@ -157,10 +207,6 @@
     caret-color: transparent;
   }
 
-  .terminal-input::placeholder {
-    @apply text-muted-foreground/50;
-  }
-
   .cursor {
     @apply text-primary ml-1;
     animation: blink 1s infinite;
@@ -177,18 +223,18 @@
 
   /* Custom scrollbar */
   .terminal-body::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
 
   .terminal-body::-webkit-scrollbar-track {
-    @apply bg-muted;
+    @apply bg-muted/30;
   }
 
   .terminal-body::-webkit-scrollbar-thumb {
-    @apply bg-border rounded;
+    @apply bg-primary/50 rounded;
   }
 
   .terminal-body::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary/50;
+    @apply bg-primary/70;
   }
 </style>

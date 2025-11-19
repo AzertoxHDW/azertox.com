@@ -75,12 +75,19 @@
 
   // Store DOM references for direct z-index manipulation
   let cardElements: (HTMLElement | null)[] = [];
-  let highestZIndex = 10 + dashboardLinks.length;
+  let terminalElement: HTMLElement | null = null;
+  let highestZIndex = 10 + dashboardLinks.length + 1; // +1 for terminal
 
   function bringToFront(index: number) {
     const element = cardElements[index];
     if (element) {
       element.style.zIndex = String(++highestZIndex);
+    }
+  }
+
+  function bringTerminalToFront() {
+    if (terminalElement) {
+      terminalElement.style.zIndex = String(++highestZIndex);
     }
   }
 
@@ -164,9 +171,20 @@
       {/each}
     </div>
 
-    <!-- Terminal Section -->
-    <div class="container mx-auto px-4 py-8 relative z-[100]" in:flyAndScale={{ y: 20, duration: 500, start: 0.95, delay: 400 }}>
-      <HomeTerminal />
+    <!-- Terminal Window (Draggable) -->
+    <div
+      bind:this={terminalElement}
+      class="terminal-window absolute max-w-4xl"
+      style="z-index: {10 + dashboardLinks.length}; width: 800px; left: 50%; transform: translateX(-50%); top: 800px;"
+      in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95, delay: 400 }}
+      use:draggable={{
+        handleSelector: '.terminal-titlebar',
+        initialPosition: { x: browser ? (window.innerWidth - 800) / 2 : 200, y: 800 },
+        onDragStart: () => bringTerminalToFront()
+      }}
+      on:mousedown={() => bringTerminalToFront()}
+    >
+      <HomeTerminal onFocus={bringTerminalToFront} />
     </div>
 
     <!-- Footer -->
