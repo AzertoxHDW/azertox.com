@@ -4,11 +4,12 @@
   import { flyAndScale } from "$lib/utils";
   import {
     UserCircle,
-    Terminal,
-    Code2,
+    Laptop,
     Server,
-    Cpu,
-    Sparkles
+    Wrench,
+    Music,
+    Lightbulb,
+    Zap
   } from "lucide-svelte";
 
   const startDate = new Date('2003-06-11');
@@ -24,37 +25,37 @@
     return years;
   };
 
-  const skills = [
+  const interests = [
     {
-      category: "Développement",
-      icon: Code2,
+      category: "Technologie",
+      icon: Laptop,
       color: "text-blue-500",
-      items: ["JavaScript/TypeScript", "Python", "Svelte/SvelteKit", "React", "Node.js"]
-    },
-    {
-      category: "Infrastructure",
-      icon: Server,
-      color: "text-green-500",
-      items: ["Linux", "Docker", "Proxmox", "Networking", "Monitoring"]
+      items: ["Développement web", "Serveurs", "Réseaux", "Automatisation"]
     },
     {
       category: "Hardware",
-      icon: Cpu,
+      icon: Wrench,
       color: "text-orange-500",
-      items: ["Server Architecture", "Diagnostics", "Building", "Performance Tuning"]
+      items: ["Architecture serveur", "Assemblage", "Optimisation", "Diagnostic"]
     },
     {
-      category: "Autres",
-      icon: Sparkles,
+      category: "Électronique",
+      icon: Zap,
+      color: "text-yellow-500",
+      items: ["Circuits", "IoT", "Domotique", "Prototypage"]
+    },
+    {
+      category: "Créativité",
+      icon: Music,
       color: "text-purple-500",
-      items: ["Électronique", "Musique", "Domotique", "IoT"]
+      items: ["Musique", "Conception 3D", "Projets DIY", "Expérimentation"]
     }
   ];
 </script>
 
 <svelte:head>
   <title>Az' - À propos de moi</title>
-  <meta name="description" content="Développeur, sysadmin et passionné de technologie" />
+  <meta name="description" content="Passionné de technologie et créateur autodidacte" />
 </svelte:head>
 
 <style lang="postcss">
@@ -79,60 +80,56 @@
     <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-3">
       <span class="gradient-text">Dylan "Az'" R.</span>
     </h1>
-    <p class="text-lg md:text-xl text-muted-foreground mb-3">
-      {yearsSince()} ans • Passionné de technologie & Autodidacte
+    <p class="text-lg md:text-xl text-muted-foreground">
+      {yearsSince()} ans • Belgique
     </p>
-    <div class="flex flex-wrap items-center justify-center gap-2">
-      <Badge variant="outline" class="text-sm">
-        <Terminal class="w-3 h-3 mr-1" />
-        Developer
-      </Badge>
-      <Badge variant="outline" class="text-sm">
-        <Server class="w-3 h-3 mr-1" />
-        Sysadmin
-      </Badge>
-      <Badge variant="outline" class="text-sm">
-        <Cpu class="w-3 h-3 mr-1" />
-        Hardware
-      </Badge>
-    </div>
   </div>
 
   <!-- Bio -->
   <section class="mb-12" in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: 120 }}>
     <Card class="shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <CardContent class="p-6 md:p-8">
-        <p class="text-base md:text-lg text-muted-foreground leading-relaxed">
-          Développeur et administrateur système autodidacte depuis plus de 10 ans.
-          Je travaille principalement avec JavaScript/TypeScript, Python, et je gère des infrastructures Linux/Docker.
-          Au-delà du code et des serveurs, j'explore l'électronique, la domotique et la musique.
-          Chaque projet est une opportunité d'apprendre quelque chose de nouveau.
-        </p>
+        <div class="flex items-start gap-3 mb-4">
+          <Lightbulb class="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+          <div class="space-y-3 text-base md:text-lg text-muted-foreground leading-relaxed">
+            <p>
+              Passionné de technologie depuis toujours, j'ai construit mon expertise en autodidacte.
+              Ce qui me motive, c'est comprendre comment les choses fonctionnent et créer des solutions.
+            </p>
+            <p>
+              Je gère des infrastructures serveurs, développe des applications web, et expérimente avec l'électronique et la domotique.
+              Chaque projet est une occasion d'apprendre et de repousser mes limites.
+            </p>
+            <p>
+              Au-delà de la technique, j'aime la musique et les projets créatifs qui mélangent différents domaines.
+            </p>
+          </div>
+        </div>
       </CardContent>
     </Card>
   </section>
 
-  <!-- Skills -->
+  <!-- Interests -->
   <section in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: 240 }}>
     <h2 class="text-2xl md:text-3xl font-bold text-foreground mb-6 flex items-center gap-3">
-      <Terminal class="h-7 w-7 text-primary" />
-      Compétences
+      <Server class="h-7 w-7 text-primary" />
+      Centres d'intérêt
     </h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {#each skills as skillGroup}
+      {#each interests as interest}
         <Card class="shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary/30">
           <CardHeader class="pb-3">
             <CardTitle class="flex items-center gap-2 text-lg">
-              <svelte:component this={skillGroup.icon} class="w-5 h-5 {skillGroup.color}" />
-              <span>{skillGroup.category}</span>
+              <svelte:component this={interest.icon} class="w-5 h-5 {interest.color}" />
+              <span>{interest.category}</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div class="flex flex-wrap gap-2">
-              {#each skillGroup.items as skill}
+              {#each interest.items as item}
                 <Badge variant="secondary" class="text-sm">
-                  {skill}
+                  {item}
                 </Badge>
               {/each}
             </div>
