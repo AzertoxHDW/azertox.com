@@ -140,8 +140,8 @@
 
       <!-- Logo and Title -->
       <div class="flex items-center gap-2 bg-background/80 backdrop-blur-sm border border-border/40 rounded-full px-4 py-2">
-        <Terminal class="h-5 w-5 text-primary flex-shrink-0" />
-        <span class="text-lg font-bold text-primary">Az'</span>
+        <img src="/favicon.png" alt="Logo" class="h-5 w-5 flex-shrink-0" />
+        <span class="text-lg font-bold text-foreground">Az'</span>
       </div>
     </div>
 
