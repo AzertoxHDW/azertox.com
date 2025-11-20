@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types';
   import { infrastructure, type Machine, type MachineSpec } from '$lib/infra-data';
+  import { rackDevices, TOTAL_U_SLOTS } from '$lib/rack-data';
   import { Badge } from "$lib/components/ui/badge"; //
   import { Button } from "$lib/components/ui/button"; //
   import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "$lib/components/ui/card"; //
@@ -12,26 +13,6 @@
   export let data: PageData;
 
   let machine: Machine | undefined = data.machine;
-
-  // Rack device mapping (matching data from rack page)
-  interface RackDevice {
-    id: string;
-    name: string;
-    uHeight: number;
-    uPosition: number;
-    type: string;
-    infraMachineId?: string;
-  }
-
-  const rackDevices: RackDevice[] = [
-    { id: 'u2', name: 'Network switch', uHeight: 1, uPosition: 2, type: 'switch' },
-    { id: 'u3', name: 'Raspberry Pi', uHeight: 1, uPosition: 3, type: 'arm-cluster' },
-    { id: 'u9', name: 'Dell Optiplex R230', uHeight: 1, uPosition: 9, type: 'server-1u' },
-    { id: 'u10', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 10, type: 'server-1u', infraMachineId: 'nas' },
-    { id: 'u18', name: 'Sierra', uHeight: 4, uPosition: 18, type: 'server-4u', infraMachineId: 'pve-01' },
-  ];
-
-  const TOTAL_U_SLOTS = 18;
 
   // Find rack position for current machine
   $: rackPosition = machine ? rackDevices.find(d => d.infraMachineId === machine.id) : null;
@@ -141,28 +122,35 @@
             <!-- Mini Rack Visualization -->
             <div class="bg-gradient-to-br from-zinc-800 to-zinc-900 dark:from-zinc-900 dark:to-black border-2 border-zinc-700 dark:border-zinc-800 rounded-lg p-2 shadow-lg">
               <div class="flex gap-1">
-                <!-- U numbers column -->
-                <div class="flex flex-col-reverse text-[8px] text-zinc-400 font-mono">
+                <!-- U numbers column (top to bottom: U1...U18) -->
+                <div class="flex flex-col text-[8px] text-zinc-400 font-mono">
                   {#each Array(TOTAL_U_SLOTS) as _, i}
-                    <div class="h-3 flex items-center justify-center">{i + 1}</div>
+                    {@const uNumber = i + 1}
+                    <div class="h-3 flex items-center justify-center">{uNumber}</div>
                   {/each}
                 </div>
-                <!-- Rack slots -->
-                <div class="flex-1 flex flex-col-reverse gap-[1px]">
+                <!-- Rack slots (top to bottom: U1...U18) -->
+                <div class="flex-1 flex flex-col gap-[1px]">
                   {#each Array(TOTAL_U_SLOTS) as _, i}
-                    {@const currentU = i + 1}
-                    {@const device = rackDevices.find(d => d.uPosition === currentU)}
+                    {@const uNumber = i + 1}
+                    {@const device = rackDevices.find(d => {
+                      // uPosition is the bottom (highest U number) of the device
+                      const deviceBottom = d.uPosition;
+                      const deviceTop = d.uPosition - d.uHeight + 1;
+                      return uNumber >= deviceTop && uNumber <= deviceBottom;
+                    })}
+                    {@const isDeviceStart = device && uNumber === (device.uPosition - device.uHeight + 1)}
                     {@const isCurrentMachine = device?.infraMachineId === machine.id}
-                    {#if device && device.uPosition === currentU}
+                    {#if device && isDeviceStart}
                       <div
-                        class="h-3 rounded-sm flex items-center justify-center text-[7px] font-bold text-white uppercase tracking-wider"
+                        class="h-3 rounded-sm flex items-center justify-center text-[7px] font-bold text-white uppercase tracking-wider px-1"
                         class:bg-primary={isCurrentMachine}
                         class:bg-zinc-600={!isCurrentMachine}
                         style="height: {device.uHeight * 12}px;"
                       >
-                        {device.name.substring(0, 8)}
+                        <span class="truncate">{device.name}</span>
                       </div>
-                    {:else if !rackDevices.some(d => d.uPosition < currentU && d.uPosition + d.uHeight > currentU)}
+                    {:else if !device}
                       <div class="h-3 bg-zinc-700/30 rounded-sm"></div>
                     {/if}
                   {/each}
