@@ -3,8 +3,9 @@
     import { Badge } from "$lib/components/ui/badge";
     import { Button } from "$lib/components/ui/button";
     import { flyAndScale } from "$lib/utils";
-    import { ArrowRight, Info, Link as LinkIcon, Server, NetworkIcon, HardDrive as StorageIcon, Zap, CornerDownLeft } from "lucide-svelte";
+    import { ArrowRight, Info, Link as LinkIcon, Server, NetworkIcon, HardDrive as StorageIcon, Zap, CornerDownLeft, Activity } from "lucide-svelte";
     import { onMount, tick } from "svelte";
+    import { infrastructure, type Machine } from "$lib/infra-data";
   
     interface RackDeviceFaceplate {
       text?: string;
@@ -22,7 +23,7 @@
       type: 'pdu' | 'patch-panel' | 'switch' | 'server-1u' | 'server-2u' | 'server-3u' | 'server-4u' | 'storage-2u' | 'storage-4u' | 'ups' | 'spacer' | 'arm-cluster';
       description: string;
       details?: string[];
-      link?: string;
+      infraMachineId?: string; // ID to link to infrastructure machine
       status?: 'Online' | 'Offline' | 'Warning';
       faceplate?: RackDeviceFaceplate;
       uPosition?: number; // Top U it occupies (e.g., U28 is 28)
@@ -32,13 +33,18 @@
       { id: 'u2', name: 'Network switch', uHeight: 1, uPosition: 2, type: 'switch', description: 'Main switch', faceplate: { text: " ", ports: { type: 'rj45', count: 8, arrangement: 'row' }, leds: [{color: 'green', count:8, blinking: true}]}},
       { id: 'u3', name: 'Raspberry Pi', uHeight: 1, uPosition: 3, type: 'arm-cluster', description: 'Main local services host machine', status: 'Online', faceplate: { text: "PI-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
       { id: 'u9', name: 'Dell Optiplex R230', uHeight: 1, uPosition: 9, type: 'server-1u', description: 'Unused server', status: 'Offline', faceplate: { text: "SPARE", leds: [{color: 'red', count:2}]}},
-      { id: 'u10', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 10, type: 'server-1u', description: 'TrueNAS storage server', status: 'Online', faceplate: { text: "TRUENAS", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}, link: '/infra/nas'},
-      { id: 'u18', name: 'Sierra', uHeight: 4, uPosition: 18, type: 'server-4u', description: 'Game hosting server', status: 'Online', faceplate: { text: "PVE-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}, link: '/infra/pve-01'},
+      { id: 'u10', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 10, type: 'server-1u', description: 'TrueNAS storage server', status: 'Online', faceplate: { text: "TRUENAS", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}, infraMachineId: 'nas'},
+      { id: 'u18', name: 'Sierra', uHeight: 4, uPosition: 18, type: 'server-4u', description: 'Game hosting server', status: 'Online', faceplate: { text: "PVE-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}, infraMachineId: 'pve-01'},
     ];
 
     let currentHoveredItem: RackDevice | null = null;
     let infoBoxPosition = { top: 0, left: 0, visible: false, preferSide: 'right' };
     let rackWrapperEl: HTMLElement;
+
+    // Get the infrastructure machine for the currently hovered device
+    $: currentInfraMachine = currentHoveredItem?.infraMachineId
+      ? infrastructure.find(m => m.id === currentHoveredItem.infraMachineId)
+      : null;
 
     async function handleMouseEnter(item: RackDevice, event: MouseEvent) {
       currentHoveredItem = item;
@@ -74,12 +80,6 @@
               currentHoveredItem = null;
           }
       }, 200);
-    }
-
-    function handleDeviceClick(device: RackDevice) {
-      if (device.link) {
-        window.location.href = device.link;
-      }
     }
 
     const U_HEIGHT_PX = 30;
@@ -200,19 +200,11 @@
             {#if deviceInSlot && (deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller}
               {:else}
               <div
-                class="rack-device type-{(deviceInSlot || {type: 'spacer'}).type} flex items-center justify-center text-center text-muted-foreground relative {deviceInSlot?.link ? 'has-link' : ''}"
+                class="rack-device type-{(deviceInSlot || {type: 'spacer'}).type} flex items-center justify-center text-center text-muted-foreground relative"
                 style="height: { (deviceInSlot ? deviceInSlot.uHeight : 1) * U_HEIGHT_PX }px;"
                 on:mouseenter={(e) => deviceInSlot && deviceInSlot.type !== 'spacer' && !(deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller ? handleMouseEnter(deviceInSlot, e) : null}
                 on:mouseleave={deviceInSlot && deviceInSlot.type !== 'spacer' && !(deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller ? handleMouseLeave : null}
-                on:click={() => deviceInSlot && deviceInSlot.type !== 'spacer' && !(deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller ? handleDeviceClick(deviceInSlot) : null}
-                on:keydown={(e) => {
-                  if ((e.key === 'Enter' || e.key === ' ') && deviceInSlot && deviceInSlot.type !== 'spacer' && !(deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller) {
-                    e.preventDefault();
-                    handleDeviceClick(deviceInSlot);
-                  }
-                }}
-                role={deviceInSlot && deviceInSlot.type !== 'spacer' ? "button" : "presentation"}
-                tabindex={deviceInSlot && deviceInSlot.type !== 'spacer' ? 0 : -1}
+                role={deviceInSlot && deviceInSlot.type !== 'spacer' ? "region" : "presentation"}
                 aria-label={deviceInSlot?.name}
               >
                 {#if deviceInSlot && deviceInSlot.type !== 'spacer' && !(deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller}
@@ -264,35 +256,86 @@
             class="p-1"
             transition:flyAndScale={{ y: 15, duration: 300, start: 0.8 }}
           >
-            <Card class="shadow-2xl bg-card/95 backdrop-blur-sm">
-              <CardHeader class="pb-3 pt-4">
-                <CardTitle class="text-lg flex items-center">
-                  <Info class="h-5 w-5 mr-2 text-primary" />
-                  {currentHoveredItem.name}
-                </CardTitle>
-                {#if currentHoveredItem.uHeight}
-                  <CardDescription>{currentHoveredItem.uHeight}U - Type: {currentHoveredItem.type}</CardDescription>
-                {/if}
-              </CardHeader>
-              <CardContent class="text-sm space-y-2 pb-4">
-                <p class="text-muted-foreground">{currentHoveredItem.description}</p>
-                {#if currentHoveredItem.details && currentHoveredItem.details.length > 0}
-                  <ul class="list-disc list-inside pl-1 space-y-0.5">
-                    {#each currentHoveredItem.details as detail}
-                      <li>{detail}</li>
-                    {/each}
-                  </ul>
-                {/if}
-                {#if currentHoveredItem.link}
-                  <div class="mt-3 pt-3 border-t border-border/50">
-                    <p class="text-xs text-primary font-semibold flex items-center justify-center gap-1">
-                      <ArrowRight class="h-3 w-3" />
-                      Cliquez pour voir les détails
-                    </p>
+            {#if currentInfraMachine}
+              <!-- Full Infrastructure Card -->
+              <Card class="shadow-2xl h-full flex flex-col">
+                {#if currentInfraMachine.imageUrl}
+                  <div class="relative h-48 w-full overflow-hidden rounded-t-lg">
+                    <img
+                      src={currentInfraMachine.imageUrl}
+                      alt="Image de {currentInfraMachine.name}"
+                      class="object-cover w-full h-full"
+                    />
+                    {#if currentInfraMachine.status}
+                      <Badge
+                        variant={currentInfraMachine.status === 'Online' ? 'default' : currentInfraMachine.status === 'Offline' ? 'destructive' : 'secondary'}
+                        class="absolute top-2 right-2"
+                      >
+                        {#if currentInfraMachine.status === 'Online'} <Activity class="mr-1 h-3 w-3 text-green-400" /> {/if}
+                        {currentInfraMachine.status}
+                      </Badge>
+                    {/if}
                   </div>
                 {/if}
-              </CardContent>
-            </Card>
+
+                <CardHeader class="pb-4">
+                  <CardTitle class="text-xl">{currentInfraMachine.name}</CardTitle>
+                  <CardDescription class="flex items-center">
+                    {#if currentInfraMachine.os.icon}
+                      <svelte:component this={currentInfraMachine.os.icon} class="h-4 w-4 mr-1.5 text-muted-foreground" />
+                    {/if}
+                    {currentInfraMachine.os.name}
+                  </CardDescription>
+                  <p class="text-sm text-primary font-semibold pt-1">{currentInfraMachine.role}</p>
+                </CardHeader>
+
+                <CardContent class="flex-grow space-y-3 text-sm">
+                  <h4 class="font-semibold text-foreground mb-1">Spécifications Clés :</h4>
+                  <ul class="space-y-1.5">
+                    {#each currentInfraMachine.specs.slice(0, 3) as spec}
+                      <li class="flex items-center text-muted-foreground">
+                        {#if spec.icon}
+                          <svelte:component this={spec.icon} class="h-4 w-4 mr-2 text-primary/80" />
+                        {:else}
+                          <div class="w-4 mr-2"></div>
+                        {/if}
+                        <span class="font-medium text-foreground/90 min-w-[80px]">{spec.name}:</span>
+                        <span>{spec.value}</span>
+                      </li>
+                    {/each}
+                  </ul>
+                </CardContent>
+
+                <div class="p-6 pt-4 border-t mt-auto">
+                  <Button href={`/infra/${currentInfraMachine.id}`} variant="outline" size="sm" class="w-full">
+                    Voir tous les Détails <ArrowRight class="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </Card>
+            {:else}
+              <!-- Basic Rack Device Info -->
+              <Card class="shadow-2xl bg-card/95 backdrop-blur-sm">
+                <CardHeader class="pb-3 pt-4">
+                  <CardTitle class="text-lg flex items-center">
+                    <Info class="h-5 w-5 mr-2 text-primary" />
+                    {currentHoveredItem.name}
+                  </CardTitle>
+                  {#if currentHoveredItem.uHeight}
+                    <CardDescription>{currentHoveredItem.uHeight}U - Type: {currentHoveredItem.type}</CardDescription>
+                  {/if}
+                </CardHeader>
+                <CardContent class="text-sm space-y-2 pb-4">
+                  <p class="text-muted-foreground">{currentHoveredItem.description}</p>
+                  {#if currentHoveredItem.details && currentHoveredItem.details.length > 0}
+                    <ul class="list-disc list-inside pl-1 space-y-0.5">
+                      {#each currentHoveredItem.details as detail}
+                        <li>{detail}</li>
+                      {/each}
+                    </ul>
+                  {/if}
+                </CardContent>
+              </Card>
+            {/if}
           </div>
         {:else}
           <div class="p-4 text-center text-muted-foreground italic">
@@ -369,22 +412,6 @@
         0 4px 12px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         0 0 0 2px hsl(var(--primary) / 0.3);
-    }
-
-    .rack-device.has-link {
-      cursor: pointer;
-    }
-
-    .rack-device.has-link:hover {
-      transform: translateX(3px);
-      box-shadow:
-        0 6px 16px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        0 0 0 2px hsl(var(--primary) / 0.5);
-    }
-
-    .rack-device.has-link:active {
-      transform: translateX(1px);
     }
 
     .device-bezel {
