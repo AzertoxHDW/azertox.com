@@ -10,7 +10,6 @@
   import type { Selected } from "bits-ui";
   import { BROWSER } from 'esm-env';
   import { mobileTerminalTrigger } from '$lib/mobileMenuStore';
-  import { warp } from '$lib/utils';
 
   let showBootUpAnimation = false;
   let currentBootThemeOption: ThemeOption | undefined = undefined;
@@ -236,14 +235,7 @@
     <main
       class="flex-grow pt-16 lg:pt-8 transition-opacity duration-300 ease-in-out {showBootUpAnimation ? 'opacity-0 pointer-events-none absolute -z-10' : 'opacity-100'}"
     >
-      {#key $page.url.pathname}
-        <div
-          in:warp={{ duration: 350, delay: 120 }}
-          out:warp={{ duration: 250 }}
-        >
-          <slot />
-        </div>
-      {/key}
+      <slot />
     </main>
   {/if}
 </div>
