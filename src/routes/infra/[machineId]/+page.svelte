@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types';
   import { infrastructure, type Machine, type MachineSpec } from '$lib/infra-data';
+  import { rackDevices, TOTAL_U_SLOTS } from '$lib/rack-data';
   import { Badge } from "$lib/components/ui/badge"; //
   import { Button } from "$lib/components/ui/button"; //
   import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "$lib/components/ui/card"; //
@@ -12,26 +13,6 @@
   export let data: PageData;
 
   let machine: Machine | undefined = data.machine;
-
-  // Rack device mapping (matching data from rack page)
-  interface RackDevice {
-    id: string;
-    name: string;
-    uHeight: number;
-    uPosition: number;
-    type: string;
-    infraMachineId?: string;
-  }
-
-  const rackDevices: RackDevice[] = [
-    { id: 'u2', name: 'Network switch', uHeight: 1, uPosition: 2, type: 'switch' },
-    { id: 'u3', name: 'Raspberry Pi', uHeight: 1, uPosition: 3, type: 'arm-cluster' },
-    { id: 'u9', name: 'Dell Optiplex R230', uHeight: 1, uPosition: 9, type: 'server-1u' },
-    { id: 'u10', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 10, type: 'server-1u', infraMachineId: 'nas' },
-    { id: 'u18', name: 'Sierra', uHeight: 4, uPosition: 18, type: 'server-4u', infraMachineId: 'pve-01' },
-  ];
-
-  const TOTAL_U_SLOTS = 18;
 
   // Find rack position for current machine
   $: rackPosition = machine ? rackDevices.find(d => d.infraMachineId === machine.id) : null;
