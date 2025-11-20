@@ -143,7 +143,7 @@
       bind:this={errorTextElement}
       class="absolute cursor-move select-none"
       use:draggable={{
-        initialPosition: { x: browser ? window.innerWidth / 2 - 120 : 200, y: 250 }
+        initialPosition: { x: browser ? window.innerWidth / 2 - 120 : 200, y: 300 }
       }}
     >
       <p class="text-destructive text-lg font-bold">⚠ ERROR: PAGE NOT FOUND ⚠</p>
@@ -155,7 +155,7 @@
       class="absolute cursor-move terminal-window border border-border rounded-lg overflow-hidden shadow-2xl w-full max-w-3xl"
       use:draggable={{
         handleSelector: '.terminal-header-drag',
-        initialPosition: { x: browser ? (window.innerWidth - 800) / 2 : 50, y: 350 }
+        initialPosition: { x: browser ? (window.innerWidth - 800) / 2 : 50, y: 450 }
       }}
     >
         <!-- Terminal Header -->
@@ -215,7 +215,7 @@
 
     <!-- Draggable Home Button -->
     <div
-      class="absolute cursor-move select-none"
+      class="absolute select-none cursor-move"
       use:draggable={{
         initialPosition: { x: browser ? window.innerWidth / 2 - 100 : 300, y: browser ? window.innerHeight - 150 : 600 }
       }}
@@ -223,7 +223,7 @@
       <Button
         href="/"
         variant="default"
-        class="px-8 py-3 gap-2 shadow-2xl"
+        class="px-8 py-3 gap-2 shadow-2xl pointer-events-auto"
       >
         <Home class="h-5 w-5" /> Return to Home
       </Button>
