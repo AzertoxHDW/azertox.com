@@ -219,24 +219,25 @@
       <!-- Mobile Terminal (Full Screen Overlay) -->
       {#if showTerminal}
         <div
-          class="fixed inset-0 z-[200] bg-background/95 backdrop-blur-sm p-4"
+          class="fixed inset-0 z-[200] bg-background/95 backdrop-blur-sm p-4 flex flex-col"
           in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
         >
-          <!-- Large Close Button for Mobile -->
+          <div class="terminal-window flex-1 flex flex-col mb-4">
+            <HomeTerminal onClose={closeTerminal} />
+          </div>
+
+          <!-- Large Close Button at Bottom Center -->
           <button
             on:click={closeTerminal}
-            class="absolute top-4 right-4 z-10 w-12 h-12 rounded-full bg-destructive/20 hover:bg-destructive/30 border border-destructive/50 flex items-center justify-center transition-all"
+            class="w-full max-w-xs mx-auto py-4 rounded-lg bg-destructive/20 hover:bg-destructive/30 border-2 border-destructive/50 flex items-center justify-center gap-2 transition-all text-destructive font-semibold"
             aria-label="Fermer le terminal"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-destructive">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
+            Fermer le terminal
           </button>
-
-          <div class="terminal-window h-full flex flex-col">
-            <HomeTerminal onClose={closeTerminal} />
-          </div>
         </div>
       {/if}
     {:else}
