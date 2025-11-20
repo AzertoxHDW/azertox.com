@@ -151,7 +151,7 @@
 {#if $currentTheme !== 'win2000'}
   <StarField />
 {/if}
-<div class="w-full flex flex-col text-foreground">
+<div class="w-full min-h-screen flex flex-col text-foreground">
     <!-- Terminal Toggle Button (Desktop only) -->
     <button
       on:click={toggleTerminal}
@@ -174,7 +174,7 @@
 
     <!-- Mobile: Vertical Stack Layout -->
     {#if isMobile}
-      <div class="flex-1 px-4 pb-48 space-y-4">
+      <div class="flex-1 px-4 mb-32 space-y-4">
         {#each dashboardLinks as item, i}
           <div
             class="terminal-window w-full"
@@ -311,7 +311,7 @@
     {/if}
 
     <!-- Footer -->
-    <footer class="text-center text-xs md:text-sm text-muted-foreground py-4 md:py-8 px-4 relative z-[100]">
+    <footer class="text-center text-xs md:text-sm text-muted-foreground py-4 md:py-8 px-4 mt-auto relative z-[100]">
         <p class="break-words">&copy; {new Date().getFullYear()} Dylan "Azertox" R. | Horloge système: {new Date().toLocaleTimeString('fr-BE')} | Source code: <a href="https://github.com/AzertoxHDW/azertox.com" class="text-primary hover:underline">Github</a></p>
         <p class="mt-1">Développé avec Svelte & TailwindCSS</p>
     </footer>
