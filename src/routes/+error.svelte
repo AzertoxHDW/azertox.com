@@ -143,7 +143,7 @@
       bind:this={errorTextElement}
       class="absolute cursor-move select-none"
       use:draggable={{
-        initialPosition: { x: browser ? window.innerWidth / 2 - 120 : 200, y: 300 }
+        initialPosition: { x: browser ? window.innerWidth / 2 - 120 : 200, y: 380 }
       }}
     >
       <p class="text-destructive text-lg font-bold">⚠ ERROR: PAGE NOT FOUND ⚠</p>
