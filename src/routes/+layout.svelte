@@ -269,10 +269,10 @@
             <a
               bind:this={navItemElements[i]}
               href={item.href}
-              class="relative flex items-center text-xs sm:text-sm font-medium px-3 py-2 rounded-full transition-colors z-10
+              class="relative flex items-center text-xs sm:text-sm font-medium px-3 py-2 rounded-full z-10
                     {isHovered || isActive
-                        ? 'text-primary-foreground'
-                        : 'text-muted-foreground hover:text-primary'}"
+                        ? 'text-primary-foreground transition-none'
+                        : 'text-muted-foreground transition-colors hover:text-primary'}"
               aria-current={isActive ? "page" : undefined}
             >
               <svelte:component this={item.icon} class="mr-1.5 h-4 w-4 {isHovered || isActive ? 'text-primary-foreground' : ''}" />
