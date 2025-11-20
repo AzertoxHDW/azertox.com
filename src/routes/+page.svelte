@@ -295,12 +295,12 @@
       {#if showTerminal}
         <div
           bind:this={terminalElement}
-          class="terminal-window absolute {activeWindowIndex === -1 ? 'active' : ''}"
-          style="z-index: 200; width: 600px;"
+          class="terminal-window absolute {activeWindowIndex === -1 ? 'active' : ''} w-[90vw] max-w-4xl"
+          style="z-index: 200;"
           in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
           use:draggable={{
             handleSelector: '.terminal-titlebar',
-            initialPosition: { x: browser ? (window.innerWidth - 600) / 2 : 250, y: 300 },
+            initialPosition: { x: browser ? (window.innerWidth * 0.05) : 50, y: 300 },
             onDragStart: () => bringTerminalToFront()
           }}
           on:mousedown={() => bringTerminalToFront()}
