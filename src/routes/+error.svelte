@@ -4,7 +4,9 @@
   import { Home, Terminal, AlertTriangle } from 'lucide-svelte';
   import { currentTheme } from '$lib/themeStore';
   import StarField from '$lib/components/StarField.svelte';
+  import { draggable } from '$lib/actions/draggable';
   import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
 
   let errorCode = $page.status;
   const errorObject = $page.error as Error & { stack?: string };
@@ -14,17 +16,29 @@
   let stopCode = errorCode === 404 ? "0x00000404" : `0x${errorCode.toString(16).toUpperCase().padStart(8, '0')}`;
   let errorName = errorCode === 404 ? "PAGE_NOT_FOUND" : "KERNEL_MODE_EXCEPTION";
 
-  // Terminal ASCII art for 404
-  const ascii404 = `
-      ██╗  ██╗  ██████╗  ██╗  ██╗
-      ██║  ██║ ██╔═████╗ ██║  ██║
-      ███████║ ██║██╔██║ ███████║
-      ╚════██║ ████╔╝██║ ╚════██║
-           ██║ ╚██████╔╝      ██║
-           ╚═╝  ╚═════╝       ╚═╝
+  // Individual ASCII art digits for draggable 404
+  const digit4 = `
+██╗  ██╗
+██║  ██║
+███████║
+╚════██║
+     ██║
+     ╚═╝`;
 
-         ERROR: PAGE NOT FOUND
-  `;
+  const digit0 = `
+ ██████╗
+██╔═████╗
+██║██╔██║
+████╔╝██║
+╚██████╔╝
+ ╚═════╝`;
+
+  // Draggable element positions
+  let terminalElement: HTMLElement;
+  let digit1Element: HTMLElement;
+  let digit2Element: HTMLElement;
+  let digit3Element: HTMLElement;
+  let errorTextElement: HTMLElement;
 
   let glitchOffset = 0;
   let glitchInterval: number;
@@ -90,25 +104,68 @@
 {:else}
   <!-- Terminal-Style 404 -->
   <div
-    class="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4 bg-background text-foreground"
+    class="fixed inset-0 z-[999] overflow-hidden bg-background text-foreground"
     role="alert"
   >
-    <div class="w-full max-w-4xl space-y-6">
-      <!-- ASCII Art with glitch effect (outside terminal) -->
-      <div class="text-center">
-        <pre class="text-primary text-base md:text-lg leading-tight inline-block" style="transform: translateX({glitchOffset}px)">{ascii404}</pre>
-      </div>
+    <!-- Draggable 404 Digits -->
+    <div
+      bind:this={digit1Element}
+      class="absolute cursor-move select-none"
+      use:draggable={{
+        initialPosition: { x: browser ? window.innerWidth / 2 - 200 : 100, y: 100 }
+      }}
+    >
+      <pre class="text-primary text-2xl md:text-3xl leading-tight" style="transform: translateX({glitchOffset}px)">{digit4}</pre>
+    </div>
 
-      <!-- Terminal Window -->
-      <div class="terminal-window border border-border rounded-lg overflow-hidden shadow-2xl">
+    <div
+      bind:this={digit2Element}
+      class="absolute cursor-move select-none"
+      use:draggable={{
+        initialPosition: { x: browser ? window.innerWidth / 2 - 50 : 250, y: 100 }
+      }}
+    >
+      <pre class="text-primary text-2xl md:text-3xl leading-tight" style="transform: translateX({glitchOffset}px)">{digit0}</pre>
+    </div>
+
+    <div
+      bind:this={digit3Element}
+      class="absolute cursor-move select-none"
+      use:draggable={{
+        initialPosition: { x: browser ? window.innerWidth / 2 + 100 : 400, y: 100 }
+      }}
+    >
+      <pre class="text-primary text-2xl md:text-3xl leading-tight" style="transform: translateX({glitchOffset}px)">{digit4}</pre>
+    </div>
+
+    <!-- Draggable Error Text -->
+    <div
+      bind:this={errorTextElement}
+      class="absolute cursor-move select-none"
+      use:draggable={{
+        initialPosition: { x: browser ? window.innerWidth / 2 - 120 : 200, y: 250 }
+      }}
+    >
+      <p class="text-destructive text-lg font-bold">⚠ ERROR: PAGE NOT FOUND ⚠</p>
+    </div>
+
+    <!-- Draggable Terminal Window -->
+    <div
+      bind:this={terminalElement}
+      class="absolute cursor-move terminal-window border border-border rounded-lg overflow-hidden shadow-2xl w-full max-w-3xl"
+      use:draggable={{
+        handleSelector: '.terminal-header-drag',
+        initialPosition: { x: browser ? (window.innerWidth - 800) / 2 : 50, y: 350 }
+      }}
+    >
         <!-- Terminal Header -->
-        <div class="bg-muted border-b border-border px-4 py-2 flex items-center gap-2">
+        <div class="terminal-header-drag bg-muted border-b border-border px-4 py-2 flex items-center gap-2 cursor-move">
           <div class="flex gap-1.5">
             <div class="w-3 h-3 rounded-full bg-red-500"></div>
             <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
             <div class="w-3 h-3 rounded-full bg-green-500"></div>
           </div>
-          <span class="text-sm text-muted-foreground font-mono ml-2">system@azertox:~/{errorCode}</span>
+          <span class="text-sm text-muted-foreground font-mono ml-2">system@azertox:~/{errorCode} - Drag me around!</span>
         </div>
 
         <!-- Terminal Content -->
@@ -155,18 +212,27 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Action Button -->
-      <div class="mt-6 text-center">
-        <Button
-          href="/"
-          variant="default"
-          class="px-8 py-3 gap-2"
-        >
-          <Home class="h-5 w-5" /> Return to Home
-        </Button>
-        <p class="mt-3 text-sm text-muted-foreground">or press Ctrl+C to abort (just kidding)</p>
-      </div>
+    <!-- Draggable Home Button -->
+    <div
+      class="absolute cursor-move select-none"
+      use:draggable={{
+        initialPosition: { x: browser ? window.innerWidth / 2 - 100 : 300, y: browser ? window.innerHeight - 150 : 600 }
+      }}
+    >
+      <Button
+        href="/"
+        variant="default"
+        class="px-8 py-3 gap-2 shadow-2xl"
+      >
+        <Home class="h-5 w-5" /> Return to Home
+      </Button>
+    </div>
+
+    <!-- Helpful hint -->
+    <div class="absolute bottom-4 right-4 text-sm text-muted-foreground opacity-70 select-none">
+      💡 Hint: Everything is draggable! Have fun!
     </div>
   </div>
 {/if}
