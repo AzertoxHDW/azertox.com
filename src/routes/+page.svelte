@@ -14,8 +14,8 @@
   import { currentTheme } from '$lib/themeStore';
   import { mobileTerminalTrigger } from '$lib/mobileMenuStore';
 
-  const CARD_WIDTH = 450;
-  const CARD_GAP = 40;
+  const CARD_WIDTH = 380;
+  const CARD_GAP = 30;
 
   // Dashboard links data
   const dashboardLinks = [
@@ -144,7 +144,7 @@
 <style lang="postcss">
   /* Styles for the icon wrappers in terminal cards */
   .icon-wrapper {
-    @apply p-3 bg-primary/10 rounded-lg text-primary inline-flex;
+    @apply p-2 bg-primary/10 rounded-md text-primary inline-flex;
   }
 </style>
 
@@ -155,19 +155,19 @@
     <!-- Terminal Toggle Button (Desktop only) -->
     <button
       on:click={toggleTerminal}
-      class="terminal-toggle-btn hidden lg:flex fixed top-4 right-4 lg:top-8 lg:right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+      class="terminal-toggle-btn hidden lg:flex fixed top-4 right-4 lg:top-6 lg:right-6 z-[150] w-10 h-10 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
       aria-label="{showTerminal ? 'Fermer' : 'Ouvrir'} Terminal"
     >
-      <Terminal class="h-5 w-5 text-primary" />
+      <Terminal class="h-4 w-4 text-primary" />
     </button>
 
     <!-- Header -->
-    <header class="text-center space-y-2 py-6 px-4 md:py-8 relative z-[100]" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
-      <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight flex flex-col md:flex-row items-center justify-center gap-2 md:gap-0">
-          <Terminal class="h-8 w-8 md:h-10 md:w-10 md:mr-3 text-primary" />
+    <header class="text-center space-y-2 py-4 px-4 md:py-6 relative z-[100]" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
+      <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight flex flex-col md:flex-row items-center justify-center gap-2 md:gap-0">
+          <Terminal class="h-6 w-6 md:h-8 md:w-8 md:mr-2 text-primary" />
           <span class="flex items-center gap-2">Interface Système: <span class="text-primary">Az'</span></span>
       </h1>
-      <p class="text-sm md:text-base lg:text-lg text-muted-foreground px-4">
+      <p class="text-xs md:text-sm lg:text-base text-muted-foreground px-4">
         Tableau de bord opérationnel pour les ressources système et la navigation des projets.
       </p>
     </header>
@@ -193,21 +193,21 @@
             <!-- Terminal Content -->
             <div class="terminal-content">
               <Card class="h-full flex flex-col !border-0 !shadow-none !rounded-none">
-                <CardHeader>
-                  <div class="flex items-center gap-3">
+                <CardHeader class="pb-3">
+                  <div class="flex items-center gap-2">
                     <div class="icon-wrapper">
-                        <svelte:component this={item.icon} class="h-7 w-7" />
+                        <svelte:component this={item.icon} class="h-5 w-5" />
                     </div>
-                    <CardTitle class="text-xl !mt-0">{item.title}</CardTitle>
+                    <CardTitle class="text-lg !mt-0">{item.title}</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent class="flex-grow">
-                  <p class="text-muted-foreground text-sm mb-3">{item.description}</p>
-                  <p class="text-xs font-mono text-primary/80 bg-muted/50 p-2 rounded">{item.details}</p>
+                <CardContent class="flex-grow py-2">
+                  <p class="text-muted-foreground text-xs mb-2">{item.description}</p>
+                  <p class="text-xs font-mono text-primary/80 bg-muted/50 p-1.5 rounded">{item.details}</p>
                 </CardContent>
-                <div class="p-4 pt-2">
-                  <Button href={item.href} class="w-full" variant="outline">
-                    Explorer <ArrowRight class="ml-2 h-4 w-4" />
+                <div class="p-3 pt-2">
+                  <Button href={item.href} class="w-full text-sm py-1.5" variant="outline">
+                    Explorer <ArrowRight class="ml-2 h-3 w-3" />
                   </Button>
                 </div>
               </Card>
@@ -268,21 +268,21 @@
             <!-- Terminal Content -->
             <div class="terminal-content" on:mousedown={() => bringToFront(i)}>
               <Card class="h-full flex flex-col !border-0 !shadow-none !rounded-none">
-                <CardHeader>
-                  <div class="flex items-center gap-3">
+                <CardHeader class="pb-3">
+                  <div class="flex items-center gap-2">
                     <div class="icon-wrapper">
-                        <svelte:component this={item.icon} class="h-7 w-7" />
+                        <svelte:component this={item.icon} class="h-5 w-5" />
                     </div>
-                    <CardTitle class="text-xl !mt-0 group-hover:text-primary">{item.title}</CardTitle>
+                    <CardTitle class="text-lg !mt-0 group-hover:text-primary">{item.title}</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent class="flex-grow">
-                  <p class="text-muted-foreground text-sm mb-3">{item.description}</p>
-                  <p class="text-xs font-mono text-primary/80 bg-muted/50 p-2 rounded">{item.details}</p>
+                <CardContent class="flex-grow py-2">
+                  <p class="text-muted-foreground text-xs mb-2">{item.description}</p>
+                  <p class="text-xs font-mono text-primary/80 bg-muted/50 p-1.5 rounded">{item.details}</p>
                 </CardContent>
-                <div class="p-4 pt-2">
-                  <Button href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} class="w-full" variant="outline">
-                    {item.external ? 'Accéder' : 'Explorer'} <ArrowRight class="ml-2 h-4 w-4" />
+                <div class="p-3 pt-2">
+                  <Button href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} class="w-full text-sm py-1.5" variant="outline">
+                    {item.external ? 'Accéder' : 'Explorer'} <ArrowRight class="ml-2 h-3 w-3" />
                   </Button>
                 </div>
               </Card>
@@ -296,11 +296,11 @@
         <div
           bind:this={terminalElement}
           class="terminal-window absolute {activeWindowIndex === -1 ? 'active' : ''}"
-          style="z-index: 200; width: 700px;"
+          style="z-index: 200; width: 600px;"
           in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
           use:draggable={{
             handleSelector: '.terminal-titlebar',
-            initialPosition: { x: browser ? (window.innerWidth - 700) / 2 : 250, y: 300 },
+            initialPosition: { x: browser ? (window.innerWidth - 600) / 2 : 250, y: 300 },
             onDragStart: () => bringTerminalToFront()
           }}
           on:mousedown={() => bringTerminalToFront()}
@@ -311,7 +311,7 @@
     {/if}
 
     <!-- Footer -->
-    <footer class="text-center text-xs md:text-sm text-muted-foreground py-4 md:py-8 px-4 mt-auto relative z-[100]">
+    <footer class="text-center text-[10px] md:text-xs text-muted-foreground py-3 md:py-6 px-4 mt-auto relative z-[100]">
         <p class="break-words">&copy; {new Date().getFullYear()} Dylan "Azertox" R. | Horloge système: {new Date().toLocaleTimeString('fr-BE')} | Source code: <a href="https://github.com/AzertoxHDW/azertox.com" class="text-primary hover:underline">Github</a></p>
         <p class="mt-1">Développé avec Svelte & TailwindCSS</p>
     </footer>

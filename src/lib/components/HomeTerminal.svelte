@@ -171,16 +171,16 @@
   }
 
   .terminal-titlebar {
-    @apply bg-primary/20 border-b border-primary/30 px-3 py-2 flex items-center justify-between;
+    @apply bg-primary/20 border-b border-primary/30 px-2 py-1.5 flex items-center justify-between;
     @apply cursor-grab active:cursor-grabbing;
   }
 
   .terminal-controls {
-    @apply flex gap-2;
+    @apply flex gap-1.5;
   }
 
   .terminal-btn {
-    @apply w-3 h-3 rounded-full border-0 p-0;
+    @apply w-2.5 h-2.5 rounded-full border-0 p-0;
   }
 
   .terminal-btn.close {
@@ -196,13 +196,13 @@
   }
 
   .terminal-title {
-    @apply text-sm font-mono text-primary absolute left-1/2 -translate-x-1/2 pointer-events-none;
+    @apply text-xs font-mono text-primary absolute left-1/2 -translate-x-1/2 pointer-events-none;
   }
 
   .terminal-content {
-    @apply p-4 font-mono text-sm overflow-y-auto cursor-text;
+    @apply p-3 font-mono text-xs overflow-y-auto cursor-text;
     @apply bg-card/50 backdrop-blur-sm;
-    height: 220px;
+    height: 180px;
   }
 
   .terminal-body {
