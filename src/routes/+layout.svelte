@@ -272,7 +272,7 @@
               href={item.href}
               class="relative flex items-center text-xs sm:text-sm px-3 py-2 rounded-full z-10
                     {hasBlob ? '!text-white' : 'text-muted-foreground hover:text-primary'}
-                    {isActive ? 'font-bold' : 'font-medium'}
+                    {isActive ? 'font-bold underline decoration-primary decoration-2 underline-offset-4' : 'font-medium'}
                     {hasBlob ? 'transition-none' : 'transition-colors'}"
               aria-current={isActive ? "page" : undefined}
             >
