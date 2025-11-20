@@ -6,7 +6,7 @@
   import { Button } from "$lib/components/ui/button"; //
   import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "$lib/components/ui/card"; //
   // Added Laptop to the import list
-  import { ArrowLeft, ExternalLink, Activity, CalendarDays, Info, ListChecks, ImageIcon, Laptop, Server, Cpu, MemoryStick, HardDrive, Network, Terminal as TerminalIcon, X } from "lucide-svelte";
+  import { ArrowLeft, ExternalLink, Activity, CalendarDays, Info, ListChecks, ImageIcon, Laptop, Server, Cpu, MemoryStick, HardDrive, Network, Terminal as TerminalIcon, X, ChevronLeft, ChevronRight } from "lucide-svelte";
   import { flyAndScale } from "$lib/utils"; //
   import { onMount } from 'svelte';
   import { fade, scale } from 'svelte/transition';
@@ -20,12 +20,22 @@
 
   let selectedImage: string | undefined;
   let lightboxOpen = false;
+  let currentImageIndex = 0;
+
+  // Build gallery array (includes all images from gallery or just the main imageUrl)
+  $: galleryImages = machine?.gallery && machine.gallery.length > 0
+    ? machine.gallery
+    : machine?.imageUrl
+    ? [machine.imageUrl]
+    : [];
 
   onMount(() => {
     if (machine?.gallery && machine.gallery.length > 0) {
       selectedImage = machine.gallery[0];
+      currentImageIndex = 0;
     } else if (machine?.imageUrl) {
       selectedImage = machine.imageUrl;
+      currentImageIndex = 0;
     }
   });
 
@@ -39,9 +49,29 @@
     document.body.style.overflow = '';
   }
 
+  function nextImage() {
+    if (galleryImages.length <= 1) return;
+    currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+    selectedImage = galleryImages[currentImageIndex];
+  }
+
+  function previousImage() {
+    if (galleryImages.length <= 1) return;
+    currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+    selectedImage = galleryImages[currentImageIndex];
+  }
+
   function handleKeydown(e: KeyboardEvent) {
-    if (e.key === 'Escape' && lightboxOpen) {
+    if (!lightboxOpen) return;
+
+    if (e.key === 'Escape') {
       closeLightbox();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      nextImage();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      previousImage();
     }
   }
 
@@ -286,6 +316,7 @@
         aria-modal="true"
         transition:fade={{ duration: 200 }}
       >
+        <!-- Close Button -->
         <button
           on:click={closeLightbox}
           class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
@@ -294,16 +325,54 @@
         >
           <X class="w-8 h-8" />
         </button>
+
+        <!-- Image Counter -->
+        {#if galleryImages.length > 1}
+        <div
+          class="absolute top-4 left-1/2 -translate-x-1/2 text-white bg-black/50 px-4 py-2 rounded-lg text-sm font-medium z-10"
+          in:fade={{ duration: 150, delay: 100 }}
+        >
+          {currentImageIndex + 1} / {galleryImages.length}
+        </div>
+        {/if}
+
+        <!-- Previous Button -->
+        {#if galleryImages.length > 1}
+        <button
+          on:click|stopPropagation={previousImage}
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-10 bg-black/30 hover:bg-black/50 rounded-full p-3"
+          aria-label="Image précédente"
+          in:fade={{ duration: 150, delay: 100 }}
+        >
+          <ChevronLeft class="w-8 h-8" />
+        </button>
+        {/if}
+
+        <!-- Next Button -->
+        {#if galleryImages.length > 1}
+        <button
+          on:click|stopPropagation={nextImage}
+          class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-10 bg-black/30 hover:bg-black/50 rounded-full p-3"
+          aria-label="Image suivante"
+          in:fade={{ duration: 150, delay: 100 }}
+        >
+          <ChevronRight class="w-8 h-8" />
+        </button>
+        {/if}
+
+        <!-- Image Container -->
         <div
           class="relative max-w-7xl max-h-full"
           on:click|stopPropagation
-          in:scale={{ duration: 300, start: 0.9, delay: 50 }}
         >
+          {#key selectedImage}
           <img
             src={selectedImage}
-            alt="Image de {machine.name}"
+            alt="Image {currentImageIndex + 1} de {machine.name}"
             class="max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-lg"
+            in:fade={{ duration: 200 }}
           />
+          {/key}
         </div>
       </div>
     {/if}
