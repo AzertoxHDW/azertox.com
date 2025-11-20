@@ -28,7 +28,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
     {#each infrastructure as machine, i (machine.id)}
     <div in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: i * 120 }}>
-        <Card class="flex flex-col h-full shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
+        <Card class="flex flex-col h-full shadow-lg hover:shadow-primary/20 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01]">
           {#if machine.imageUrl}
             <a href={`/infra/${machine.id}`} class="block relative h-48 w-full overflow-hidden rounded-t-lg group">
               <img

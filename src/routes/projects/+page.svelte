@@ -124,7 +124,7 @@
     {#each projects as project, i (project.id)}
       {@const statusConfig = getStatusConfig(project.status)}
       <div in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: i * 120 }}>
-        <Card class="overflow-hidden hover:shadow-lg hover:shadow-primary/10 transition-shadow duration-300">
+        <Card class="overflow-hidden hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01]">
           <div class="flex flex-col md:flex-row">
             {#if project.imageUrl}
               <div class="md:w-48 md:flex-shrink-0">

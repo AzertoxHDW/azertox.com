@@ -63,7 +63,7 @@
         <h2 class="text-4xl md:text-5xl font-bold text-foreground">Qui je suis</h2>
         <span class="text-4xl md:text-5xl font-bold text-primary blinking-cursor ml-1">_</span>
       </div>
-      <Card class="shadow-lg">
+      <Card class="shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.005]">
         <CardContent class="p-6 md:p-8">
           <p class="text-xl md:text-2xl text-muted-foreground leading-relaxed">
             Je suis Dylan R. (ou Az' sur internet), {yearsSince()} ans, passionné de technologie. Je passe mon temps à cultiver ma passion en tant qu'autodidacte au travers de plus en plus de domaines.
@@ -78,7 +78,7 @@
         <h2 class="text-4xl md:text-5xl font-bold text-foreground">Ce que je fais</h2>
          <span class="text-4xl md:text-5xl font-bold text-primary blinking-cursor ml-1">_</span>
       </div>
-      <Card class="shadow-lg">
+      <Card class="shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.005]">
         <CardContent class="p-6 md:p-8">
           <p class="text-xl md:text-2xl text-muted-foreground leading-relaxed">
             Je cultive mes connaissances depuis de nombreuses années dans plusieurs domaines tels que le développement, le "hardware", ou la gestion de serveurs
