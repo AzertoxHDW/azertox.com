@@ -89,7 +89,7 @@
   </div>
 
   <!-- Bio -->
-  <section class="mb-12" in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: 120 }}>
+  <section class="mb-12" in:flyAndScale={{ y: 50, duration: 400, start: 0.75, delay: 120 }}>
     <Card class="shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <CardContent class="p-6 md:p-8">
         <div class="flex items-start gap-3 mb-4">
@@ -113,7 +113,7 @@
   </section>
 
   <!-- Interests -->
-  <section in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: 240 }}>
+  <section in:flyAndScale={{ y: 50, duration: 400, start: 0.75, delay: 240 }}>
     <h2 class="text-2xl md:text-3xl font-bold text-foreground mb-6 flex items-center gap-3">
       <Server class="h-7 w-7 text-primary" />
       Centres d'intérêt
