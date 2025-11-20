@@ -162,7 +162,7 @@
     </button>
 
     <!-- Header -->
-    <header class="text-center space-y-2 py-4 px-4 md:py-6 relative z-[100]" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
+    <header class="text-center space-y-2 py-4 px-4 md:py-6 relative z-[100]" in:flyAndScale={{ y:-30, duration:700, start:0.7}}>
       <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight flex flex-col md:flex-row items-center justify-center gap-2 md:gap-0">
           <Terminal class="h-6 w-6 md:h-8 md:w-8 md:mr-2 text-primary" />
           <span class="flex items-center gap-2">Interface Système: <span class="text-primary">Az'</span></span>
@@ -178,7 +178,7 @@
         {#each dashboardLinks as item, i}
           <div
             class="terminal-window w-full"
-            in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
+            in:flyAndScale|global={{ y: 50, duration: 600, start: 0.75, delay: i * 150 }}
           >
             <!-- Terminal Title Bar -->
             <div class="terminal-titlebar">
@@ -220,7 +220,7 @@
       {#if showTerminal}
         <div
           class="fixed inset-0 z-[200] bg-background/95 backdrop-blur-sm p-4 flex flex-col"
-          in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
+          in:flyAndScale|global={{ y: 60, duration: 700, start: 0.7 }}
         >
           <div class="terminal-window flex-1 flex flex-col mb-4">
             <HomeTerminal onClose={closeTerminal} />
@@ -248,7 +248,7 @@
             bind:this={cardElements[i]}
             class="terminal-window absolute {activeWindowIndex === i ? 'active' : ''}"
             style="z-index: {10 + i}; width: {CARD_WIDTH}px;"
-            in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
+            in:flyAndScale|global={{ y: 50, duration: 600, start: 0.75, delay: i * 150 }}
             use:draggable={{
               handleSelector: '.terminal-titlebar',
               initialPosition: { x: initialPositions[i].x, y: initialPositions[i].y },
@@ -297,7 +297,7 @@
           bind:this={terminalElement}
           class="terminal-window absolute {activeWindowIndex === -1 ? 'active' : ''} w-[90vw] max-w-4xl"
           style="z-index: 200;"
-          in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
+          in:flyAndScale|global={{ y: 60, duration: 700, start: 0.7 }}
           use:draggable={{
             handleSelector: '.terminal-titlebar',
             initialPosition: { x: browser ? (window.innerWidth * 0.05) : 50, y: 300 },

@@ -46,7 +46,7 @@
 </style>
 
 <div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer">
-  <div class="text-center mb-12 md:mb-16" in:flyAndScale={{ y: -20, duration: 500, start: 0.95 }}>
+  <div class="text-center mb-12 md:mb-16" in:flyAndScale={{ y: -40, duration: 700, start: 0.7 }}>
     <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground flex items-center justify-center">
       <UserCircle class="w-10 h-10 md:w-12 md:h-12 mr-3 text-primary" />
       À propos de moi
@@ -57,7 +57,7 @@
   </div>
 
   <div class="space-y-16 md:space-y-24">
-    <section in:flyAndScale|global={{ y: 20, duration: 500 }}>
+    <section in:flyAndScale|global={{ y: 50, duration: 600, start: 0.75 }}>
       <div class="flex items-center mb-6">
         <Terminal class="h-10 w-10 mr-3 text-primary" />
         <h2 class="text-4xl md:text-5xl font-bold text-foreground">Qui je suis</h2>
@@ -72,7 +72,7 @@
       </Card>
     </section>
 
-    <section in:flyAndScale|global={{ y: 20, duration: 500 }}>
+    <section in:flyAndScale|global={{ y: 50, duration: 600, start: 0.75 }}>
       <div class="flex items-center mb-6">
          <Terminal class="h-10 w-10 mr-3 text-primary" />
         <h2 class="text-4xl md:text-5xl font-bold text-foreground">Ce que je fais</h2>
