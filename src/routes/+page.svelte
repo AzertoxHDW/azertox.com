@@ -178,7 +178,7 @@
         {#each dashboardLinks as item, i}
           <div
             class="terminal-window w-full"
-            in:flyAndScale={{ y: 50, duration: 400, start: 0.75, delay: i * 120 }}
+            in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: i * 120 }}
           >
             <!-- Terminal Title Bar -->
             <div class="terminal-titlebar">
@@ -220,7 +220,7 @@
       {#if showTerminal}
         <div
           class="fixed inset-0 z-[200] bg-background/95 backdrop-blur-sm p-4 flex flex-col"
-          in:flyAndScale={{ y: 60, duration: 450, start: 0.7 }}
+          in:flyAndScale|global={{ y: 60, duration: 450, start: 0.7 }}
         >
           <div class="terminal-window flex-1 flex flex-col mb-4">
             <HomeTerminal onClose={closeTerminal} />
@@ -248,7 +248,7 @@
             bind:this={cardElements[i]}
             class="terminal-window absolute {activeWindowIndex === i ? 'active' : ''}"
             style="z-index: {10 + i}; width: {CARD_WIDTH}px;"
-            in:flyAndScale={{ y: 50, duration: 400, start: 0.75, delay: i * 120 }}
+            in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: i * 120 }}
             use:draggable={{
               handleSelector: '.terminal-titlebar',
               initialPosition: { x: initialPositions[i].x, y: initialPositions[i].y },
@@ -297,7 +297,7 @@
           bind:this={terminalElement}
           class="terminal-window absolute {activeWindowIndex === -1 ? 'active' : ''} w-[90vw] max-w-4xl"
           style="z-index: 200;"
-          in:flyAndScale={{ y: 60, duration: 450, start: 0.7 }}
+          in:flyAndScale|global={{ y: 60, duration: 450, start: 0.7 }}
           use:draggable={{
             handleSelector: '.terminal-titlebar',
             initialPosition: { x: browser ? (window.innerWidth * 0.05) : 50, y: 300 },
