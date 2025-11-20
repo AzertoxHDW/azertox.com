@@ -174,7 +174,7 @@
 
     <!-- Mobile: Vertical Stack Layout -->
     {#if isMobile}
-      <div class="flex-1 px-4 pb-8 space-y-4">
+      <div class="flex-1 px-4 pb-24 space-y-4">
         {#each dashboardLinks as item, i}
           <div
             class="terminal-window w-full"
