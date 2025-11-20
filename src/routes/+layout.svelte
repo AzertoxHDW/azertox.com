@@ -16,6 +16,7 @@
 
   // Mobile menu state
   let mobileMenuOpen = false;
+  let showScrollTop = false;
 
   // Reactive statement to check if win2000 theme is active
   $: isWin2000Theme = ($currentTheme === 'win2000');
@@ -64,10 +65,19 @@
 
     if (BROWSER) {
       window.addEventListener('keydown', handleGlobalKeyDown);
+
+      // Track scroll position for scroll to top button
+      const handleScroll = () => {
+        showScrollTop = window.scrollY > 300; // Show after 300px scroll
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
     }
+
     return () => {
         if (BROWSER) {
             window.removeEventListener('keydown', handleGlobalKeyDown);
+            window.removeEventListener('scroll', handleScroll);
         }
     };
   });
@@ -129,12 +139,12 @@
 <div class="flex flex-col min-h-screen bg-background text-foreground {isWin2000Theme ? 'win2000-theme' : ''}">
 
   {#if !showBootUpAnimation}
-    <!-- Mobile Header with Hamburger and Logo -->
-    <div class="md:hidden fixed top-4 left-4 right-4 z-[160] flex items-center gap-3">
+    <!-- Mobile Header with Hamburger -->
+    <div class="md:hidden fixed top-4 left-4 z-[160]">
       <!-- Hamburger Button -->
       <button
         on:click={toggleMobileMenu}
-        class="w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm flex-shrink-0"
+        class="w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
         aria-label="{mobileMenuOpen ? 'Fermer' : 'Ouvrir'} le menu"
       >
         {#if mobileMenuOpen}
@@ -143,22 +153,20 @@
           <Menu class="h-6 w-6 text-primary" />
         {/if}
       </button>
-
-      <!-- Logo and Title -->
-      <div class="flex items-center gap-2 bg-background/80 backdrop-blur-sm border border-border/40 rounded-full px-4 py-2 flex-1">
-        <img src="/favicon.png" alt="Logo" class="h-5 w-5 flex-shrink-0" />
-        <span class="text-lg font-bold text-foreground">Az'</span>
-      </div>
-
-      <!-- Scroll to Top Button -->
-      <button
-        on:click={scrollToTop}
-        class="w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm flex-shrink-0"
-        aria-label="Retour en haut"
-      >
-        <ArrowUp class="h-6 w-6 text-primary" />
-      </button>
     </div>
+
+    <!-- Mobile Scroll to Top Button (appears when scrolled) -->
+    {#if showScrollTop}
+      <div class="md:hidden fixed top-4 right-4 z-[160]">
+        <button
+          on:click={scrollToTop}
+          class="w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm animate-in fade-in slide-in-from-top-2 duration-300"
+          aria-label="Retour en haut"
+        >
+          <ArrowUp class="h-6 w-6 text-primary" />
+        </button>
+      </div>
+    {/if}
 
     <!-- Desktop Navigation -->
     <header class="hidden md:block relative z-40 pt-6 pb-2 md:pt-8 md:pb-4 transition-opacity duration-300">
