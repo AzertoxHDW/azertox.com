@@ -103,9 +103,9 @@
     {/if}
 
     <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      <!-- Left Column: Info + Specs -->
-      <div class="lg:col-span-7 space-y-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Left Column: Description + Hardware Specs + Key Infos -->
+      <div class="space-y-8">
         {#if machine.description}
         <div class="bg-card/30 rounded-xl p-6 border border-border/10">
           <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
@@ -134,27 +134,7 @@
           </div>
         </div>
 
-        {#if machine.software && machine.software.length > 0}
         <div class="bg-card/30 rounded-xl p-6 border border-border/10">
-          <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
-            <Laptop class="mr-2 h-5 w-5 text-primary"/>
-            Logiciels & Services Clés
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            {#each machine.software as sw}
-              <div class="p-3 rounded-lg bg-card/50 border border-border/10">
-                <p class="font-medium text-foreground mb-1">{sw.name} {#if sw.version}<Badge variant="outline" class="ml-2 text-xs">{sw.version}</Badge>{/if}</p>
-                {#if sw.notes}<p class="text-xs text-muted-foreground italic leading-relaxed">{sw.notes}</p>{/if}
-              </div>
-            {/each}
-          </div>
-        </div>
-        {/if}
-      </div>
-
-      <!-- Right Column: Quick Info + Rack -->
-      <div class="lg:col-span-5 space-y-8">
-        <div class="bg-card/30 rounded-xl p-6 border border-border/10 lg:sticky lg:top-8">
           <h3 class="flex items-center text-lg font-semibold mb-6 text-foreground">
             <Info class="mr-2 h-5 w-5 text-primary"/>
             Informations Clés
@@ -187,6 +167,26 @@
             </div>
           {/if}
         </div>
+      </div>
+
+      <!-- Right Column: Software & Services + Rack Position -->
+      <div class="space-y-8">
+        {#if machine.software && machine.software.length > 0}
+        <div class="bg-card/30 rounded-xl p-6 border border-border/10">
+          <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
+            <Laptop class="mr-2 h-5 w-5 text-primary"/>
+            Logiciels & Services Clés
+          </h3>
+          <div class="space-y-3 text-sm">
+            {#each machine.software as sw}
+              <div class="p-3 rounded-lg bg-card/50 border border-border/10">
+                <p class="font-medium text-foreground mb-1">{sw.name} {#if sw.version}<Badge variant="outline" class="ml-2 text-xs">{sw.version}</Badge>{/if}</p>
+                {#if sw.notes}<p class="text-xs text-muted-foreground italic leading-relaxed">{sw.notes}</p>{/if}
+              </div>
+            {/each}
+          </div>
+        </div>
+        {/if}
 
         {#if rackPosition}
         <div class="bg-card/30 rounded-xl p-6 border border-border/10">
