@@ -139,8 +139,8 @@
 <div class="flex flex-col min-h-screen bg-background text-foreground {isWin2000Theme ? 'win2000-theme' : ''}">
 
   {#if !showBootUpAnimation}
-    <!-- Mobile Header with Hamburger -->
-    <div class="md:hidden fixed top-4 left-4 z-[160]">
+    <!-- Mobile/Tablet Header with Hamburger -->
+    <div class="lg:hidden fixed top-4 left-4 z-[160]">
       <!-- Hamburger Button -->
       <button
         on:click={toggleMobileMenu}
@@ -155,9 +155,9 @@
       </button>
     </div>
 
-    <!-- Mobile Scroll to Top Button (appears when scrolled) -->
+    <!-- Mobile/Tablet Scroll to Top Button (appears when scrolled) -->
     {#if showScrollTop}
-      <div class="md:hidden fixed top-4 right-4 z-[160]">
+      <div class="lg:hidden fixed top-4 right-4 z-[160]">
         <button
           on:click={scrollToTop}
           class="w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm animate-in fade-in slide-in-from-top-2 duration-300"
@@ -169,7 +169,7 @@
     {/if}
 
     <!-- Desktop Navigation -->
-    <header class="hidden md:block relative z-40 pt-6 pb-2 md:pt-8 md:pb-4 transition-opacity duration-300">
+    <header class="hidden lg:block relative z-40 pt-6 pb-2 lg:pt-8 lg:pb-4 transition-opacity duration-300">
       <div class="container mx-auto flex items-center justify-center">
         <nav class="flex items-center space-x-1 sm:space-x-2 bg-background/80 dark:bg-muted/50 backdrop-blur-lg shadow-xl rounded-full px-3 py-2 border border-border/40">
           {#each navItems as item}
@@ -190,9 +190,9 @@
       </div>
     </header>
 
-    <!-- Mobile Menu Overlay -->
+    <!-- Mobile/Tablet Menu Overlay -->
     {#if mobileMenuOpen}
-      <div class="md:hidden fixed inset-0 z-[150] bg-background/95 backdrop-blur-md">
+      <div class="lg:hidden fixed inset-0 z-[150] bg-background/95 backdrop-blur-md">
         <div class="flex flex-col h-full p-4 pt-20">
           <!-- Navigation Links -->
           <nav class="flex flex-col space-y-2 flex-1">
@@ -233,7 +233,7 @@
 
   {#if !showBootUpAnimation}
     <main
-      class="flex-grow pt-16 md:pt-8 transition-opacity duration-300 ease-in-out {showBootUpAnimation ? 'opacity-0 pointer-events-none absolute -z-10' : 'opacity-100'}"
+      class="flex-grow pt-16 lg:pt-8 transition-opacity duration-300 ease-in-out {showBootUpAnimation ? 'opacity-0 pointer-events-none absolute -z-10' : 'opacity-100'}"
     >
       <slot />
     </main>

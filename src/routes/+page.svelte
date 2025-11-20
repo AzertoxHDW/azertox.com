@@ -110,7 +110,7 @@
 
   function checkMobile() {
     if (browser) {
-      isMobile = window.innerWidth < 768; // md breakpoint
+      isMobile = window.innerWidth < 1024; // lg breakpoint - includes tablets
     }
   }
 
@@ -155,7 +155,7 @@
     <!-- Terminal Toggle Button (Desktop only) -->
     <button
       on:click={toggleTerminal}
-      class="terminal-toggle-btn hidden md:flex fixed top-4 right-4 md:top-8 md:right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+      class="terminal-toggle-btn hidden lg:flex fixed top-4 right-4 lg:top-8 lg:right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
       aria-label="{showTerminal ? 'Fermer' : 'Ouvrir'} Terminal"
     >
       <Terminal class="h-5 w-5 text-primary" />
