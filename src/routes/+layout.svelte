@@ -4,7 +4,7 @@
   import BootAnimation from "$lib/components/BootAnimation.svelte";
   import Win2000Desktop from "$lib/components/desktop/Win2000Desktop.svelte";
   import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "$lib/components/ui/select";
-  import { Home, User, ServerIcon as ServerIconLucide, FolderGit2 as CodeIconLucide, Gem, Menu, X, Terminal } from "lucide-svelte";
+  import { Home, User, ServerIcon as ServerIconLucide, FolderGit2 as CodeIconLucide, Gem, Menu, X, Terminal, ArrowUp } from "lucide-svelte";
   import { page } from '$app/stores';
   import { onMount } from "svelte";
   import type { Selected } from "bits-ui";
@@ -118,6 +118,12 @@
     mobileMenuOpen = false;
   }
 
+  function scrollToTop() {
+    if (BROWSER) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
 </script>
 
 <div class="flex flex-col min-h-screen bg-background text-foreground {isWin2000Theme ? 'win2000-theme' : ''}">
@@ -139,10 +145,19 @@
       </button>
 
       <!-- Logo and Title -->
-      <div class="flex items-center gap-2 bg-background/80 backdrop-blur-sm border border-border/40 rounded-full px-4 py-2">
+      <div class="flex items-center gap-2 bg-background/80 backdrop-blur-sm border border-border/40 rounded-full px-4 py-2 flex-1">
         <img src="/favicon.png" alt="Logo" class="h-5 w-5 flex-shrink-0" />
         <span class="text-lg font-bold text-foreground">Az'</span>
       </div>
+
+      <!-- Scroll to Top Button -->
+      <button
+        on:click={scrollToTop}
+        class="w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm flex-shrink-0"
+        aria-label="Retour en haut"
+      >
+        <ArrowUp class="h-6 w-6 text-primary" />
+      </button>
     </div>
 
     <!-- Desktop Navigation -->
