@@ -110,17 +110,17 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8 md:py-12">
-  <div class="text-center mb-12 md:mb-16" in:flyAndScale={{ y: -20, duration: 500, start: 0.95 }}>
-    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground flex items-center justify-center">
-      <FolderGit2 class="w-10 h-10 md:w-12 md:h-12 mr-3 text-primary" />
+  <div class="text-center mb-8 md:mb-12" in:flyAndScale={{ y: -20, duration: 500, start: 0.95 }}>
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground flex items-center justify-center">
+      <FolderGit2 class="w-8 h-8 md:w-10 md:h-10 mr-2 text-primary" />
       Mes projets
     </h1>
-    <p class="mt-4 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+    <p class="mt-3 text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
       Une sélection de mes projets personnels et contributions.
     </p>
   </div>
 
-  <div class="max-w-4xl mx-auto space-y-6">
+  <div class="max-w-7xl mx-auto space-y-6">
     {#each projects as project, i (project.id)}
       {@const statusConfig = getStatusConfig(project.status)}
       <div in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}>
@@ -140,7 +140,7 @@
               <CardHeader class="pb-3">
                 <div class="flex flex-wrap items-start justify-between gap-2">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <CardTitle class="text-xl md:text-2xl">{project.name}</CardTitle>
+                    <CardTitle class="text-lg md:text-xl">{project.name}</CardTitle>
                     {#if project.categories && project.categories.length > 0}
                       {#each project.categories as category}
                         {@const catConfig = getCategoryConfig(category)}
@@ -150,12 +150,12 @@
                       {/each}
                     {/if}
                   </div>
-                  <Badge variant={statusConfig.variant} class="flex items-center gap-1">
+                  <Badge variant={statusConfig.variant} class="flex items-center gap-1 text-xs">
                     <svelte:component this={statusConfig.icon} class="h-3 w-3" />
                     {statusConfig.label}
                   </Badge>
                 </div>
-                <CardDescription class="text-base mt-1">
+                <CardDescription class="text-sm mt-1">
                   {project.description}
                 </CardDescription>
               </CardHeader>
@@ -188,14 +188,14 @@
               
               <CardFooter class="pt-0 gap-2 flex-wrap">
                 {#if project.githubUrl}
-                  <Button href={project.githubUrl} target="_blank" rel="noopener noreferrer" variant="outline" size="sm">
-                    <Github class="h-4 w-4 mr-2" />
+                  <Button href={project.githubUrl} target="_blank" rel="noopener noreferrer" variant="outline" size="sm" class="text-xs">
+                    <Github class="h-3 w-3 mr-1.5" />
                     Code source
                   </Button>
                 {/if}
                 {#if project.liveUrl}
-                  <Button href={project.liveUrl} target="_blank" rel="noopener noreferrer" variant="default" size="sm">
-                    <ExternalLink class="h-4 w-4 mr-2" />
+                  <Button href={project.liveUrl} target="_blank" rel="noopener noreferrer" variant="default" size="sm" class="text-xs">
+                    <ExternalLink class="h-3 w-3 mr-1.5" />
                     Voir le site
                   </Button>
                 {/if}

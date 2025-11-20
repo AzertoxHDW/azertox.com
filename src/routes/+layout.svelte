@@ -4,17 +4,30 @@
   import BootAnimation from "$lib/components/BootAnimation.svelte";
   import Win2000Desktop from "$lib/components/desktop/Win2000Desktop.svelte";
   import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "$lib/components/ui/select";
-  import { Home, User, ServerIcon as ServerIconLucide, FolderGit2 as CodeIconLucide, Gem } from "lucide-svelte";
+  import { Home, User, ServerIcon as ServerIconLucide, FolderGit2 as CodeIconLucide, Gem, Menu, X, Terminal, ArrowUp } from "lucide-svelte";
   import { page } from '$app/stores';
   import { onMount } from "svelte";
   import type { Selected } from "bits-ui";
   import { BROWSER } from 'esm-env';
+  import { mobileTerminalTrigger } from '$lib/mobileMenuStore';
 
   let showBootUpAnimation = false;
   let currentBootThemeOption: ThemeOption | undefined = undefined;
 
+  // Mobile menu state
+  let mobileMenuOpen = false;
+  let showScrollTop = false;
+
   // Reactive statement to check if win2000 theme is active
   $: isWin2000Theme = ($currentTheme === 'win2000');
+
+  // Check if we're on the home page
+  $: isHomePage = $page.url.pathname === '/';
+
+  // Close mobile menu when route changes
+  $: if ($page.url.pathname) {
+    mobileMenuOpen = false;
+  }
 
   // Listen for boot animation triggers from terminal
   $: if ($bootAnimationTrigger && $bootAnimationTrigger.theme === 'win2000') {
@@ -37,6 +50,11 @@
       }
       setTheme('dark'); // Exit win2000 theme back to dark theme
     }
+
+    // Close mobile menu on Escape
+    if (event.key === 'Escape' && mobileMenuOpen) {
+      mobileMenuOpen = false;
+    }
   }
 
   onMount(() => {
@@ -47,10 +65,19 @@
 
     if (BROWSER) {
       window.addEventListener('keydown', handleGlobalKeyDown);
+
+      // Track scroll position for scroll to top button
+      const handleScroll = () => {
+        showScrollTop = window.scrollY > 300; // Show after 300px scroll
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
     }
+
     return () => {
         if (BROWSER) {
             window.removeEventListener('keydown', handleGlobalKeyDown);
+            window.removeEventListener('scroll', handleScroll);
         }
     };
   });
@@ -84,6 +111,10 @@
     currentBootThemeOption = undefined;
   }
 
+  function toggleMobileMenu() {
+    mobileMenuOpen = !mobileMenuOpen;
+  }
+
   const navItems = [
     { href: "/", label: "Accueil", icon: Home },
     { href: "/about", label: "À propos", icon: User },
@@ -92,12 +123,53 @@
     { href: "/museum", label: "Musée", icon: Gem },
   ];
 
+  function handleMobileTerminalClick() {
+    mobileTerminalTrigger.set(true);
+    mobileMenuOpen = false;
+  }
+
+  function scrollToTop() {
+    if (BROWSER) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
 </script>
 
 <div class="flex flex-col min-h-screen bg-background text-foreground {isWin2000Theme ? 'win2000-theme' : ''}">
 
   {#if !showBootUpAnimation}
-    <header class="relative z-40 pt-6 pb-2 md:pt-8 md:pb-4 transition-opacity duration-300">
+    <!-- Mobile/Tablet Header with Hamburger -->
+    <div class="lg:hidden fixed top-4 left-4 z-[160]">
+      <!-- Hamburger Button -->
+      <button
+        on:click={toggleMobileMenu}
+        class="w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+        aria-label="{mobileMenuOpen ? 'Fermer' : 'Ouvrir'} le menu"
+      >
+        {#if mobileMenuOpen}
+          <X class="h-6 w-6 text-primary" />
+        {:else}
+          <Menu class="h-6 w-6 text-primary" />
+        {/if}
+      </button>
+    </div>
+
+    <!-- Mobile/Tablet Scroll to Top Button (appears when scrolled) -->
+    {#if showScrollTop}
+      <div class="lg:hidden fixed top-4 right-4 z-[160]">
+        <button
+          on:click={scrollToTop}
+          class="w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm animate-in fade-in slide-in-from-top-2 duration-300"
+          aria-label="Retour en haut"
+        >
+          <ArrowUp class="h-6 w-6 text-primary" />
+        </button>
+      </div>
+    {/if}
+
+    <!-- Desktop Navigation -->
+    <header class="hidden lg:block relative z-40 pt-6 pb-2 lg:pt-8 lg:pb-4 transition-opacity duration-300">
       <div class="container mx-auto flex items-center justify-center">
         <nav class="flex items-center space-x-1 sm:space-x-2 bg-background/80 dark:bg-muted/50 backdrop-blur-lg shadow-xl rounded-full px-3 py-2 border border-border/40">
           {#each navItems as item}
@@ -117,6 +189,42 @@
         </nav>
       </div>
     </header>
+
+    <!-- Mobile/Tablet Menu Overlay -->
+    {#if mobileMenuOpen}
+      <div class="lg:hidden fixed inset-0 z-[150] bg-background/95 backdrop-blur-md">
+        <div class="flex flex-col h-full p-4 pt-20">
+          <!-- Navigation Links -->
+          <nav class="flex flex-col space-y-2 flex-1">
+            {#each navItems as item}
+              {@const isActive = $page.url.pathname === item.href}
+              <a
+                href={item.href}
+                class="flex items-center text-lg font-medium px-4 py-4 rounded-lg transition-colors border border-border/40
+                      {isActive
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-card text-foreground hover:bg-accent'}"
+                aria-current={isActive ? "page" : undefined}
+              >
+                <svelte:component this={item.icon} class="mr-3 h-6 w-6" />
+                {item.label}
+              </a>
+            {/each}
+
+            <!-- Terminal Button (only on home page) -->
+            {#if isHomePage}
+              <button
+                on:click={handleMobileTerminalClick}
+                class="flex items-center text-lg font-medium px-4 py-4 rounded-lg transition-colors border border-border/40 bg-primary/10 text-primary hover:bg-primary/20"
+              >
+                <Terminal class="mr-3 h-6 w-6" />
+                Terminal
+              </button>
+            {/if}
+          </nav>
+        </div>
+      </div>
+    {/if}
   {/if}
 
   {#if showBootUpAnimation && currentBootThemeOption && currentBootThemeOption.value === 'win2000'}
@@ -125,7 +233,7 @@
 
   {#if !showBootUpAnimation}
     <main
-      class="flex-grow pt-4 md:pt-8 transition-opacity duration-300 ease-in-out {showBootUpAnimation ? 'opacity-0 pointer-events-none absolute -z-10' : 'opacity-100'}"
+      class="flex-grow pt-16 lg:pt-8 transition-opacity duration-300 ease-in-out {showBootUpAnimation ? 'opacity-0 pointer-events-none absolute -z-10' : 'opacity-100'}"
     >
       <slot />
     </main>
