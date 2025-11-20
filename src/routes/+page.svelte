@@ -174,7 +174,7 @@
 
     <!-- Mobile: Vertical Stack Layout -->
     {#if isMobile}
-      <div class="flex-1 px-4 mb-16 space-y-4">
+      <div class="flex-1 px-4 mb-6 space-y-4">
         {#each dashboardLinks as item, i}
           <div
             class="terminal-window w-full"
@@ -311,7 +311,7 @@
     {/if}
 
     <!-- Footer -->
-    <footer class="text-center text-[10px] md:text-xs text-muted-foreground py-2 md:py-4 px-4 mt-auto relative z-[100]">
+    <footer class="text-center text-[10px] md:text-xs text-muted-foreground py-2 md:py-3 px-4 mt-auto relative z-[100]">
         <p class="break-words">&copy; {new Date().getFullYear()} Dylan "Azertox" R. | Horloge système: {new Date().toLocaleTimeString('fr-BE')} | Source code: <a href="https://github.com/AzertoxHDW/azertox.com" class="text-primary hover:underline">Github</a></p>
         <p class="mt-1">Développé avec Svelte & TailwindCSS</p>
     </footer>
