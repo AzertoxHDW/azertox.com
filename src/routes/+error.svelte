@@ -12,32 +12,143 @@
   const errorObject = $page.error as Error & { stack?: string };
   let errorMessage = errorObject?.message || "Something went wrong";
 
-  // BSOD error codes
-  let stopCode = errorCode === 404 ? "0x00000404" : `0x${errorCode.toString(16).toUpperCase().padStart(8, '0')}`;
-  let errorName = errorCode === 404 ? "PAGE_NOT_FOUND" : "KERNEL_MODE_EXCEPTION";
-
-  // Individual ASCII art digits for draggable 404
-  const digit4 = `
-██╗  ██╗
-██║  ██║
-███████║
-╚════██║
-     ██║
-     ╚═╝`;
-
-  const digit0 = `
+  // ASCII art for all digits 0-9
+  const asciiDigits: { [key: string]: string } = {
+    '0': `
  ██████╗
 ██╔═████╗
 ██║██╔██║
 ████╔╝██║
 ╚██████╔╝
- ╚═════╝`;
+ ╚═════╝`,
+    '1': `
+ ███╗
+████║
+╚██╔╝
+ ██║
+ ██║
+ ╚═╝`,
+    '2': `
+██████╗
+╚════██╗
+ █████╔╝
+██╔═══╝
+███████╗
+╚══════╝`,
+    '3': `
+██████╗
+╚════██╗
+ █████╔╝
+ ╚═══██╗
+██████╔╝
+╚═════╝`,
+    '4': `
+██╗  ██╗
+██║  ██║
+███████║
+╚════██║
+     ██║
+     ╚═╝`,
+    '5': `
+███████╗
+██╔════╝
+███████╗
+╚════██║
+███████║
+╚══════╝`,
+    '6': `
+ ██████╗
+██╔════╝
+███████╗
+██╔═══██╗
+╚██████╔╝
+ ╚═════╝`,
+    '7': `
+███████╗
+╚════██║
+    ██╔╝
+   ██╔╝
+   ██║
+   ╚═╝`,
+    '8': `
+ █████╗
+██╔══██╗
+╚█████╔╝
+██╔══██╗
+╚█████╔╝
+ ╚════╝`,
+    '9': `
+ █████╗
+██╔══██╗
+╚██████║
+ ╚═══██║
+ █████╔╝
+ ╚════╝`
+  };
+
+  // Get error code digits dynamically
+  const errorCodeString = errorCode.toString();
+  const errorDigits = errorCodeString.split('').map(digit => asciiDigits[digit]);
+
+  // BSOD error codes and names
+  let stopCode = `0x${errorCode.toString(16).toUpperCase().padStart(8, '0')}`;
+
+  // Map error codes to BSOD error names
+  const errorNames: { [key: number]: string } = {
+    400: 'BAD_REQUEST',
+    401: 'UNAUTHORIZED_ACCESS',
+    403: 'ACCESS_FORBIDDEN',
+    404: 'PAGE_NOT_FOUND',
+    405: 'METHOD_NOT_ALLOWED',
+    408: 'REQUEST_TIMEOUT',
+    429: 'TOO_MANY_REQUESTS',
+    500: 'INTERNAL_SERVER_ERROR',
+    501: 'NOT_IMPLEMENTED',
+    502: 'BAD_GATEWAY',
+    503: 'SERVICE_UNAVAILABLE',
+    504: 'GATEWAY_TIMEOUT'
+  };
+
+  let errorName = errorNames[errorCode] || 'KERNEL_MODE_EXCEPTION';
+
+  // Map error codes to user-friendly messages
+  const errorDescriptions: { [key: number]: string } = {
+    400: 'The request could not be understood by the server due to malformed syntax.',
+    401: 'Authentication is required to access this resource.',
+    403: 'You do not have permission to access this resource.',
+    404: 'The requested resource could not be found on this server.',
+    405: 'The request method is not supported for this resource.',
+    408: 'The server timed out waiting for the request.',
+    429: 'Too many requests. Please slow down and try again later.',
+    500: 'The server encountered an internal error and could not complete your request.',
+    501: 'The server does not support the functionality required to fulfill the request.',
+    502: 'The server received an invalid response from an upstream server.',
+    503: 'The service is temporarily unavailable. Please try again later.',
+    504: 'The server did not receive a timely response from an upstream server.'
+  };
+
+  const errorDescription = errorDescriptions[errorCode] || 'An unexpected error occurred while processing your request.';
+
+  // Map error codes to error labels
+  const errorLabels: { [key: number]: string } = {
+    400: 'BAD REQUEST',
+    401: 'UNAUTHORIZED',
+    403: 'FORBIDDEN',
+    404: 'PAGE NOT FOUND',
+    405: 'METHOD NOT ALLOWED',
+    408: 'REQUEST TIMEOUT',
+    429: 'TOO MANY REQUESTS',
+    500: 'INTERNAL SERVER ERROR',
+    501: 'NOT IMPLEMENTED',
+    502: 'BAD GATEWAY',
+    503: 'SERVICE UNAVAILABLE',
+    504: 'GATEWAY TIMEOUT'
+  };
+
+  const errorLabel = errorLabels[errorCode] || 'ERROR';
 
   // Draggable element positions
   let terminalElement: HTMLElement;
-  let digit1Element: HTMLElement;
-  let digit2Element: HTMLElement;
-  let digit3Element: HTMLElement;
   let errorTextElement: HTMLElement;
 
   let glitchOffset = 0;
@@ -73,7 +184,7 @@
 
       <p class="text-2xl font-bold my-6">{errorName}</p>
 
-      <p>The requested page could not be found or an error occurred while processing your request.</p>
+      <p>{errorDescription}</p>
 
       <div class="mt-6 space-y-1">
         <p>Technical information:</p>
@@ -102,41 +213,25 @@
     </div>
   </div>
 {:else}
-  <!-- Terminal-Style 404 -->
+  <!-- Terminal-Style Error Page -->
   <div
     class="fixed inset-0 z-[999] overflow-hidden bg-background text-foreground"
     role="alert"
   >
-    <!-- Draggable 404 Digits -->
-    <div
-      bind:this={digit1Element}
-      class="absolute cursor-move select-none"
-      use:draggable={{
-        initialPosition: { x: browser ? window.innerWidth / 2 - 200 : 100, y: 100 }
-      }}
-    >
-      <pre class="text-primary text-2xl md:text-3xl leading-tight" style="transform: translateX({glitchOffset}px)">{digit4}</pre>
-    </div>
-
-    <div
-      bind:this={digit2Element}
-      class="absolute cursor-move select-none"
-      use:draggable={{
-        initialPosition: { x: browser ? window.innerWidth / 2 - 50 : 250, y: 100 }
-      }}
-    >
-      <pre class="text-primary text-2xl md:text-3xl leading-tight" style="transform: translateX({glitchOffset}px)">{digit0}</pre>
-    </div>
-
-    <div
-      bind:this={digit3Element}
-      class="absolute cursor-move select-none"
-      use:draggable={{
-        initialPosition: { x: browser ? window.innerWidth / 2 + 100 : 400, y: 100 }
-      }}
-    >
-      <pre class="text-primary text-2xl md:text-3xl leading-tight" style="transform: translateX({glitchOffset}px)">{digit4}</pre>
-    </div>
+    <!-- Draggable Error Code Digits -->
+    {#each errorDigits as digit, i}
+      <div
+        class="absolute cursor-move select-none"
+        use:draggable={{
+          initialPosition: {
+            x: browser ? window.innerWidth / 2 - (errorDigits.length * 75) + (i * 150) : 100 + (i * 150),
+            y: 100
+          }
+        }}
+      >
+        <pre class="text-primary text-2xl md:text-3xl leading-tight" style="transform: translateX({glitchOffset}px)">{digit}</pre>
+      </div>
+    {/each}
 
     <!-- Draggable Error Text -->
     <div
@@ -146,7 +241,7 @@
         initialPosition: { x: browser ? window.innerWidth / 2 - 120 : 200, y: 380 }
       }}
     >
-      <p class="text-destructive text-lg font-bold">⚠ ERROR: PAGE NOT FOUND ⚠</p>
+      <p class="text-destructive text-lg font-bold">⚠ ERROR: {errorLabel} ⚠</p>
     </div>
 
     <!-- Draggable Terminal Window -->
@@ -179,17 +274,24 @@
 
               <p class="text-destructive flex items-start gap-2">
                 <AlertTriangle class="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span>Error {errorCode}: The requested resource could not be found on this server.</span>
+                <span>Error {errorCode}: {errorDescription}</span>
               </p>
 
-              {#if errorMessage && errorMessage !== "Not Found"}
+              {#if errorMessage && errorMessage !== "Not Found" && errorMessage !== "Something went wrong"}
                 <p class="ml-6 text-sm opacity-80">Message: {errorMessage}</p>
               {/if}
 
               <div class="mt-6 ml-6 space-y-1 text-xs opacity-60">
-                <p>→ The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
-                <p>→ If you typed the URL manually, please check your spelling and try again.</p>
-                <p>→ If you followed a link from somewhere, please let us know.</p>
+                {#if errorCode >= 400 && errorCode < 500}
+                  <p>→ Client error: The request contains bad syntax or cannot be fulfilled.</p>
+                  <p>→ Please check the URL and try again, or contact support if the problem persists.</p>
+                {:else if errorCode >= 500}
+                  <p>→ Server error: The server failed to fulfill a valid request.</p>
+                  <p>→ This is not your fault. Please try again later or contact support.</p>
+                {:else}
+                  <p>→ An unexpected error occurred while processing your request.</p>
+                  <p>→ Please try again or contact support if the problem persists.</p>
+                {/if}
               </div>
 
               <div class="mt-6 pt-4 border-t border-border">
