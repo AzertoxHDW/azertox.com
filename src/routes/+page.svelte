@@ -151,7 +151,7 @@
 {#if $currentTheme !== 'win2000'}
   <StarField />
 {/if}
-<div class="w-full min-h-screen flex flex-col text-foreground">
+<div class="w-full flex flex-col text-foreground">
     <!-- Terminal Toggle Button (Desktop only) -->
     <button
       on:click={toggleTerminal}
@@ -174,7 +174,7 @@
 
     <!-- Mobile: Vertical Stack Layout -->
     {#if isMobile}
-      <div class="flex-1 px-4 pb-32 space-y-4">
+      <div class="flex-1 px-4 pb-48 space-y-4">
         {#each dashboardLinks as item, i}
           <div
             class="terminal-window w-full"
