@@ -201,7 +201,7 @@
 
   {#if !showBootUpAnimation}
     <main
-      class="flex-grow pt-4 md:pt-8 transition-opacity duration-300 ease-in-out {showBootUpAnimation ? 'opacity-0 pointer-events-none absolute -z-10' : 'opacity-100'}"
+      class="flex-grow pt-16 md:pt-8 transition-opacity duration-300 ease-in-out {showBootUpAnimation ? 'opacity-0 pointer-events-none absolute -z-10' : 'opacity-100'}"
     >
       <slot />
     </main>
