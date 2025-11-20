@@ -34,9 +34,11 @@
       if (activeElement && navContainer) {
         const containerRect = navContainer.getBoundingClientRect();
         const activeRect = activeElement.getBoundingClientRect();
-        const left = activeRect.left - containerRect.left;
+        const containerStyle = window.getComputedStyle(navContainer);
+        const containerPaddingLeft = parseFloat(containerStyle.paddingLeft);
+        const left = activeRect.left - containerRect.left - containerPaddingLeft;
         const width = activeRect.width;
-        activeIndicatorStyle = `transform: translateX(${left}px); width: ${width}px;`;
+        activeIndicatorStyle = `left: 0; transform: translateX(${left}px); width: ${width}px;`;
       }
     }
   }
