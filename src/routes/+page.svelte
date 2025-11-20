@@ -174,7 +174,7 @@
 
     <!-- Mobile: Vertical Stack Layout -->
     {#if isMobile}
-      <div class="px-4 mb-6 space-y-4">
+      <div class="flex-1 px-4 pb-6 space-y-4">
         {#each dashboardLinks as item, i}
           <div
             class="terminal-window w-full"
@@ -242,7 +242,7 @@
       {/if}
     {:else}
       <!-- Desktop: Draggable Cards Container -->
-      <div class="relative w-full pb-8" style="min-height: 750px;">
+      <div class="flex-1 relative w-full" style="min-height: 750px;">
         {#each dashboardLinks as item, i}
           <div
             bind:this={cardElements[i]}
