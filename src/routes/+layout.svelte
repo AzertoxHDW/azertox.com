@@ -10,8 +10,7 @@
   import type { Selected } from "bits-ui";
   import { BROWSER } from 'esm-env';
   import { mobileTerminalTrigger } from '$lib/mobileMenuStore';
-  import { fade } from 'svelte/transition';
-  import { cubicOut } from 'svelte/easing';
+  import { warp } from '$lib/utils';
 
   let showBootUpAnimation = false;
   let currentBootThemeOption: ThemeOption | undefined = undefined;
@@ -239,8 +238,8 @@
     >
       {#key $page.url.pathname}
         <div
-          in:fade={{ duration: 300, delay: 150, easing: cubicOut }}
-          out:fade={{ duration: 150, easing: cubicOut }}
+          in:warp={{ duration: 400, delay: 100 }}
+          out:warp={{ duration: 300 }}
         >
           <slot />
         </div>
