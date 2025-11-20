@@ -9,6 +9,7 @@
   import { ArrowLeft, ExternalLink, Activity, CalendarDays, Info, ListChecks, ImageIcon, Laptop, Server, Cpu, MemoryStick, HardDrive, Network, Terminal as TerminalIcon, X } from "lucide-svelte";
   import { flyAndScale } from "$lib/utils"; //
   import { onMount } from 'svelte';
+  import { fade, scale } from 'svelte/transition';
 
   export let data: PageData;
 
@@ -57,14 +58,14 @@
 <svelte:window on:keydown={handleKeydown} />
 
 {#if machine}
-  <div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer" in:flyAndScale={{ y: 50, duration: 400, start: 0.75 }}>
-    <div class="mb-8">
+  <div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer">
+    <div class="mb-8" in:flyAndScale|global={{ y: 20, duration: 300, start: 0.8, delay: 0 }}>
       <Button href="/infra" variant="outline" size="sm">
         <ArrowLeft class="mr-2 h-4 w-4" /> Retour à l'infrastructure
       </Button>
     </div>
 
-    <header class="mb-10 md:mb-12">
+    <header class="mb-10 md:mb-12" in:flyAndScale|global={{ y: 30, duration: 350, start: 0.75, delay: 50 }}>
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">{machine.name}</h1>
@@ -82,7 +83,7 @@
 
     <!-- Hero Image Section -->
     {#if selectedImage}
-    <div class="mb-10">
+    <div class="mb-10" in:flyAndScale|global={{ y: 40, duration: 400, start: 0.75, delay: 100 }}>
       <button on:click={openLightbox} class="relative w-full h-[50vh] min-h-[400px] max-h-[600px] overflow-hidden rounded-2xl shadow-2xl border border-border/10 cursor-pointer hover:opacity-95 hover:shadow-3xl transition-all group">
         <img src={selectedImage} alt="Image de {machine.name}" class="object-cover w-full h-full" />
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
@@ -105,7 +106,7 @@
     <!-- Main Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Left Column: Description + Hardware Specs + Key Infos -->
-      <div class="space-y-8">
+      <div class="space-y-8" in:flyAndScale|global={{ y: 30, duration: 400, start: 0.75, delay: 150 }}>
         {#if machine.description}
         <div class="bg-card/30 rounded-xl p-6 border border-border/10">
           <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
@@ -170,7 +171,7 @@
       </div>
 
       <!-- Right Column: Software & Services + Rack Position -->
-      <div class="space-y-8">
+      <div class="space-y-8" in:flyAndScale|global={{ y: 30, duration: 400, start: 0.75, delay: 200 }}>
         {#if machine.software && machine.software.length > 0}
         <div class="bg-card/30 rounded-xl p-6 border border-border/10">
           <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
@@ -283,17 +284,20 @@
         on:click={closeLightbox}
         role="dialog"
         aria-modal="true"
+        transition:fade={{ duration: 200 }}
       >
         <button
           on:click={closeLightbox}
           class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
           aria-label="Fermer"
+          in:fade={{ duration: 150, delay: 100 }}
         >
           <X class="w-8 h-8" />
         </button>
         <div
           class="relative max-w-7xl max-h-full"
           on:click|stopPropagation
+          in:scale={{ duration: 300, start: 0.9, delay: 50 }}
         >
           <img
             src={selectedImage}
