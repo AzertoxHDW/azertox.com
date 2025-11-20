@@ -31,18 +31,18 @@
     const rackDevicesData: RackDevice[] = [
       { id: 'u2', name: 'Network switch', uHeight: 1, uPosition: 2, type: 'switch', description: 'Main switch', faceplate: { text: " ", ports: { type: 'rj45', count: 8, arrangement: 'row' }, leds: [{color: 'green', count:8, blinking: true}]} , link: '/infra/networking'},
       { id: 'u3', name: 'Raspberry Pi', uHeight: 1, uPosition: 3, type: 'arm-cluster', description: 'Main local services host machine', status: 'Online', faceplate: { text: "PI-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
-      { id: 'u15', name: 'Dell Optiplex R230', uHeight: 1, uPosition: 15, type: 'server-1u', description: 'Unused server', status: 'Offline', faceplate: { text: "SPARE", leds: [{color: 'red', count:2}]}},
-      { id: 'u16', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 16, type: 'server-1u', description: 'TrueNAS storage server', status: 'Online', faceplate: { text: "TRUENAS", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
-      { id: 'u25', name: 'Sierra', uHeight: 4, uPosition: 25, type: 'server-4u', description: 'Game hosting server', status: 'Online', faceplate: { text: "PVE-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
+      { id: 'u9', name: 'Dell Optiplex R230', uHeight: 1, uPosition: 9, type: 'server-1u', description: 'Unused server', status: 'Offline', faceplate: { text: "SPARE", leds: [{color: 'red', count:2}]}},
+      { id: 'u10', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 10, type: 'server-1u', description: 'TrueNAS storage server', status: 'Online', faceplate: { text: "TRUENAS", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
+      { id: 'u18', name: 'Sierra', uHeight: 4, uPosition: 18, type: 'server-4u', description: 'Game hosting server', status: 'Online', faceplate: { text: "PVE-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
     ];
-  
+
     let currentHoveredItem: RackDevice | null = null;
     let infoBoxPosition = { top: 0, left: 0, visible: false, preferSide: 'right' };
     let rackWrapperEl: HTMLElement;
-  
+
     async function handleMouseEnter(item: RackDevice, event: MouseEvent) {
       currentHoveredItem = item;
-      await tick(); 
+      await tick();
       if (rackWrapperEl) {
         const targetElement = event.currentTarget as HTMLElement;
         const targetRect = targetElement.getBoundingClientRect();
@@ -57,7 +57,7 @@
           left = targetRect.right - rackRect.left + 10;
           infoBoxPosition.preferSide = 'right';
         }
-        const infoBoxHeight = 200; 
+        const infoBoxHeight = 200;
         if (event.clientY + infoBoxHeight > window.innerHeight) {
           top = targetRect.bottom - rackRect.top - infoBoxHeight;
         } else if (event.clientY - infoBoxHeight / 2 < 0) {
@@ -66,18 +66,18 @@
         infoBoxPosition = { ...infoBoxPosition, top: Math.max(0, top), left: Math.max(0, left), visible: true };
       }
     }
-  
+
     function handleMouseLeave() {
       infoBoxPosition = { ...infoBoxPosition, visible: false };
       setTimeout(() => {
-          if (!infoBoxPosition.visible) { 
+          if (!infoBoxPosition.visible) {
               currentHoveredItem = null;
           }
       }, 200);
     }
-  
+
     const U_HEIGHT_PX = 30;
-    const TOTAL_U_SLOTS = 28;
+    const TOTAL_U_SLOTS = 18;
     let displayGrid: (RackDevice | null)[] = Array(TOTAL_U_SLOTS).fill(null);
   
     rackDevicesData.forEach(device => {
