@@ -13,6 +13,29 @@
 
   let machine: Machine | undefined = data.machine;
 
+  // Rack device mapping (matching data from rack page)
+  interface RackDevice {
+    id: string;
+    name: string;
+    uHeight: number;
+    uPosition: number;
+    type: string;
+    infraMachineId?: string;
+  }
+
+  const rackDevices: RackDevice[] = [
+    { id: 'u2', name: 'Network switch', uHeight: 1, uPosition: 2, type: 'switch' },
+    { id: 'u3', name: 'Raspberry Pi', uHeight: 1, uPosition: 3, type: 'arm-cluster' },
+    { id: 'u9', name: 'Dell Optiplex R230', uHeight: 1, uPosition: 9, type: 'server-1u' },
+    { id: 'u10', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 10, type: 'server-1u', infraMachineId: 'nas' },
+    { id: 'u18', name: 'Sierra', uHeight: 4, uPosition: 18, type: 'server-4u', infraMachineId: 'pve-01' },
+  ];
+
+  const TOTAL_U_SLOTS = 18;
+
+  // Find rack position for current machine
+  $: rackPosition = machine ? rackDevices.find(d => d.infraMachineId === machine.id) : null;
+
   let selectedImage: string | undefined;
   onMount(() => {
     if (machine?.gallery && machine.gallery.length > 0) {
@@ -104,6 +127,56 @@
             {/if}
           </CardContent>
         </Card>
+
+        {#if rackPosition}
+        <Card>
+          <CardHeader>
+            <CardTitle class="flex items-center text-xl"><Server class="mr-2 h-5 w-5 text-primary"/>Position dans le rack</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div class="flex items-center justify-between mb-3 text-sm">
+              <span class="text-muted-foreground">Position:</span>
+              <span class="font-bold text-primary">U{rackPosition.uPosition} ({rackPosition.uHeight}U)</span>
+            </div>
+            <!-- Mini Rack Visualization -->
+            <div class="bg-gradient-to-br from-zinc-800 to-zinc-900 dark:from-zinc-900 dark:to-black border-2 border-zinc-700 dark:border-zinc-800 rounded-lg p-2 shadow-lg">
+              <div class="flex gap-1">
+                <!-- U numbers column -->
+                <div class="flex flex-col-reverse text-[8px] text-zinc-400 font-mono">
+                  {#each Array(TOTAL_U_SLOTS) as _, i}
+                    <div class="h-3 flex items-center justify-center">{i + 1}</div>
+                  {/each}
+                </div>
+                <!-- Rack slots -->
+                <div class="flex-1 flex flex-col-reverse gap-[1px]">
+                  {#each Array(TOTAL_U_SLOTS) as _, i}
+                    {@const currentU = i + 1}
+                    {@const device = rackDevices.find(d => d.uPosition === currentU)}
+                    {@const isCurrentMachine = device?.infraMachineId === machine.id}
+                    {#if device && device.uPosition === currentU}
+                      <div
+                        class="h-3 rounded-sm flex items-center justify-center text-[7px] font-bold text-white uppercase tracking-wider"
+                        class:bg-primary={isCurrentMachine}
+                        class:bg-zinc-600={!isCurrentMachine}
+                        style="height: {device.uHeight * 12}px;"
+                      >
+                        {device.name.substring(0, 8)}
+                      </div>
+                    {:else if !rackDevices.some(d => d.uPosition < currentU && d.uPosition + d.uHeight > currentU)}
+                      <div class="h-3 bg-zinc-700/30 rounded-sm"></div>
+                    {/if}
+                  {/each}
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 text-center">
+              <Button href="/rack" variant="outline" size="sm" class="w-full text-xs">
+                Voir le rack complet →
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        {/if}
       </div>
 
       <div class="lg:col-span-2 space-y-8">
