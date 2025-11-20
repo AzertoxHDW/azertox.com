@@ -92,8 +92,8 @@
   // Check if we're on the home page
   $: isHomePage = $page.url.pathname === '/';
 
-  // Check if we're on a machine detail page
-  $: isMachineDetailPage = $page.url.pathname.startsWith('/infra/') && $page.url.pathname !== '/infra/';
+  // Check if we're on a machine detail page or rack page (hide navigation)
+  $: isMachineDetailPage = ($page.url.pathname.startsWith('/infra/') && $page.url.pathname !== '/infra/') || $page.url.pathname === '/rack';
 
   // Close mobile menu when route changes
   $: if ($page.url.pathname) {
