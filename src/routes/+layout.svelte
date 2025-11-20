@@ -10,6 +10,8 @@
   import type { Selected } from "bits-ui";
   import { BROWSER } from 'esm-env';
   import { mobileTerminalTrigger } from '$lib/mobileMenuStore';
+  import { fade } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
 
   let showBootUpAnimation = false;
   let currentBootThemeOption: ThemeOption | undefined = undefined;
@@ -235,7 +237,14 @@
     <main
       class="flex-grow pt-16 lg:pt-8 transition-opacity duration-300 ease-in-out {showBootUpAnimation ? 'opacity-0 pointer-events-none absolute -z-10' : 'opacity-100'}"
     >
-      <slot />
+      {#key $page.url.pathname}
+        <div
+          in:fade={{ duration: 300, delay: 150, easing: cubicOut }}
+          out:fade={{ duration: 150, easing: cubicOut }}
+        >
+          <slot />
+        </div>
+      {/key}
     </main>
   {/if}
 </div>
