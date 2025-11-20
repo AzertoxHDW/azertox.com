@@ -31,7 +31,7 @@
   function updateActiveIndicator() {
     const targetIndex = isHoveringNav && hoveredIndex !== -1
       ? hoveredIndex
-      : navItems.findIndex(item => item.href === $page.url.pathname || (item.href === '/infra' && $page.url.pathname === '/rack'));
+      : navItems.findIndex(item => item.href === $page.url.pathname || (item.href === '/infra' && ($page.url.pathname === '/rack' || $page.url.pathname.startsWith('/infra/'))));
 
     if (targetIndex !== -1 && navItemElements[targetIndex]) {
       const targetElement = navItemElements[targetIndex];
