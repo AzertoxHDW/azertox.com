@@ -6,7 +6,7 @@
   import { Button } from "$lib/components/ui/button"; //
   import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "$lib/components/ui/card"; //
   // Added Laptop to the import list
-  import { ArrowLeft, ExternalLink, Activity, CalendarDays, Info, ListChecks, ImageIcon, Laptop, Server, Cpu, MemoryStick, HardDrive, Network, Terminal as TerminalIcon } from "lucide-svelte";
+  import { ArrowLeft, ExternalLink, Activity, CalendarDays, Info, ListChecks, ImageIcon, Laptop, Server, Cpu, MemoryStick, HardDrive, Network, Terminal as TerminalIcon, X } from "lucide-svelte";
   import { flyAndScale } from "$lib/utils"; //
   import { onMount } from 'svelte';
 
@@ -18,6 +18,8 @@
   $: rackPosition = machine ? rackDevices.find(d => d.infraMachineId === machine.id) : null;
 
   let selectedImage: string | undefined;
+  let lightboxOpen = false;
+
   onMount(() => {
     if (machine?.gallery && machine.gallery.length > 0) {
       selectedImage = machine.gallery[0];
@@ -25,6 +27,22 @@
       selectedImage = machine.imageUrl;
     }
   });
+
+  function openLightbox() {
+    lightboxOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightboxOpen = false;
+    document.body.style.overflow = '';
+  }
+
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && lightboxOpen) {
+      closeLightbox();
+    }
+  }
 
   function formatDate(dateString?: string): string {
     if (!dateString) return 'N/A';
@@ -35,6 +53,8 @@
     });
   }
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 {#if machine}
   <div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer" in:flyAndScale={{ y: 50, duration: 400, start: 0.75 }}>
@@ -63,9 +83,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
       <div class="lg:col-span-1 space-y-6">
         {#if selectedImage}
-          <div class="relative aspect-video w-full overflow-hidden rounded-lg shadow-md border border-border/20">
+          <button on:click={openLightbox} class="relative aspect-video w-full overflow-hidden rounded-lg shadow-md border border-border/20 cursor-pointer hover:opacity-90 transition-opacity group">
             <img src={selectedImage} alt="Image de {machine.name}" class="object-cover w-full h-full" />
-          </div>
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+              <ImageIcon class="w-8 h-8 text-white opacity-0 group-hover:opacity-80 transition-opacity" />
+            </div>
+          </button>
         {/if}
         {#if machine.gallery && machine.gallery.length > 1}
           <div class="flex space-x-2 overflow-x-auto pb-2">
@@ -213,6 +236,34 @@
         {/if}
       </div>
     </div>
+
+    <!-- Image Lightbox -->
+    {#if lightboxOpen && selectedImage}
+      <div
+        class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+        on:click={closeLightbox}
+        role="dialog"
+        aria-modal="true"
+      >
+        <button
+          on:click={closeLightbox}
+          class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+          aria-label="Fermer"
+        >
+          <X class="w-8 h-8" />
+        </button>
+        <div
+          class="relative max-w-7xl max-h-full"
+          on:click|stopPropagation
+        >
+          <img
+            src={selectedImage}
+            alt="Image de {machine.name}"
+            class="max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-lg"
+          />
+        </div>
+      </div>
+    {/if}
 
   </div>
 {:else}
