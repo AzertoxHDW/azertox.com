@@ -78,7 +78,7 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8 md:py-12">
-  <div class="text-center mb-12 md:mb-16" in:flyAndScale={{ y: -20, duration: 500, start: 0.95 }}>
+  <div class="text-center mb-12 md:mb-16" in:flyAndScale={{ y: -40, duration: 450, start: 0.7 }}>
     <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground flex items-center justify-center">
       <ArchiveIcon class="w-10 h-10 md:w-12 md:h-12 mr-3 text-primary" />
       Le musée
@@ -91,8 +91,8 @@
   {#if $visibleItems.length > 0}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
       {#each $visibleItems as item (item.id)}
-        <div in:flyAndScale|global={{ y: 20, duration: 300, start:0.98, delay: (($visibleItems.indexOf(item) % itemsPerLoad) * 75)}}>
-          <Card class="h-full flex flex-col museum-card hover:shadow-xl dark:hover:shadow-primary/30 transition-shadow duration-300 overflow-hidden">
+        <div in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: (($visibleItems.indexOf(item) % itemsPerLoad) * 80)}}>
+          <Card class="h-full flex flex-col museum-card hover:shadow-xl dark:hover:shadow-primary/30 transition-all duration-300 overflow-hidden hover:-translate-y-1 hover:scale-[1.01]">
             {#if item.imageUrl}
               <div class="aspect-[4/3] w-full overflow-hidden rounded-t-lg bg-muted/50 dark:bg-muted/20 border-b border-border/30">
                 <img src={item.imageUrl} alt="Image de {item.name}" class="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300" />

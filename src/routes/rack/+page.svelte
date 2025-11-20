@@ -118,7 +118,7 @@
   </svelte:head>
   
   <div class="container mx-auto px-4 py-8 md:py-12">
-    <div class="text-center mb-10 md:mb-12" in:flyAndScale={{ y: -20, duration: 500 }}>
+    <div class="text-center mb-10 md:mb-12" in:flyAndScale={{ y: -40, duration: 450, start: 0.7 }}>
       <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
         Mon installation rack
       </h1>
@@ -190,7 +190,7 @@
         {#if currentHoveredItem}
           <div
             class="p-1"
-            transition:flyAndScale={{ y: 8, duration: 200, start: 0.95 }}
+            transition:flyAndScale={{ y: 15, duration: 300, start: 0.8 }}
           >
             <Card class="shadow-2xl bg-card/95 backdrop-blur-sm">
               <CardHeader class="pb-3 pt-4">
