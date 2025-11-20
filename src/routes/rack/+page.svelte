@@ -30,11 +30,13 @@
     }
   
     const rackDevicesData: RackDevice[] = [
-      { id: 'u2', name: 'Network switch', uHeight: 1, uPosition: 2, type: 'switch', description: 'Main switch', faceplate: { text: " ", ports: { type: 'rj45', count: 8, arrangement: 'row' }, leds: [{color: 'green', count:8, blinking: true}]}},
-      { id: 'u3', name: 'Raspberry Pi', uHeight: 1, uPosition: 3, type: 'arm-cluster', description: 'Main local services host machine', status: 'Online', faceplate: { text: "PI-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
-      { id: 'u9', name: 'Dell Optiplex R230', uHeight: 1, uPosition: 9, type: 'server-1u', description: 'Unused server', status: 'Offline', faceplate: { text: "SPARE", leds: [{color: 'red', count:2}]}},
-      { id: 'u10', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 10, type: 'server-1u', description: 'TrueNAS storage server', status: 'Online', faceplate: { text: "TRUENAS", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}, infraMachineId: 'nas'},
-      { id: 'u18', name: 'Sierra', uHeight: 4, uPosition: 18, type: 'server-4u', description: 'Game hosting server', status: 'Online', faceplate: { text: "PVE-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}, infraMachineId: 'pve-01'},
+      { id: 'u1', name: 'PDU', uHeight: 1, uPosition: 1, type: 'pdu', description: 'PDU Digitus 8 prises'},
+      { id: 'u2', name: 'Passe-câbles', uHeight: 1, uPosition: 2, type: 'patch-panel', description: 'Passe-câble en brosse', faceplate: { text: '≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡'}},
+      { id: 'u6', name: 'Sierra', uHeight: 4, uPosition: 6, type: 'server-4u', description: 'Serveur de virtualisation principal', status: 'Online', faceplate: { text: "PVE-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}, infraMachineId: 'pve-01'},
+      { id: 'u7', name: 'Dell Optiplex R230', uHeight: 1, uPosition: 7, type: 'server-1u', description: 'Serveur inutilisé', status: 'Offline', faceplate: { text: "SPARE", leds: [{color: 'red', count:2}]}},
+      { id: 'u8', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 8, type: 'server-1u', description: 'Serveur de stockage TrueNAS', status: 'Online', faceplate: { text: "TRUENAS", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}, infraMachineId: 'nas'},
+      { id: 'u9', name: 'Passe-câbles', uHeight: 1, uPosition: 9, type: 'patch-panel', description: 'Passe-câble en brosse', faceplate: { text: '≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡'}}, 
+      { id: 'u10', name: 'Switch + Pi', uHeight: 1, uPosition: 10, type: 'arm-cluster', description: 'Plaque modulaire contenant le switch principal et un Raspberry Pi 4B', status: 'Online', faceplate: { text: "SW / PI", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
     ];
 
     let currentHoveredItem: RackDevice | null = null;
