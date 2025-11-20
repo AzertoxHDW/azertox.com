@@ -2,6 +2,7 @@
   import { Card, CardHeader, CardTitle, CardContent } from "$lib/components/ui/card/index.js";
   import { Badge } from "$lib/components/ui/badge";
   import { flyAndScale } from "$lib/utils";
+  import FloatingOrbs from "$lib/components/FloatingOrbs.svelte";
   import {
     UserCircle,
     Laptop,
@@ -71,7 +72,9 @@
   }
 </style>
 
-<div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer max-w-4xl">
+<FloatingOrbs />
+
+<div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer max-w-4xl relative z-10">
   <!-- Header -->
   <div class="text-center mb-12" in:flyAndScale={{ y: -40, duration: 450, start: 0.7 }}>
     <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-4">
