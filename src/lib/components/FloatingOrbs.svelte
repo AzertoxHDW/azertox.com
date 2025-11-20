@@ -20,8 +20,8 @@
   }
 
   let orbs: Orb[] = [];
-  const orbCount = 15;
-  const connectionDistance = 200;
+  const orbCount = 10;
+  const connectionDistance = 180;
 
   const colors = [
     { h: 180, s: 60, l: 50 }, // Teal (primary)
@@ -39,7 +39,7 @@
 
     for (let i = 0; i < orbCount; i++) {
       const colorData = colors[Math.floor(Math.random() * colors.length)];
-      const speed = 0.2 + Math.random() * 0.3;
+      const speed = 0.1 + Math.random() * 0.15;
       const angle = Math.random() * Math.PI * 2;
 
       orbs.push({
@@ -47,12 +47,12 @@
         y: Math.random() * height,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
-        radius: 20 + Math.random() * 40,
+        radius: 15 + Math.random() * 25,
         color: `hsl(${colorData.h}, ${colorData.s}%, ${colorData.l}%)`,
-        glowIntensity: 0.15 + Math.random() * 0.1,
-        pulseSpeed: 0.5 + Math.random() * 0.8,
+        glowIntensity: 0.08 + Math.random() * 0.05,
+        pulseSpeed: 0.4 + Math.random() * 0.5,
         pulseOffset: Math.random() * Math.PI * 2,
-        opacity: 0.3 + Math.random() * 0.2
+        opacity: 0.15 + Math.random() * 0.1
       });
     }
   }
@@ -70,12 +70,12 @@
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < connectionDistance) {
-          const opacity = (1 - distance / connectionDistance) * 0.08;
+          const opacity = (1 - distance / connectionDistance) * 0.04;
           ctx.beginPath();
           ctx.moveTo(orbs[i].x, orbs[i].y);
           ctx.lineTo(orbs[j].x, orbs[j].y);
           ctx.strokeStyle = `hsla(180, 50%, 60%, ${opacity})`;
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 0.5;
           ctx.stroke();
         }
       }
@@ -103,8 +103,8 @@
         orb.x, orb.y, 0,
         orb.x, orb.y, currentRadius * 2
       );
-      gradient.addColorStop(0, orb.color.replace(')', `, ${currentOpacity * 0.6})`).replace('hsl', 'hsla'));
-      gradient.addColorStop(0.5, orb.color.replace(')', `, ${currentOpacity * 0.2})`).replace('hsl', 'hsla'));
+      gradient.addColorStop(0, orb.color.replace(')', `, ${currentOpacity * 0.3})`).replace('hsl', 'hsla'));
+      gradient.addColorStop(0.5, orb.color.replace(')', `, ${currentOpacity * 0.1})`).replace('hsl', 'hsla'));
       gradient.addColorStop(1, orb.color.replace(')', ', 0)').replace('hsl', 'hsla'));
 
       ctx.fillStyle = gradient;
@@ -117,8 +117,8 @@
         orb.x, orb.y, 0,
         orb.x, orb.y, currentRadius
       );
-      coreGradient.addColorStop(0, orb.color.replace(')', `, ${currentOpacity})`).replace('hsl', 'hsla'));
-      coreGradient.addColorStop(1, orb.color.replace(')', `, ${currentOpacity * 0.3})`).replace('hsl', 'hsla'));
+      coreGradient.addColorStop(0, orb.color.replace(')', `, ${currentOpacity * 0.5})`).replace('hsl', 'hsla'));
+      coreGradient.addColorStop(1, orb.color.replace(')', `, ${currentOpacity * 0.15})`).replace('hsl', 'hsla'));
 
       ctx.fillStyle = coreGradient;
       ctx.beginPath();

@@ -81,7 +81,7 @@
       <UserCircle class="w-12 h-12 text-primary" />
     </div>
     <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-3">
-      <span class="gradient-text">Dylan "Az'" R.</span>
+      <span class="gradient-text">Dylan &ldquo;Az&rsquo;&rdquo; R.</span>
     </h1>
     <p class="text-lg md:text-xl text-muted-foreground">
       {yearsSince()} ans • Belgique
