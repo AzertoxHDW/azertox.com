@@ -40,6 +40,8 @@
     let currentHoveredItem: RackDevice | null = null;
     let infoBoxPosition = { top: 0, left: 0, visible: false, preferSide: 'right' };
     let rackWrapperEl: HTMLElement;
+    let isHoveringCard = false;
+    let isHoveringDevice = false;
 
     // Get the infrastructure machine for the currently hovered device
     $: currentInfraMachine = currentHoveredItem?.infraMachineId
@@ -47,6 +49,7 @@
       : null;
 
     async function handleMouseEnter(item: RackDevice, event: MouseEvent) {
+      isHoveringDevice = true;
       currentHoveredItem = item;
       await tick();
       if (rackWrapperEl) {
@@ -74,12 +77,27 @@
     }
 
     function handleMouseLeave() {
-      infoBoxPosition = { ...infoBoxPosition, visible: false };
+      isHoveringDevice = false;
       setTimeout(() => {
-          if (!infoBoxPosition.visible) {
+          if (!isHoveringDevice && !isHoveringCard) {
+              infoBoxPosition = { ...infoBoxPosition, visible: false };
               currentHoveredItem = null;
           }
-      }, 200);
+      }, 100);
+    }
+
+    function handleCardMouseEnter() {
+      isHoveringCard = true;
+    }
+
+    function handleCardMouseLeave() {
+      isHoveringCard = false;
+      setTimeout(() => {
+          if (!isHoveringDevice && !isHoveringCard) {
+              infoBoxPosition = { ...infoBoxPosition, visible: false };
+              currentHoveredItem = null;
+          }
+      }, 100);
     }
 
     const U_HEIGHT_PX = 30;
@@ -255,6 +273,8 @@
           <div
             class="p-1"
             transition:flyAndScale={{ y: 15, duration: 300, start: 0.8 }}
+            on:mouseenter={handleCardMouseEnter}
+            on:mouseleave={handleCardMouseLeave}
           >
             {#if currentInfraMachine}
               <!-- Full Infrastructure Card -->
