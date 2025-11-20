@@ -34,11 +34,9 @@
       if (activeElement && navContainer) {
         const containerRect = navContainer.getBoundingClientRect();
         const activeRect = activeElement.getBoundingClientRect();
-        const containerStyle = window.getComputedStyle(navContainer);
-        const containerPaddingLeft = parseFloat(containerStyle.paddingLeft);
-        const left = activeRect.left - containerRect.left - containerPaddingLeft;
+        const left = activeRect.left - containerRect.left;
         const width = activeRect.width;
-        activeIndicatorStyle = `left: 0; transform: translateX(${left}px); width: ${width}px;`;
+        activeIndicatorStyle = `left: ${left}px; width: ${width}px;`;
       }
     }
   }
@@ -213,7 +211,7 @@
         <nav class="relative flex items-center space-x-1 sm:space-x-2 bg-background/80 dark:bg-muted/50 backdrop-blur-lg shadow-xl rounded-full px-3 py-2 border border-border/40">
           <!-- Sliding background indicator -->
           <div
-            class="absolute h-[calc(100%-16px)] bg-primary rounded-full transition-all duration-300 ease-out pointer-events-none"
+            class="absolute top-2 h-[calc(100%-16px)] bg-primary rounded-full transition-all duration-300 ease-out pointer-events-none"
             style="{activeIndicatorStyle}"
           ></div>
 
