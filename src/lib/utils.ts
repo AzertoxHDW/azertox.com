@@ -1,11 +1,34 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { backOut } from "svelte/easing";
+import { backOut, cubicInOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
+
+type WarpParams = {
+	duration?: number;
+	delay?: number;
+};
+
+export const warp = (
+	node: Element,
+	params: WarpParams = {}
+): TransitionConfig => {
+	return {
+		duration: params.duration ?? 400,
+		delay: params.delay ?? 0,
+		css: (t) => {
+			const eased = cubicInOut(t);
+			const blur = (1 - eased) * 4;
+
+			return `
+				filter: blur(${blur}px);
+			`;
+		}
+	};
+};
 
 type FlyAndScaleParams = {
 	y?: number;
