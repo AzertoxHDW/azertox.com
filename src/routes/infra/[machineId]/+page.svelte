@@ -143,12 +143,12 @@
                     {@const isCurrentMachine = device?.infraMachineId === machine.id}
                     {#if device && isDeviceStart}
                       <div
-                        class="h-3 rounded-sm flex items-center justify-center text-[7px] font-bold text-white uppercase tracking-wider"
+                        class="h-3 rounded-sm flex items-center justify-center text-[7px] font-bold text-white uppercase tracking-wider px-1"
                         class:bg-primary={isCurrentMachine}
                         class:bg-zinc-600={!isCurrentMachine}
                         style="height: {device.uHeight * 12}px;"
                       >
-                        {device.name.substring(0, 8)}
+                        <span class="truncate">{device.name}</span>
                       </div>
                     {:else if !device}
                       <div class="h-3 bg-zinc-700/30 rounded-sm"></div>
