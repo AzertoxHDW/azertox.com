@@ -21,11 +21,11 @@ export const warp = (
 		delay: params.delay ?? 0,
 		css: (t) => {
 			const eased = cubicInOut(t);
-			const translateY = (1 - eased) * 20;
+			const blur = (1 - eased) * 4;
 
 			return `
-				transform: translateY(${translateY}px);
 				opacity: ${eased};
+				filter: blur(${blur}px);
 			`;
 		}
 	};
