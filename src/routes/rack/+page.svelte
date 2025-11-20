@@ -29,11 +29,11 @@
     }
   
     const rackDevicesData: RackDevice[] = [
-      { id: 'u2', name: 'Network switch', uHeight: 1, uPosition: 2, type: 'switch', description: 'Main switch', faceplate: { text: " ", ports: { type: 'rj45', count: 8, arrangement: 'row' }, leds: [{color: 'green', count:8, blinking: true}]} , link: '/infra/networking'},
+      { id: 'u2', name: 'Network switch', uHeight: 1, uPosition: 2, type: 'switch', description: 'Main switch', faceplate: { text: " ", ports: { type: 'rj45', count: 8, arrangement: 'row' }, leds: [{color: 'green', count:8, blinking: true}]}},
       { id: 'u3', name: 'Raspberry Pi', uHeight: 1, uPosition: 3, type: 'arm-cluster', description: 'Main local services host machine', status: 'Online', faceplate: { text: "PI-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
       { id: 'u9', name: 'Dell Optiplex R230', uHeight: 1, uPosition: 9, type: 'server-1u', description: 'Unused server', status: 'Offline', faceplate: { text: "SPARE", leds: [{color: 'red', count:2}]}},
-      { id: 'u10', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 10, type: 'server-1u', description: 'TrueNAS storage server', status: 'Online', faceplate: { text: "TRUENAS", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
-      { id: 'u18', name: 'Sierra', uHeight: 4, uPosition: 18, type: 'server-4u', description: 'Game hosting server', status: 'Online', faceplate: { text: "PVE-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}},
+      { id: 'u10', name: 'Dell Optiplex R320', uHeight: 1, uPosition: 10, type: 'server-1u', description: 'TrueNAS storage server', status: 'Online', faceplate: { text: "TRUENAS", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}, link: '/infra/nas'},
+      { id: 'u18', name: 'Sierra', uHeight: 4, uPosition: 18, type: 'server-4u', description: 'Game hosting server', status: 'Online', faceplate: { text: "PVE-01", leds: [{color: 'green', count:1}, {color: 'amber', count:1, blinking: true}]}, link: '/infra/pve-01'},
     ];
 
     let currentHoveredItem: RackDevice | null = null;
@@ -74,6 +74,12 @@
               currentHoveredItem = null;
           }
       }, 200);
+    }
+
+    function handleDeviceClick(device: RackDevice) {
+      if (device.link) {
+        window.location.href = device.link;
+      }
     }
 
     const U_HEIGHT_PX = 30;
@@ -194,10 +200,17 @@
             {#if deviceInSlot && (deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller}
               {:else}
               <div
-                class="rack-device type-{(deviceInSlot || {type: 'spacer'}).type} flex items-center justify-center text-center text-muted-foreground relative"
+                class="rack-device type-{(deviceInSlot || {type: 'spacer'}).type} flex items-center justify-center text-center text-muted-foreground relative {deviceInSlot?.link ? 'has-link' : ''}"
                 style="height: { (deviceInSlot ? deviceInSlot.uHeight : 1) * U_HEIGHT_PX }px;"
                 on:mouseenter={(e) => deviceInSlot && deviceInSlot.type !== 'spacer' && !(deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller ? handleMouseEnter(deviceInSlot, e) : null}
                 on:mouseleave={deviceInSlot && deviceInSlot.type !== 'spacer' && !(deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller ? handleMouseLeave : null}
+                on:click={() => deviceInSlot && deviceInSlot.type !== 'spacer' && !(deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller ? handleDeviceClick(deviceInSlot) : null}
+                on:keydown={(e) => {
+                  if ((e.key === 'Enter' || e.key === ' ') && deviceInSlot && deviceInSlot.type !== 'spacer' && !(deviceInSlot as RackDevice & { isFiller?: boolean }).isFiller) {
+                    e.preventDefault();
+                    handleDeviceClick(deviceInSlot);
+                  }
+                }}
                 role={deviceInSlot && deviceInSlot.type !== 'spacer' ? "button" : "presentation"}
                 tabindex={deviceInSlot && deviceInSlot.type !== 'spacer' ? 0 : -1}
                 aria-label={deviceInSlot?.name}
@@ -271,9 +284,12 @@
                   </ul>
                 {/if}
                 {#if currentHoveredItem.link}
-                  <Button href={currentHoveredItem.link} size="sm" variant="link" class="p-0 h-auto mt-2 text-primary">
-                    Plus de détails <ArrowRight class="ml-1 h-4 w-4" />
-                  </Button>
+                  <div class="mt-3 pt-3 border-t border-border/50">
+                    <p class="text-xs text-primary font-semibold flex items-center justify-center gap-1">
+                      <ArrowRight class="h-3 w-3" />
+                      Cliquez pour voir les détails
+                    </p>
+                  </div>
                 {/if}
               </CardContent>
             </Card>
@@ -353,6 +369,22 @@
         0 4px 12px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         0 0 0 2px hsl(var(--primary) / 0.3);
+    }
+
+    .rack-device.has-link {
+      cursor: pointer;
+    }
+
+    .rack-device.has-link:hover {
+      transform: translateX(3px);
+      box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 0 0 2px hsl(var(--primary) / 0.5);
+    }
+
+    .rack-device.has-link:active {
+      transform: translateX(1px);
     }
 
     .device-bezel {
