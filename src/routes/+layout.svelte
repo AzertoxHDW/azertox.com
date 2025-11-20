@@ -238,8 +238,8 @@
     >
       {#key $page.url.pathname}
         <div
-          in:warp={{ duration: 400, delay: 100 }}
-          out:warp={{ duration: 300 }}
+          in:warp={{ duration: 350, delay: 120 }}
+          out:warp={{ duration: 250 }}
         >
           <slot />
         </div>

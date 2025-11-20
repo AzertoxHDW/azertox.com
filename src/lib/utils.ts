@@ -17,19 +17,15 @@ export const warp = (
 	params: WarpParams = {}
 ): TransitionConfig => {
 	return {
-		duration: params.duration ?? 500,
+		duration: params.duration ?? 400,
 		delay: params.delay ?? 0,
 		css: (t) => {
 			const eased = cubicInOut(t);
-			const rotation = (1 - eased) * 12;
-			const translateX = (1 - eased) * 30;
-			const scale = 0.96 + (eased * 0.04);
-			const blur = (1 - eased) * 2;
+			const translateY = (1 - eased) * 20;
 
 			return `
-				transform: perspective(1200px) rotateY(${rotation}deg) translateX(${translateX}px) scale(${scale});
+				transform: translateY(${translateY}px);
 				opacity: ${eased};
-				filter: blur(${blur}px);
 			`;
 		}
 	};
