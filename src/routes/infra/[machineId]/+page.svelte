@@ -137,7 +137,7 @@
                       const deviceTop = d.uPosition + d.uHeight - 1;
                       return uNumber <= deviceTop && uNumber >= d.uPosition;
                     })}
-                    {@const isDeviceStart = device && uNumber === d.uPosition}
+                    {@const isDeviceStart = device && uNumber === device.uPosition}
                     {@const isCurrentMachine = device?.infraMachineId === machine.id}
                     {#if device && isDeviceStart}
                       <div
