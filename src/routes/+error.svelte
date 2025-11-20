@@ -16,24 +16,14 @@
 
   // Terminal ASCII art for 404
   const ascii404 = `
-    ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-    █                                                  █
-    █     ██╗  ██╗  ██████╗  ██╗  ██╗                █
-    █     ██║  ██║ ██╔═████╗ ██║  ██║                █
-    █     ███████║ ██║██╔██║ ███████║                █
-    █     ╚════██║ ████╔╝██║ ╚════██║                █
-    █          ██║ ╚██████╔╝      ██║                █
-    █          ╚═╝  ╚═════╝       ╚═╝                █
-    █                                                  █
-    █         ⚠  ERROR: PAGE NOT FOUND  ⚠            █
-    █                                                  █
-    █   ┌─────────────────────────────────────────┐  █
-    █   │  [FATAL] Resource unavailable           │  █
-    █   │  [INFO]  404 :: Not Found                │  █
-    █   │  [WARN]  Unable to locate requested path │  █
-    █   └─────────────────────────────────────────┘  █
-    █                                                  █
-    ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+      ██╗  ██╗  ██████╗  ██╗  ██╗
+      ██║  ██║ ██╔═████╗ ██║  ██║
+      ███████║ ██║██╔██║ ███████║
+      ╚════██║ ████╔╝██║ ╚════██║
+           ██║ ╚██████╔╝      ██║
+           ╚═╝  ╚═════╝       ╚═╝
+
+         ERROR: PAGE NOT FOUND
   `;
 
   let glitchOffset = 0;
@@ -103,7 +93,12 @@
     class="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4 bg-background text-foreground"
     role="alert"
   >
-    <div class="w-full max-w-4xl">
+    <div class="w-full max-w-4xl space-y-6">
+      <!-- ASCII Art with glitch effect (outside terminal) -->
+      <div class="text-center">
+        <pre class="text-primary text-base md:text-lg leading-tight inline-block" style="transform: translateX({glitchOffset}px)">{ascii404}</pre>
+      </div>
+
       <!-- Terminal Window -->
       <div class="terminal-window border border-border rounded-lg overflow-hidden shadow-2xl">
         <!-- Terminal Header -->
@@ -117,11 +112,8 @@
         </div>
 
         <!-- Terminal Content -->
-        <div class="bg-card p-6 md:p-8 font-mono text-sm min-h-[500px] flex flex-col">
+        <div class="bg-card p-6 md:p-8 font-mono text-sm min-h-[400px] flex flex-col">
           <div class="flex-1">
-            <!-- ASCII Art with glitch effect -->
-            <pre class="text-primary text-[10px] leading-[1.2] mb-6 overflow-x-auto" style="transform: translateX({glitchOffset}px)">{ascii404}</pre>
-
             <div class="space-y-3 text-muted-foreground">
               <p class="flex items-start gap-2">
                 <Terminal class="h-4 w-4 mt-0.5 flex-shrink-0 text-primary" />
