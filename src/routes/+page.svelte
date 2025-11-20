@@ -81,6 +81,9 @@
   let showTerminal = false;
   let activeWindowIndex: number | null = null;
 
+  // Detect if we're on mobile
+  let isMobile = false;
+
   function bringToFront(index: number) {
     const element = cardElements[index];
     if (element) {
@@ -104,9 +107,25 @@
     showTerminal = false;
   }
 
+  function checkMobile() {
+    if (browser) {
+      isMobile = window.innerWidth < 768; // md breakpoint
+    }
+  }
+
   onMount(() => {
     // Recalculate positions on mount to ensure proper centering
     initialPositions = calculateInitialPositions();
+    checkMobile();
+
+    // Listen for resize events
+    const handleResize = () => {
+      checkMobile();
+      initialPositions = calculateInitialPositions();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   });
 </script>
 
@@ -126,96 +145,154 @@
   <StarField />
 {/if}
 <div class="w-full min-h-screen flex flex-col text-foreground">
-    <!-- Terminal Toggle Button (Top Right) -->
+    <!-- Terminal Toggle Button -->
     <button
       on:click={toggleTerminal}
-      class="terminal-toggle-btn fixed top-8 right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+      class="terminal-toggle-btn fixed top-4 right-4 md:top-8 md:right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
       aria-label="{showTerminal ? 'Fermer' : 'Ouvrir'} Terminal"
     >
       <Terminal class="h-5 w-5 text-primary" />
     </button>
 
     <!-- Header -->
-    <header class="text-center space-y-2 py-8 relative z-[100]" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
-      <h1 class="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center">
-          <Terminal class="h-10 w-10 mr-3 text-primary" /> Interface Système: <span class="ml-2 text-primary">Az'</span>
+    <header class="text-center space-y-2 py-6 px-4 md:py-8 relative z-[100]" in:flyAndScale={{ y:0, duration:500, start:0.95}}>
+      <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight flex flex-col md:flex-row items-center justify-center gap-2 md:gap-0">
+          <Terminal class="h-8 w-8 md:h-10 md:w-10 md:mr-3 text-primary" />
+          <span class="flex items-center gap-2">Interface Système: <span class="text-primary">Az'</span></span>
       </h1>
-      <p class="text-muted-foreground md:text-lg">
+      <p class="text-sm md:text-base lg:text-lg text-muted-foreground px-4">
         Tableau de bord opérationnel pour les ressources système et la navigation des projets.
       </p>
     </header>
 
-    <!-- Draggable Cards Container -->
-    <div class="flex-1 relative w-full" style="min-height: calc(100vh - 200px);">
-      {#each dashboardLinks as item, i}
-        <div
-          bind:this={cardElements[i]}
-          class="terminal-window absolute {activeWindowIndex === i ? 'active' : ''}"
-          style="z-index: {10 + i}; width: {CARD_WIDTH}px;"
-          in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
-          use:draggable={{
-            handleSelector: '.terminal-titlebar',
-            initialPosition: { x: initialPositions[i].x, y: initialPositions[i].y },
-            onDragStart: () => bringToFront(i)
-          }}
-        >
-          <!-- Terminal Title Bar -->
-          <div class="terminal-titlebar">
-            <div class="terminal-controls">
-              <div class="terminal-btn close"></div>
-              <div class="terminal-btn minimize"></div>
-              <div class="terminal-btn maximize"></div>
-            </div>
-            <div class="terminal-title">~ {item.title.toLowerCase().replace(/\s+/g, '-')} ~</div>
-          </div>
-
-          <!-- Terminal Content -->
-          <div class="terminal-content" on:mousedown={() => bringToFront(i)}>
-            <Card class="h-full flex flex-col !border-0 !shadow-none !rounded-none">
-              <CardHeader>
-                <div class="flex items-center gap-3">
-                  <div class="icon-wrapper">
-                      <svelte:component this={item.icon} class="h-7 w-7" />
-                  </div>
-                  <CardTitle class="text-xl !mt-0 group-hover:text-primary">{item.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent class="flex-grow">
-                <p class="text-muted-foreground text-sm mb-3">{item.description}</p>
-                <p class="text-xs font-mono text-primary/80 bg-muted/50 p-2 rounded">{item.details}</p>
-              </CardContent>
-              <div class="p-4 pt-2">
-                <Button href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} class="w-full" variant="outline">
-                  {item.external ? 'Accéder' : 'Explorer'} <ArrowRight class="ml-2 h-4 w-4" />
-                </Button>
+    <!-- Mobile: Vertical Stack Layout -->
+    {#if isMobile}
+      <div class="flex-1 px-4 pb-8 space-y-4">
+        {#each dashboardLinks as item, i}
+          <div
+            class="terminal-window w-full"
+            in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
+          >
+            <!-- Terminal Title Bar -->
+            <div class="terminal-titlebar">
+              <div class="terminal-controls">
+                <div class="terminal-btn close"></div>
+                <div class="terminal-btn minimize"></div>
+                <div class="terminal-btn maximize"></div>
               </div>
-            </Card>
+              <div class="terminal-title">~ {item.title.toLowerCase().replace(/\s+/g, '-')} ~</div>
+            </div>
+
+            <!-- Terminal Content -->
+            <div class="terminal-content">
+              <Card class="h-full flex flex-col !border-0 !shadow-none !rounded-none">
+                <CardHeader>
+                  <div class="flex items-center gap-3">
+                    <div class="icon-wrapper">
+                        <svelte:component this={item.icon} class="h-7 w-7" />
+                    </div>
+                    <CardTitle class="text-xl !mt-0">{item.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent class="flex-grow">
+                  <p class="text-muted-foreground text-sm mb-3">{item.description}</p>
+                  <p class="text-xs font-mono text-primary/80 bg-muted/50 p-2 rounded">{item.details}</p>
+                </CardContent>
+                <div class="p-4 pt-2">
+                  <Button href={item.href} class="w-full" variant="outline">
+                    Explorer <ArrowRight class="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </Card>
+            </div>
+          </div>
+        {/each}
+      </div>
+
+      <!-- Mobile Terminal (Full Screen Overlay) -->
+      {#if showTerminal}
+        <div
+          class="fixed inset-0 z-[200] bg-background/95 backdrop-blur-sm p-4"
+          in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
+        >
+          <div class="terminal-window h-full flex flex-col">
+            <HomeTerminal onClose={closeTerminal} />
           </div>
         </div>
-      {/each}
-    </div>
+      {/if}
+    {:else}
+      <!-- Desktop: Draggable Cards Container -->
+      <div class="flex-1 relative w-full" style="min-height: calc(100vh - 200px);">
+        {#each dashboardLinks as item, i}
+          <div
+            bind:this={cardElements[i]}
+            class="terminal-window absolute {activeWindowIndex === i ? 'active' : ''}"
+            style="z-index: {10 + i}; width: {CARD_WIDTH}px;"
+            in:flyAndScale|global={{ y: 20, duration: 300, start: 0.98, delay: i * 100 }}
+            use:draggable={{
+              handleSelector: '.terminal-titlebar',
+              initialPosition: { x: initialPositions[i].x, y: initialPositions[i].y },
+              onDragStart: () => bringToFront(i)
+            }}
+          >
+            <!-- Terminal Title Bar -->
+            <div class="terminal-titlebar">
+              <div class="terminal-controls">
+                <div class="terminal-btn close"></div>
+                <div class="terminal-btn minimize"></div>
+                <div class="terminal-btn maximize"></div>
+              </div>
+              <div class="terminal-title">~ {item.title.toLowerCase().replace(/\s+/g, '-')} ~</div>
+            </div>
 
-    <!-- Terminal Window (Draggable) -->
-    {#if showTerminal}
-      <div
-        bind:this={terminalElement}
-        class="terminal-window absolute {activeWindowIndex === -1 ? 'active' : ''}"
-        style="z-index: 200; width: 700px;"
-        in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
-        use:draggable={{
-          handleSelector: '.terminal-titlebar',
-          initialPosition: { x: browser ? (window.innerWidth - 700) / 2 : 250, y: 300 },
-          onDragStart: () => bringTerminalToFront()
-        }}
-        on:mousedown={() => bringTerminalToFront()}
-      >
-        <HomeTerminal onFocus={bringTerminalToFront} onClose={closeTerminal} />
+            <!-- Terminal Content -->
+            <div class="terminal-content" on:mousedown={() => bringToFront(i)}>
+              <Card class="h-full flex flex-col !border-0 !shadow-none !rounded-none">
+                <CardHeader>
+                  <div class="flex items-center gap-3">
+                    <div class="icon-wrapper">
+                        <svelte:component this={item.icon} class="h-7 w-7" />
+                    </div>
+                    <CardTitle class="text-xl !mt-0 group-hover:text-primary">{item.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent class="flex-grow">
+                  <p class="text-muted-foreground text-sm mb-3">{item.description}</p>
+                  <p class="text-xs font-mono text-primary/80 bg-muted/50 p-2 rounded">{item.details}</p>
+                </CardContent>
+                <div class="p-4 pt-2">
+                  <Button href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} class="w-full" variant="outline">
+                    {item.external ? 'Accéder' : 'Explorer'} <ArrowRight class="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </Card>
+            </div>
+          </div>
+        {/each}
       </div>
+
+      <!-- Desktop: Terminal Window (Draggable) -->
+      {#if showTerminal}
+        <div
+          bind:this={terminalElement}
+          class="terminal-window absolute {activeWindowIndex === -1 ? 'active' : ''}"
+          style="z-index: 200; width: 700px;"
+          in:flyAndScale|global={{ y: 20, duration: 500, start: 0.95 }}
+          use:draggable={{
+            handleSelector: '.terminal-titlebar',
+            initialPosition: { x: browser ? (window.innerWidth - 700) / 2 : 250, y: 300 },
+            onDragStart: () => bringTerminalToFront()
+          }}
+          on:mousedown={() => bringTerminalToFront()}
+        >
+          <HomeTerminal onFocus={bringTerminalToFront} onClose={closeTerminal} />
+        </div>
+      {/if}
     {/if}
 
     <!-- Footer -->
-    <footer class="text-center text-sm text-muted-foreground py-8 relative z-[100]">
-        <p>&copy; {new Date().getFullYear()} Dylan "Azertox" R. | Horloge système: {new Date().toLocaleTimeString('fr-BE')} | Source code: <a href="https://github.com/AzertoxHDW/azertox.com">Github</a></p>
+    <footer class="text-center text-xs md:text-sm text-muted-foreground py-4 md:py-8 px-4 relative z-[100]">
+        <p class="break-words">&copy; {new Date().getFullYear()} Dylan "Azertox" R. | Horloge système: {new Date().toLocaleTimeString('fr-BE')} | Source code: <a href="https://github.com/AzertoxHDW/azertox.com" class="text-primary hover:underline">Github</a></p>
         <p class="mt-1">Développé avec Svelte & TailwindCSS</p>
     </footer>
 </div>
