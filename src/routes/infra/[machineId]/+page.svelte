@@ -122,22 +122,22 @@
             <!-- Mini Rack Visualization -->
             <div class="bg-gradient-to-br from-zinc-800 to-zinc-900 dark:from-zinc-900 dark:to-black border-2 border-zinc-700 dark:border-zinc-800 rounded-lg p-2 shadow-lg">
               <div class="flex gap-1">
-                <!-- U numbers column (top to bottom: U18...U1) -->
+                <!-- U numbers column (top to bottom: U1...U18) -->
                 <div class="flex flex-col text-[8px] text-zinc-400 font-mono">
                   {#each Array(TOTAL_U_SLOTS) as _, i}
-                    {@const uNumber = TOTAL_U_SLOTS - i}
+                    {@const uNumber = i + 1}
                     <div class="h-3 flex items-center justify-center">{uNumber}</div>
                   {/each}
                 </div>
-                <!-- Rack slots (top to bottom: U18...U1) -->
+                <!-- Rack slots (top to bottom: U1...U18) -->
                 <div class="flex-1 flex flex-col gap-[1px]">
                   {#each Array(TOTAL_U_SLOTS) as _, i}
-                    {@const uNumber = TOTAL_U_SLOTS - i}
+                    {@const uNumber = i + 1}
                     {@const device = rackDevices.find(d => {
                       const deviceTop = d.uPosition + d.uHeight - 1;
                       return uNumber <= deviceTop && uNumber >= d.uPosition;
                     })}
-                    {@const isDeviceStart = device && uNumber === (device.uPosition + device.uHeight - 1)}
+                    {@const isDeviceStart = device && uNumber === d.uPosition}
                     {@const isCurrentMachine = device?.infraMachineId === machine.id}
                     {#if device && isDeviceStart}
                       <div
