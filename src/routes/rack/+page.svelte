@@ -230,7 +230,11 @@
                   <div class="device-bezel"></div>
 
                   <div class="device-faceplate w-full h-full p-2 flex flex-col items-center justify-center overflow-hidden gap-1">
-                    <span class="device-name text-xs font-bold tracking-wider truncate">{deviceInSlot.faceplate?.text || deviceInSlot.name.split('(')[0].trim()}</span>
+                    {#if deviceInSlot.faceplate?.text && deviceInSlot.faceplate.text.trim()}
+                      <span class="device-name text-sm font-bold tracking-wider">{deviceInSlot.faceplate.text}</span>
+                    {:else}
+                      <span class="device-name text-xs font-bold tracking-wider truncate">{deviceInSlot.name.split('(')[0].trim()}</span>
+                    {/if}
                     {#if deviceInSlot.faceplate?.leds}
                       <div class="leds-strip mt-0.5">
                         {#each deviceInSlot.faceplate.leds as ledGroup (ledGroup.color + ledGroup.count)}
@@ -451,8 +455,12 @@
 
     .device-name {
       @apply uppercase;
-      letter-spacing: 0.1em;
-      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+      letter-spacing: 0.15em;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.9));
+      text-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.8),
+        0 2px 4px rgba(0, 0, 0, 0.6),
+        0 0 8px rgba(0, 0, 0, 0.5);
     }
 
     /* Device Type Styles with 3D depth */
