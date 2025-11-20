@@ -134,10 +134,12 @@
                   {#each Array(TOTAL_U_SLOTS) as _, i}
                     {@const uNumber = i + 1}
                     {@const device = rackDevices.find(d => {
-                      const deviceTop = d.uPosition + d.uHeight - 1;
-                      return uNumber <= deviceTop && uNumber >= d.uPosition;
+                      // uPosition is the bottom (highest U number) of the device
+                      const deviceBottom = d.uPosition;
+                      const deviceTop = d.uPosition - d.uHeight + 1;
+                      return uNumber >= deviceTop && uNumber <= deviceBottom;
                     })}
-                    {@const isDeviceStart = device && uNumber === device.uPosition}
+                    {@const isDeviceStart = device && uNumber === (device.uPosition - device.uHeight + 1)}
                     {@const isCurrentMachine = device?.infraMachineId === machine.id}
                     {#if device && isDeviceStart}
                       <div
