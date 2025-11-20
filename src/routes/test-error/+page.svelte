@@ -9,6 +9,7 @@
     { code: 404, label: '404 - Not Found', icon: AlertTriangle, category: 'Client Errors' },
     { code: 405, label: '405 - Method Not Allowed', icon: Ban, category: 'Client Errors' },
     { code: 408, label: '408 - Request Timeout', icon: Clock, category: 'Client Errors' },
+    { code: 418, label: "418 - I'm a Teapot", icon: AlertTriangle, category: 'Client Errors' },
     { code: 429, label: '429 - Too Many Requests', icon: AlertTriangle, category: 'Client Errors' },
     { code: 500, label: '500 - Internal Server Error', icon: Server, category: 'Server Errors' },
     { code: 501, label: '501 - Not Implemented', icon: Bug, category: 'Server Errors' },
@@ -87,7 +88,7 @@
       /test-error/[code]
     </code>
     <p class="text-muted-foreground text-xs mt-3">
-      Example: <a href="/test-error/418" class="text-primary hover:underline">/test-error/418</a> (I'm a teapot)
+      Example: <a href="/test-error/451" class="text-primary hover:underline">/test-error/451</a> (Unavailable For Legal Reasons)
     </p>
   </div>
 

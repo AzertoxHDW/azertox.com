@@ -17,6 +17,7 @@ export const load: PageServerLoad = ({ params }) => {
     404: 'Not Found - The resource does not exist',
     405: 'Method Not Allowed - This method is not supported',
     408: 'Request Timeout - The request took too long',
+    418: "I'm a teapot - Any attempt to brew coffee with a teapot should result in this error",
     429: 'Too Many Requests - Rate limit exceeded',
     500: 'Internal Server Error - Something went wrong on the server',
     501: 'Not Implemented - This feature is not implemented',
