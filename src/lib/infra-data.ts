@@ -22,6 +22,11 @@ export interface Machine {
   purchaseDate?: string;
   releaseDate?: string;
   decommissionDate?: string;
+  // Device details for non-rack machines
+  deviceType?: string; // e.g., "Desktop PC", "Laptop", "Workstation", "Server"
+  location?: string; // e.g., "Home Office", "Data Center", "Mobile"
+  formFactor?: string; // e.g., "Tower", "Laptop", "Rack-mount", "Small Form Factor"
+  mobility?: string; // e.g., "Stationary", "Portable", "Mobile"
 }
 
 // Your existing infrastructure data, now enhanced with more fields for detail pages
@@ -125,6 +130,10 @@ export const infrastructure: Machine[] = [
         "/images/sf5.jpg",
     ],
     purchaseDate: "2021-04-01",
+    deviceType: "PC de bureau",
+    location: "Bureau personnel",
+    formFactor: "Tour mini-ITX",
+    mobility: "Fixe",
   },
   {
     id: "skylight2",
@@ -159,6 +168,10 @@ export const infrastructure: Machine[] = [
         "/images/sl4.jpg",
     ],
     releaseDate: "2019",
+    deviceType: "Station de travail",
+    location: "Bureau secondaire",
+    formFactor: "Tour ATX",
+    mobility: "Fixe",
   },
   {
     id: "zephyrus",
@@ -192,5 +205,9 @@ export const infrastructure: Machine[] = [
         "/images/zp3.jpg",
     ],
     purchaseDate: "2022-09",
+    deviceType: "Ordinateur portable",
+    location: "Mobile",
+    formFactor: "Laptop 16 pouces",
+    mobility: "Portable",
   },
 ];

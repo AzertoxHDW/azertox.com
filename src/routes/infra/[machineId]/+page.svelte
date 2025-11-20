@@ -239,6 +239,39 @@
             Voir le rack complet →
           </Button>
         </div>
+        {:else if machine.deviceType || machine.location || machine.formFactor || machine.mobility}
+        <div class="bg-card/30 rounded-xl p-6 border border-border/10">
+          <h3 class="flex items-center text-lg font-semibold mb-6 text-foreground">
+            <Laptop class="mr-2 h-5 w-5 text-primary"/>
+            Détails de l'appareil
+          </h3>
+          <div class="space-y-4 text-sm">
+            {#if machine.deviceType}
+            <div class="flex items-start justify-between p-3 rounded-lg bg-card/50 border border-border/10">
+              <span class="text-muted-foreground">Type d'appareil</span>
+              <span class="font-medium text-right">{machine.deviceType}</span>
+            </div>
+            {/if}
+            {#if machine.location}
+            <div class="flex items-start justify-between p-3 rounded-lg bg-card/50 border border-border/10">
+              <span class="text-muted-foreground">Localisation</span>
+              <span class="font-medium text-right">{machine.location}</span>
+            </div>
+            {/if}
+            {#if machine.formFactor}
+            <div class="flex items-start justify-between p-3 rounded-lg bg-card/50 border border-border/10">
+              <span class="text-muted-foreground">Format</span>
+              <span class="font-medium text-right">{machine.formFactor}</span>
+            </div>
+            {/if}
+            {#if machine.mobility}
+            <div class="flex items-start justify-between p-3 rounded-lg bg-card/50 border border-border/10">
+              <span class="text-muted-foreground">Mobilité</span>
+              <span class="font-medium text-right">{machine.mobility}</span>
+            </div>
+            {/if}
+          </div>
+        </div>
         {/if}
       </div>
     </div>
