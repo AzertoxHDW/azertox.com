@@ -266,18 +266,17 @@
           {#each navItems as item, i}
             {@const isActive = $page.url.pathname === item.href}
             {@const isHovered = isHoveringNav && hoveredIndex === i}
+            {@const hasBlob = isActive || isHovered}
             <a
               bind:this={navItemElements[i]}
               href={item.href}
               class="relative flex items-center text-xs sm:text-sm px-3 py-2 rounded-full z-10
-                    {isActive
-                        ? 'text-primary-foreground font-bold'
-                        : isHovered
-                        ? 'text-primary-foreground font-medium transition-none'
-                        : 'text-muted-foreground font-medium transition-colors hover:text-primary'}"
+                    {hasBlob ? '!text-white' : 'text-muted-foreground hover:text-primary'}
+                    {isActive ? 'font-bold' : 'font-medium'}
+                    {hasBlob ? 'transition-none' : 'transition-colors'}"
               aria-current={isActive ? "page" : undefined}
             >
-              <svelte:component this={item.icon} class="mr-1.5 h-4 w-4 {isHovered || isActive ? 'text-primary-foreground' : ''}" />
+              <svelte:component this={item.icon} class="mr-1.5 h-4 w-4 {hasBlob ? '!text-white' : ''}" />
               <span class="hidden sm:inline">{item.label}</span>
             </a>
           {/each}
