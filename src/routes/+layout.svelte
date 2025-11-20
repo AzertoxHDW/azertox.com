@@ -21,24 +21,67 @@
   // Navigation sliding background
   let navItemElements: (HTMLAnchorElement | null)[] = [];
   let activeIndicatorStyle = '';
+  let isHoveringNav = false;
+  let hoveredIndex = -1;
 
   $: if (navItemElements.length === navItems.length && BROWSER) {
     updateActiveIndicator();
   }
 
   function updateActiveIndicator() {
-    const activeIndex = navItems.findIndex(item => $page.url.pathname === item.href);
-    if (activeIndex !== -1 && navItemElements[activeIndex]) {
-      const activeElement = navItemElements[activeIndex];
-      const navContainer = activeElement?.parentElement;
-      if (activeElement && navContainer) {
+    const targetIndex = isHoveringNav && hoveredIndex !== -1 ? hoveredIndex : navItems.findIndex(item => $page.url.pathname === item.href);
+
+    if (targetIndex !== -1 && navItemElements[targetIndex]) {
+      const targetElement = navItemElements[targetIndex];
+      const navContainer = targetElement?.parentElement;
+      if (targetElement && navContainer) {
         const containerRect = navContainer.getBoundingClientRect();
-        const activeRect = activeElement.getBoundingClientRect();
-        const left = activeRect.left - containerRect.left;
-        const width = activeRect.width;
-        activeIndicatorStyle = `left: ${left}px; width: ${width}px;`;
+        const targetRect = targetElement.getBoundingClientRect();
+        const left = targetRect.left - containerRect.left;
+        const width = targetRect.width;
+        const transition = isHoveringNav ? 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)' : 'all 0.3s ease-out';
+        activeIndicatorStyle = `left: ${left}px; width: ${width}px; transition: ${transition};`;
       }
     }
+  }
+
+  function handleNavMouseMove(event: MouseEvent) {
+    if (!isHoveringNav) return;
+
+    const navElement = event.currentTarget as HTMLElement;
+    const mouseX = event.clientX;
+
+    // Find closest nav item
+    let closestIndex = -1;
+    let closestDistance = Infinity;
+
+    navItemElements.forEach((element, index) => {
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const distance = Math.abs(mouseX - centerX);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      }
+    });
+
+    if (closestIndex !== -1 && closestIndex !== hoveredIndex) {
+      hoveredIndex = closestIndex;
+      updateActiveIndicator();
+    }
+  }
+
+  function handleNavMouseEnter() {
+    isHoveringNav = true;
+  }
+
+  function handleNavMouseLeave() {
+    isHoveringNav = false;
+    hoveredIndex = -1;
+    updateActiveIndicator();
   }
 
   // Reactive statement to check if win2000 theme is active
@@ -208,25 +251,32 @@
     <!-- Desktop Navigation -->
     <header class="hidden lg:block relative z-40 pt-6 pb-2 lg:pt-8 lg:pb-4 transition-opacity duration-300">
       <div class="container mx-auto flex items-center justify-center">
-        <nav class="relative flex items-center space-x-1 sm:space-x-2 bg-background/80 dark:bg-muted/50 backdrop-blur-lg shadow-xl rounded-full px-3 py-2 border border-border/40">
+        <nav
+          class="relative flex items-center space-x-1 sm:space-x-2 bg-background/80 dark:bg-muted/50 backdrop-blur-lg shadow-xl rounded-full px-3 py-2 border border-border/40"
+          on:mouseenter={handleNavMouseEnter}
+          on:mouseleave={handleNavMouseLeave}
+          on:mousemove={handleNavMouseMove}
+        >
           <!-- Sliding background indicator -->
           <div
-            class="absolute top-2 h-[calc(100%-16px)] bg-primary rounded-full transition-all duration-300 ease-out pointer-events-none"
+            class="absolute top-2 h-[calc(100%-16px)] bg-primary rounded-full pointer-events-none"
             style="{activeIndicatorStyle}"
           ></div>
 
           {#each navItems as item, i}
             {@const isActive = $page.url.pathname === item.href}
+            {@const isHovered = isHoveringNav && hoveredIndex === i}
+            {@const hasBlob = isActive || isHovered}
             <a
               bind:this={navItemElements[i]}
               href={item.href}
-              class="relative flex items-center text-xs sm:text-sm font-medium px-3 py-2 rounded-full transition-colors z-10
-                    {isActive
-                        ? 'text-primary-foreground'
-                        : 'text-muted-foreground hover:text-primary'}"
+              class="relative flex items-center text-xs sm:text-sm px-3 py-2 rounded-full z-10
+                    {hasBlob ? '!text-white' : 'text-muted-foreground hover:text-primary'}
+                    {isActive ? 'font-bold underline decoration-primary decoration-2 underline-offset-4' : 'font-medium'}
+                    {hasBlob ? 'transition-none' : 'transition-colors'}"
               aria-current={isActive ? "page" : undefined}
             >
-              <svelte:component this={item.icon} class="mr-1.5 h-4 w-4 {isActive ? 'text-primary-foreground' : ''}" />
+              <svelte:component this={item.icon} class="mr-1.5 h-4 w-4 {hasBlob ? '!text-white' : ''}" />
               <span class="hidden sm:inline">{item.label}</span>
             </a>
           {/each}
