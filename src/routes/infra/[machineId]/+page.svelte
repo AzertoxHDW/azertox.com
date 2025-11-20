@@ -80,71 +80,123 @@
       <hr class="mt-6 border-border/40" />
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
-      <div class="lg:col-span-1 space-y-8">
-        {#if selectedImage}
-          <button on:click={openLightbox} class="relative aspect-video w-full overflow-hidden rounded-xl shadow-lg border border-border/10 cursor-pointer hover:opacity-95 hover:shadow-xl transition-all group">
-            <img src={selectedImage} alt="Image de {machine.name}" class="object-cover w-full h-full" />
-            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
-              <ImageIcon class="w-10 h-10 text-white opacity-0 group-hover:opacity-90 transition-opacity drop-shadow-lg" />
-            </div>
-          </button>
-        {/if}
-        {#if machine.gallery && machine.gallery.length > 1}
-          <div class="flex space-x-2 overflow-x-auto pb-2 -mt-2">
-            {#each machine.gallery as imgUrl, i}
-              <button on:click={() => selectedImage = imgUrl} class="h-20 w-20 rounded-lg overflow-hidden border-2 {selectedImage === imgUrl ? 'border-primary shadow-md' : 'border-border/10 hover:border-border/30'} transition-all flex-shrink-0">
-                <img src={imgUrl} alt="Galerie image {i+1} de {machine.name}" class="object-cover h-full w-full"/>
-              </button>
-            {/each}
-          </div>
+    <!-- Hero Image Section -->
+    {#if selectedImage}
+    <div class="mb-10">
+      <button on:click={openLightbox} class="relative w-full h-[50vh] min-h-[400px] max-h-[600px] overflow-hidden rounded-2xl shadow-2xl border border-border/10 cursor-pointer hover:opacity-95 hover:shadow-3xl transition-all group">
+        <img src={selectedImage} alt="Image de {machine.name}" class="object-cover w-full h-full" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+          <ImageIcon class="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-2xl" />
+        </div>
+      </button>
+      {#if machine.gallery && machine.gallery.length > 1}
+        <div class="flex space-x-3 overflow-x-auto pb-2 mt-4 justify-center">
+          {#each machine.gallery as imgUrl, i}
+            <button on:click={() => selectedImage = imgUrl} class="h-24 w-24 rounded-lg overflow-hidden border-2 {selectedImage === imgUrl ? 'border-primary shadow-lg scale-105' : 'border-border/20 hover:border-border/40'} transition-all flex-shrink-0">
+              <img src={imgUrl} alt="Galerie image {i+1} de {machine.name}" class="object-cover h-full w-full"/>
+            </button>
+          {/each}
+        </div>
+      {/if}
+    </div>
+    {/if}
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Left Column: Info + Specs -->
+      <div class="lg:col-span-7 space-y-8">
+        {#if machine.description}
+        <div class="bg-card/30 rounded-xl p-6 border border-border/10">
+          <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
+            <Info class="mr-2 h-5 w-5 text-primary"/>
+            Description
+          </h3>
+          <p class="text-muted-foreground leading-relaxed">{machine.description}</p>
+        </div>
         {/if}
 
-        <div class="space-y-6 bg-card/30 rounded-xl p-6 border border-border/10">
-          <div>
-            <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
-              <Info class="mr-2 h-5 w-5 text-primary"/>
-              Informations Clés
-            </h3>
-            <div class="space-y-3 text-sm">
-              <div class="flex justify-between items-center py-2 border-b border-border/10">
-                <span class="text-muted-foreground">Système d'exploitation</span>
-                <span class="font-medium flex items-center">
-                  {#if machine.os.icon}<svelte:component this={machine.os.icon} class="h-4 w-4 mr-1.5"/>{/if}
-                  {machine.os.name}
+        <div class="bg-card/30 rounded-xl p-6 border border-border/10">
+          <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
+            <ListChecks class="mr-2 h-5 w-5 text-primary"/>
+            Spécifications Détaillées
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-sm">
+            {#each machine.moreSpecs || machine.specs as spec}
+              <div class="flex flex-col py-2.5 border-b border-border/10 last:border-b-0">
+                <span class="font-medium text-muted-foreground flex items-center mb-1">
+                  {#if spec.icon}<svelte:component this={spec.icon} class="h-4 w-4 mr-2 text-primary/70"/>{/if}
+                  {spec.name}
                 </span>
+                <span class="text-foreground font-medium">{spec.value}</span>
               </div>
-              {#if machine.releaseDate}
-              <div class="flex justify-between items-center py-2 border-b border-border/10">
-                <span class="text-muted-foreground">Année de fabrication</span>
-                <span class="font-medium">{machine.releaseDate}</span>
+            {/each}
+          </div>
+        </div>
+
+        {#if machine.software && machine.software.length > 0}
+        <div class="bg-card/30 rounded-xl p-6 border border-border/10">
+          <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
+            <Laptop class="mr-2 h-5 w-5 text-primary"/>
+            Logiciels & Services Clés
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {#each machine.software as sw}
+              <div class="p-3 rounded-lg bg-card/50 border border-border/10">
+                <p class="font-medium text-foreground mb-1">{sw.name} {#if sw.version}<Badge variant="outline" class="ml-2 text-xs">{sw.version}</Badge>{/if}</p>
+                {#if sw.notes}<p class="text-xs text-muted-foreground italic leading-relaxed">{sw.notes}</p>{/if}
               </div>
-              {/if}
-              {#if machine.purchaseDate}
-              <div class="flex justify-between items-center py-2">
-                <span class="text-muted-foreground">Date d'acquisition</span>
-                <span class="font-medium">{formatDate(machine.purchaseDate)}</span>
-              </div>
-              {/if}
+            {/each}
+          </div>
+        </div>
+        {/if}
+      </div>
+
+      <!-- Right Column: Quick Info + Rack -->
+      <div class="lg:col-span-5 space-y-8">
+        <div class="bg-card/30 rounded-xl p-6 border border-border/10 lg:sticky lg:top-8">
+          <h3 class="flex items-center text-lg font-semibold mb-6 text-foreground">
+            <Info class="mr-2 h-5 w-5 text-primary"/>
+            Informations Clés
+          </h3>
+          <div class="space-y-4 text-sm">
+            <div class="flex items-start justify-between p-3 rounded-lg bg-card/50 border border-border/10">
+              <span class="text-muted-foreground">Système d'exploitation</span>
+              <span class="font-medium flex items-center text-right">
+                {#if machine.os.icon}<svelte:component this={machine.os.icon} class="h-4 w-4 mr-1.5"/>{/if}
+                {machine.os.name}
+              </span>
             </div>
+            {#if machine.releaseDate}
+            <div class="flex items-start justify-between p-3 rounded-lg bg-card/50 border border-border/10">
+              <span class="text-muted-foreground">Année de fabrication</span>
+              <span class="font-medium">{machine.releaseDate}</span>
+            </div>
+            {/if}
+            {#if machine.purchaseDate}
+            <div class="flex items-start justify-between p-3 rounded-lg bg-card/50 border border-border/10">
+              <span class="text-muted-foreground">Date d'acquisition</span>
+              <span class="font-medium text-right">{formatDate(machine.purchaseDate)}</span>
+            </div>
+            {/if}
           </div>
 
           {#if machine.notes}
-            <div class="pt-4 border-t border-border/10">
+            <div class="mt-6 pt-6 border-t border-border/10">
               <p class="text-sm text-muted-foreground italic leading-relaxed">{machine.notes}</p>
             </div>
           {/if}
         </div>
 
         {#if rackPosition}
-        <div class="space-y-4 bg-card/30 rounded-xl p-6 border border-border/10">
-          <h3 class="flex items-center text-lg font-semibold text-foreground">
+        <div class="bg-card/30 rounded-xl p-6 border border-border/10">
+          <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
             <Server class="mr-2 h-5 w-5 text-primary"/>
             Position dans le rack
           </h3>
-          <div class="flex items-center justify-between text-sm pb-4">
-            <span class="text-muted-foreground">Position</span>
-            <span class="font-bold text-primary text-base">U{rackPosition.uPosition} ({rackPosition.uHeight}U)</span>
+          <div class="flex items-center justify-between mb-6 p-3 rounded-lg bg-card/50 border border-border/10">
+            <span class="text-muted-foreground text-sm">Position</span>
+            <span class="font-bold text-primary text-lg">U{rackPosition.uPosition} ({rackPosition.uHeight}U)</span>
           </div>
           <!-- Mini Rack Visualization -->
           <div class="bg-gradient-to-br from-zinc-800 to-zinc-900 dark:from-zinc-900 dark:to-black border border-zinc-700 dark:border-zinc-800 rounded-lg p-2 shadow-lg">
@@ -161,7 +213,6 @@
                 {#each Array(TOTAL_U_SLOTS) as _, i}
                   {@const uNumber = i + 1}
                   {@const device = rackDevices.find(d => {
-                    // uPosition is the bottom (highest U number) of the device
                     const deviceBottom = d.uPosition;
                     const deviceTop = d.uPosition - d.uHeight + 1;
                     return uNumber >= deviceTop && uNumber <= deviceBottom;
@@ -187,53 +238,6 @@
           <Button href="/rack" variant="outline" size="sm" class="w-full text-xs mt-4">
             Voir le rack complet →
           </Button>
-        </div>
-        {/if}
-      </div>
-
-      <div class="lg:col-span-2 space-y-8">
-        {#if machine.description}
-        <div class="bg-card/30 rounded-xl p-6 border border-border/10">
-          <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
-            <Info class="mr-2 h-5 w-5 text-primary"/>
-            Description
-          </h3>
-          <p class="text-muted-foreground leading-relaxed">{machine.description}</p>
-        </div>
-        {/if}
-
-        <div class="bg-card/30 rounded-xl p-6 border border-border/10">
-          <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
-            <ListChecks class="mr-2 h-5 w-5 text-primary"/>
-            Spécifications Détaillées
-          </h3>
-          <div class="space-y-1 text-sm">
-            {#each machine.moreSpecs || machine.specs as spec}
-              <div class="flex justify-between py-2.5 border-b border-border/10 last:border-b-0">
-                <span class="font-medium text-muted-foreground flex items-center">
-                  {#if spec.icon}<svelte:component this={spec.icon} class="h-4 w-4 mr-2 text-primary/70"/>{/if}
-                  {spec.name}
-                </span>
-                <span class="text-right text-foreground font-medium">{spec.value}</span>
-              </div>
-            {/each}
-          </div>
-        </div>
-
-        {#if machine.software && machine.software.length > 0}
-        <div class="bg-card/30 rounded-xl p-6 border border-border/10">
-          <h3 class="flex items-center text-lg font-semibold mb-4 text-foreground">
-            <Laptop class="mr-2 h-5 w-5 text-primary"/>
-            Logiciels & Services Clés
-          </h3>
-          <div class="space-y-1 text-sm">
-            {#each machine.software as sw}
-              <div class="py-2.5 border-b border-border/10 last:border-b-0">
-                <p class="font-medium text-foreground">{sw.name} {#if sw.version}<Badge variant="outline" class="ml-2 text-xs">{sw.version}</Badge>{/if}</p>
-                {#if sw.notes}<p class="text-xs text-muted-foreground italic mt-1 leading-relaxed">{sw.notes}</p>{/if}
-              </div>
-            {/each}
-          </div>
         </div>
         {/if}
       </div>
