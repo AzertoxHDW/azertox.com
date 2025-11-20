@@ -120,13 +120,13 @@
               <span class="font-bold text-primary">U{rackPosition.uPosition} ({rackPosition.uHeight}U)</span>
             </div>
             <!-- Mini Rack Visualization -->
-            <div class="bg-gradient-to-br from-zinc-800 to-zinc-900 dark:from-zinc-900 dark:to-black border-2 border-zinc-700 dark:border-zinc-800 rounded-lg p-2 shadow-lg">
+            <div class="bg-gradient-to-br from-zinc-800 to-zinc-900 dark:from-zinc-900 dark:to-black border-2 border-zinc-700 dark:border-zinc-800 rounded p-2 shadow-lg">
               <div class="flex gap-1">
                 <!-- U numbers column (top to bottom: U1...U18) -->
                 <div class="flex flex-col text-[8px] text-zinc-400 font-mono">
                   {#each Array(TOTAL_U_SLOTS) as _, i}
                     {@const uNumber = i + 1}
-                    <div class="h-3 flex items-center justify-center">{uNumber}</div>
+                    <div class="h-4 flex items-center justify-center">{uNumber}</div>
                   {/each}
                 </div>
                 <!-- Rack slots (top to bottom: U1...U18) -->
@@ -143,15 +143,15 @@
                     {@const isCurrentMachine = device?.infraMachineId === machine.id}
                     {#if device && isDeviceStart}
                       <div
-                        class="h-3 rounded-sm flex items-center justify-center text-[7px] font-bold text-white uppercase tracking-wider px-1"
+                        class="h-4 rounded flex items-center justify-center text-[8px] font-bold text-white uppercase tracking-wider px-1"
                         class:bg-primary={isCurrentMachine}
                         class:bg-zinc-600={!isCurrentMachine}
-                        style="height: {device.uHeight * 12}px;"
+                        style="height: {device.uHeight * 16}px;"
                       >
                         <span class="truncate">{device.name}</span>
                       </div>
                     {:else if !device}
-                      <div class="h-3 bg-zinc-700/30 rounded-sm"></div>
+                      <div class="h-4 bg-zinc-700/30 rounded"></div>
                     {/if}
                   {/each}
                 </div>
