@@ -92,6 +92,9 @@
   // Check if we're on the home page
   $: isHomePage = $page.url.pathname === '/';
 
+  // Check if we're on a machine detail page
+  $: isMachineDetailPage = $page.url.pathname.startsWith('/infra/') && $page.url.pathname !== '/infra/';
+
   // Close mobile menu when route changes
   $: if ($page.url.pathname) {
     mobileMenuOpen = false;
@@ -222,6 +225,7 @@
 
   {#if !showBootUpAnimation}
     <!-- Mobile/Tablet Header with Hamburger -->
+    {#if !isMachineDetailPage}
     <div class="lg:hidden fixed top-4 left-4 z-[160]">
       <!-- Hamburger Button -->
       <button
@@ -236,6 +240,7 @@
         {/if}
       </button>
     </div>
+    {/if}
 
     <!-- Mobile/Tablet Scroll to Top Button (appears when scrolled) -->
     {#if showScrollTop}
@@ -251,6 +256,7 @@
     {/if}
 
     <!-- Desktop Navigation -->
+    {#if !isMachineDetailPage}
     <header class="hidden lg:block relative z-40 pt-6 pb-2 lg:pt-8 lg:pb-4 transition-opacity duration-300">
       <div class="container mx-auto flex items-center justify-center">
         <nav
@@ -285,9 +291,10 @@
         </nav>
       </div>
     </header>
+    {/if}
 
     <!-- Mobile/Tablet Menu Overlay -->
-    {#if mobileMenuOpen}
+    {#if mobileMenuOpen && !isMachineDetailPage}
       <div class="lg:hidden fixed inset-0 z-[150] bg-background/95 backdrop-blur-md">
         <div class="flex flex-col h-full p-4 pt-20">
           <!-- Navigation Links -->
