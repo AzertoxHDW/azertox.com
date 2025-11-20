@@ -12,6 +12,7 @@
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
   import { currentTheme } from '$lib/themeStore';
+  import { mobileTerminalTrigger } from '$lib/mobileMenuStore';
 
   const CARD_WIDTH = 450;
   const CARD_GAP = 40;
@@ -113,6 +114,12 @@
     }
   }
 
+  // Listen for mobile terminal trigger from hamburger menu
+  $: if ($mobileTerminalTrigger && isMobile) {
+    showTerminal = true;
+    mobileTerminalTrigger.set(false); // Reset the trigger
+  }
+
   onMount(() => {
     // Recalculate positions on mount to ensure proper centering
     initialPositions = calculateInitialPositions();
@@ -145,10 +152,10 @@
   <StarField />
 {/if}
 <div class="w-full min-h-screen flex flex-col text-foreground">
-    <!-- Terminal Toggle Button -->
+    <!-- Terminal Toggle Button (Desktop only) -->
     <button
       on:click={toggleTerminal}
-      class="terminal-toggle-btn fixed top-4 right-4 md:top-8 md:right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+      class="terminal-toggle-btn hidden md:flex fixed top-4 right-4 md:top-8 md:right-8 z-[150] w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/30 items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
       aria-label="{showTerminal ? 'Fermer' : 'Ouvrir'} Terminal"
     >
       <Terminal class="h-5 w-5 text-primary" />
