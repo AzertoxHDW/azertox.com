@@ -18,6 +18,29 @@
   let mobileMenuOpen = false;
   let showScrollTop = false;
 
+  // Navigation sliding background
+  let navItemElements: (HTMLAnchorElement | null)[] = [];
+  let activeIndicatorStyle = '';
+
+  $: if (navItemElements.length === navItems.length && BROWSER) {
+    updateActiveIndicator();
+  }
+
+  function updateActiveIndicator() {
+    const activeIndex = navItems.findIndex(item => $page.url.pathname === item.href);
+    if (activeIndex !== -1 && navItemElements[activeIndex]) {
+      const activeElement = navItemElements[activeIndex];
+      const navContainer = activeElement?.parentElement;
+      if (activeElement && navContainer) {
+        const containerRect = navContainer.getBoundingClientRect();
+        const activeRect = activeElement.getBoundingClientRect();
+        const left = activeRect.left - containerRect.left;
+        const width = activeRect.width;
+        activeIndicatorStyle = `transform: translateX(${left}px); width: ${width}px;`;
+      }
+    }
+  }
+
   // Reactive statement to check if win2000 theme is active
   $: isWin2000Theme = ($currentTheme === 'win2000');
 
@@ -27,6 +50,10 @@
   // Close mobile menu when route changes
   $: if ($page.url.pathname) {
     mobileMenuOpen = false;
+    // Update active indicator when page changes
+    if (BROWSER) {
+      setTimeout(updateActiveIndicator, 0);
+    }
   }
 
   // Listen for boot animation triggers from terminal
@@ -71,13 +98,23 @@
         showScrollTop = window.scrollY > 300; // Show after 300px scroll
       };
 
+      // Update active indicator on resize
+      const handleResize = () => {
+        updateActiveIndicator();
+      };
+
       window.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('resize', handleResize);
+
+      // Initial update
+      setTimeout(updateActiveIndicator, 0);
     }
 
     return () => {
         if (BROWSER) {
             window.removeEventListener('keydown', handleGlobalKeyDown);
             window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', handleResize);
         }
     };
   });
@@ -171,15 +208,22 @@
     <!-- Desktop Navigation -->
     <header class="hidden lg:block relative z-40 pt-6 pb-2 lg:pt-8 lg:pb-4 transition-opacity duration-300">
       <div class="container mx-auto flex items-center justify-center">
-        <nav class="flex items-center space-x-1 sm:space-x-2 bg-background/80 dark:bg-muted/50 backdrop-blur-lg shadow-xl rounded-full px-3 py-2 border border-border/40">
-          {#each navItems as item}
+        <nav class="relative flex items-center space-x-1 sm:space-x-2 bg-background/80 dark:bg-muted/50 backdrop-blur-lg shadow-xl rounded-full px-3 py-2 border border-border/40">
+          <!-- Sliding background indicator -->
+          <div
+            class="absolute h-[calc(100%-16px)] bg-primary rounded-full transition-all duration-300 ease-out pointer-events-none"
+            style="{activeIndicatorStyle}"
+          ></div>
+
+          {#each navItems as item, i}
             {@const isActive = $page.url.pathname === item.href}
             <a
+              bind:this={navItemElements[i]}
               href={item.href}
-              class="flex items-center text-xs sm:text-sm font-medium px-3 py-2 rounded-full transition-colors
+              class="relative flex items-center text-xs sm:text-sm font-medium px-3 py-2 rounded-full transition-colors z-10
                     {isActive
-                        ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                        : 'text-muted-foreground hover:text-primary hover:bg-accent'}"
+                        ? 'text-primary-foreground'
+                        : 'text-muted-foreground hover:text-primary'}"
               aria-current={isActive ? "page" : undefined}
             >
               <svelte:component this={item.icon} class="mr-1.5 h-4 w-4 {isActive ? 'text-primary-foreground' : ''}" />
