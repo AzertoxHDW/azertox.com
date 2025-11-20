@@ -33,7 +33,7 @@
 </script>
 
 {#if machine}
-  <div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer" in:flyAndScale={{ y: 50, duration: 600, start: 0.75 }}>
+  <div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer" in:flyAndScale={{ y: 50, duration: 400, start: 0.75 }}>
     <div class="mb-8">
       <Button href="/infra" variant="outline" size="sm">
         <ArrowLeft class="mr-2 h-4 w-4" /> Retour à l'infrastructure

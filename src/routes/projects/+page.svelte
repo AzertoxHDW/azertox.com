@@ -110,7 +110,7 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8 md:py-12">
-  <div class="text-center mb-8 md:mb-12" in:flyAndScale={{ y: -40, duration: 700, start: 0.7 }}>
+  <div class="text-center mb-8 md:mb-12" in:flyAndScale={{ y: -40, duration: 450, start: 0.7 }}>
     <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground flex items-center justify-center">
       <FolderGit2 class="w-8 h-8 md:w-10 md:h-10 mr-2 text-primary" />
       Mes projets
@@ -123,7 +123,7 @@
   <div class="max-w-7xl mx-auto space-y-6">
     {#each projects as project, i (project.id)}
       {@const statusConfig = getStatusConfig(project.status)}
-      <div in:flyAndScale|global={{ y: 50, duration: 600, start: 0.75, delay: i * 150 }}>
+      <div in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: i * 120 }}>
         <Card class="overflow-hidden hover:shadow-lg hover:shadow-primary/10 transition-shadow duration-300">
           <div class="flex flex-col md:flex-row">
             {#if project.imageUrl}

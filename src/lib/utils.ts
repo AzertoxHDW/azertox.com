@@ -17,7 +17,7 @@ type FlyAndScaleParams = {
 
 export const flyAndScale = (
 	node: Element,
-	params: FlyAndScaleParams = { y: -8, x: 0, start: 0.8, duration: 500 }
+	params: FlyAndScaleParams = { y: -8, x: 0, start: 0.8, duration: 400 }
 ): TransitionConfig => {
 	const style = getComputedStyle(node);
 	const transform = style.transform === "none" ? "" : style.transform;
@@ -46,7 +46,7 @@ export const flyAndScale = (
 	};
 
 	return {
-		duration: params.duration ?? 500,
+		duration: params.duration ?? 400,
 		delay: params.delay ?? 0,
 		css: (t) => {
 			const y = scaleConversion(t, [0, 1], [params.y ?? 5, 0]);

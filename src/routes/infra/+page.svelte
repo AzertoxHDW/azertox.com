@@ -15,7 +15,7 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8 md:py-12 min-h-screen_minus_header_footer">
-  <div class="text-center mb-12 md:mb-16" in:flyAndScale={{ y: -40, duration: 700, start: 0.7 }}>
+  <div class="text-center mb-12 md:mb-16" in:flyAndScale={{ y: -40, duration: 450, start: 0.7 }}>
     <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground flex items-center justify-center">
       <ServerIcon class="w-10 h-10 md:w-12 md:h-12 mr-3 text-primary" />
       Mon infrastructure
@@ -27,7 +27,7 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
     {#each infrastructure as machine, i (machine.id)}
-    <div in:flyAndScale|global={{ y: 50, duration: 600, start: 0.75, delay: i * 150 }}>
+    <div in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: i * 120 }}>
         <Card class="flex flex-col h-full shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
           {#if machine.imageUrl}
             <a href={`/infra/${machine.id}`} class="block relative h-48 w-full overflow-hidden rounded-t-lg group">
@@ -94,7 +94,7 @@
     {/each}
   </div>
 
-  <div class="text-center mt-1 md:mt-2" in:flyAndScale|global={{ y: 50, duration: 600, start: 0.75, delay: infrastructure.length * 150 + 300 }}>
+  <div class="text-center mt-1 md:mt-2" in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: infrastructure.length * 120 + 200 }}>
     <div class="p-10 pt-4">
             <Button href={`/rack`} variant="outline" size="sm" class="p-6">
               Afficher le diagramme du rack <ArrowRight class="ml-2 h-4 w-4" />
@@ -102,7 +102,7 @@
           </div>
   </div>
 
-  <div class="text-center mt-16 md:mt-20" in:flyAndScale|global={{ y: 50, duration: 600, start: 0.75, delay: infrastructure.length * 150 + 300 }}>
+  <div class="text-center mt-16 md:mt-20" in:flyAndScale|global={{ y: 50, duration: 400, start: 0.75, delay: infrastructure.length * 120 + 200 }}>
     <p class="text-lg sm:text-xl md:text-2xl text-muted-foreground">
       Vous pouvez vérifier le statut de l'infrastructure en temps réel
       <a
