@@ -24,7 +24,6 @@ export const warp = (
 			const blur = (1 - eased) * 4;
 
 			return `
-				opacity: ${eased};
 				filter: blur(${blur}px);
 			`;
 		}
