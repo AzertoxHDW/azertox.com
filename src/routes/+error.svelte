@@ -212,7 +212,6 @@
           </div>
         </div>
       </div>
-    </div>
 
     <!-- Draggable Home Button -->
     <div
