@@ -200,9 +200,9 @@
   }
 
   .terminal-content {
-    @apply p-3 font-mono text-xs overflow-y-auto cursor-text;
+    @apply p-4 font-mono text-sm overflow-y-auto cursor-text;
     @apply bg-card/50 backdrop-blur-sm;
-    height: 180px;
+    height: 260px;
   }
 
   .terminal-body {
