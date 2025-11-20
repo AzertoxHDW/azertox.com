@@ -125,6 +125,12 @@
       <p class="mt-3 text-lg text-muted-foreground">
         Survolez les équipements pour plus de détails.
       </p>
+      <div class="mt-6">
+        <Button href="/infra" variant="outline" class="shadow-md hover:shadow-lg transition-shadow">
+          <CornerDownLeft class="mr-2 h-4 w-4" />
+          Retour à l'infrastructure
+        </Button>
+      </div>
     </div>
 
     <!-- Rack Statistics -->

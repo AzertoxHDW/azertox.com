@@ -29,7 +29,9 @@
   }
 
   function updateActiveIndicator() {
-    const targetIndex = isHoveringNav && hoveredIndex !== -1 ? hoveredIndex : navItems.findIndex(item => $page.url.pathname === item.href);
+    const targetIndex = isHoveringNav && hoveredIndex !== -1
+      ? hoveredIndex
+      : navItems.findIndex(item => item.href === $page.url.pathname || (item.href === '/infra' && $page.url.pathname === '/rack'));
 
     if (targetIndex !== -1 && navItemElements[targetIndex]) {
       const targetElement = navItemElements[targetIndex];
@@ -264,7 +266,7 @@
           ></div>
 
           {#each navItems as item, i}
-            {@const isActive = $page.url.pathname === item.href}
+            {@const isActive = $page.url.pathname === item.href || (item.href === '/infra' && $page.url.pathname === '/rack')}
             {@const isHovered = isHoveringNav && hoveredIndex === i}
             {@const hasBlob = isActive || isHovered}
             <a
@@ -291,7 +293,7 @@
           <!-- Navigation Links -->
           <nav class="flex flex-col space-y-2 flex-1">
             {#each navItems as item}
-              {@const isActive = $page.url.pathname === item.href}
+              {@const isActive = $page.url.pathname === item.href || (item.href === '/infra' && $page.url.pathname === '/rack')}
               <a
                 href={item.href}
                 class="flex items-center text-lg font-medium px-4 py-4 rounded-lg transition-colors border border-border/40
