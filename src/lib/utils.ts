@@ -21,12 +21,13 @@ export const warp = (
 		delay: params.delay ?? 0,
 		css: (t) => {
 			const eased = cubicInOut(t);
-			const rotation = (1 - eased) * 90;
-			const scale = 0.8 + (eased * 0.2);
-			const blur = (1 - eased) * 10;
+			const rotation = (1 - eased) * 12;
+			const translateX = (1 - eased) * 30;
+			const scale = 0.96 + (eased * 0.04);
+			const blur = (1 - eased) * 2;
 
 			return `
-				transform: perspective(1000px) rotateY(${rotation}deg) scale(${scale});
+				transform: perspective(1200px) rotateY(${rotation}deg) translateX(${translateX}px) scale(${scale});
 				opacity: ${eased};
 				filter: blur(${blur}px);
 			`;
