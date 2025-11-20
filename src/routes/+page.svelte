@@ -14,8 +14,8 @@
   import { currentTheme } from '$lib/themeStore';
   import { mobileTerminalTrigger } from '$lib/mobileMenuStore';
 
-  const CARD_WIDTH = 380;
-  const CARD_GAP = 30;
+  const CARD_WIDTH = 450;
+  const CARD_GAP = 40;
 
   // Dashboard links data
   const dashboardLinks = [
