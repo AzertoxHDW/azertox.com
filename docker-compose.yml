@@ -20,7 +20,7 @@ services:
     network_mode: "host"
 
     environment:
-      HOST: 127.0.0.1
+      HOST: 0.0.0.0
       PORT: ${PORT:-3000}
       
       ORIGIN: ${ORIGIN:-https://azertox.com}
