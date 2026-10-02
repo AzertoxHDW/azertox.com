@@ -34,27 +34,27 @@ export const infrastructure: Machine[] = [
   {
     id: "pve-01", // This ID will be used in the URL
     name: "Sierra (PVE-01)",
-    role: "Serveur de jeu principal",
+    role: "Serveur de virtualisation principal",
     status: "Online",
-    os: { name: "Proxmox VE 8.x", icon: Server },
+    os: { name: "Proxmox VE 9.x", icon: Server },
     specs: [ // Specs for the card view
       { name: "CPU", value: "2x Intel Xeon E5-2667 v2", icon: Cpu },
       { name: "RAM", value: "32 GB DDR3 ECC", icon: MemoryStick },
-      { name: "Stockage VMs", value: "1 TB SATA SSD", icon: HardDrive },
+      { name: "Stockage VMs", value: "1 TB (RAID1)", icon: HardDrive },
     ],
     moreSpecs: [ // Specs for the detail view
       { name: "CPU Model", value: "2x Intel Xeon E5-2667 v2 @ 3.30GHz", icon: Cpu },
       { name: "CPU Cores/Threads", value: "16 Cores / 32 Threads", icon: Cpu },
       { name: "Motherboard", value: "Huananzhi X79-8D", icon: Cpu }, // Placeholder icon
       { name: "RAM Type", value: "4x4GB DDR3 ECC @ 1600MHz", icon: MemoryStick },
-      { name: "Stockage VMs/Data", value: "1 TB SATA SSD (Crucial MX500)", icon: HardDrive },
+      { name: "Stockage VMs/Data", value: "2 x 1TB SATA SSD (RAID1)", icon: HardDrive },
       { name: "NIC 1", value: "Onboard Dual Intel 1GbE", icon: Network },
       { name: "Alimentation", value: "Corsair RM650e", icon: PlugIcon },
     ],
     software: [
-        { name: "Proxmox Virtual Environment", version: "8", notes: "" },
+        { name: "Proxmox Virtual Environment", version: "9", notes: "" },
     ],
-    description: "Machine conçue sur-mesure pour l'hébergement de serveurs de jeu. Pensée avec des composants low-cost et trouvables facilement, avec un bon compromis entre consommation et puissance.",
+    description: "Machine conçue sur-mesure pour l'hébergement de machines virtuelles. Pensée avec des composants low-cost et trouvables facilement, avec un bon compromis entre consommation et puissance.",
     notes: "",
     imageUrl: "/images/sierra2.jpg",
     gallery: [
@@ -66,6 +66,39 @@ export const infrastructure: Machine[] = [
     ],
     releaseDate: "",
     purchaseDate: "2021-09-09",
+  },
+  {
+    id: "pve-02", // This ID will be used in the URL
+    name: "Echo (PVE-02)",
+    role: "Serveur de virtualisation secondaire",
+    status: "Online",
+    os: { name: "Proxmox VE 9.x", icon: Server },
+    specs: [ // Specs for the card view
+      { name: "CPU", value: "Intel Core i3-10100T", icon: Cpu },
+      { name: "RAM", value: "8 GB DDR4", icon: MemoryStick },
+      { name: "Stockage VMs", value: "256 GB", icon: HardDrive },
+    ],
+    moreSpecs: [ // Specs for the detail view
+      { name: "CPU Model", value: "Intel Core i3-10100T @ 3.00GHz", icon: Cpu },
+      { name: "CPU Cores/Threads", value: "4 Cores / 8 Threads", icon: Cpu },
+      { name: "Motherboard", value: "Dell Optiplex 3080 Micro", icon: Cpu }, // Placeholder icon
+      { name: "RAM Type", value: "1x8GB DDR4 3200MHz", icon: MemoryStick },
+      { name: "Stockage VMs/Data", value: "256GB SATA SSD", icon: HardDrive },
+      { name: "NIC 1", value: "Onboard Intel 1GbE", icon: Network },
+    ],
+    software: [
+        { name: "Proxmox Virtual Environment", version: "9", notes: "" },
+    ],
+    description: "Dell Optiplex récupéré et transformé en node Proxmox basse consommation",
+    notes: "",
+    imageUrl: "/images/opt1.jpg",
+    gallery: [
+        "/images/opt1.jpg",
+        "/images/opt2.jpg",
+        "/images/opt3.jpg",
+    ],
+    releaseDate: "",
+    purchaseDate: "2024-05-30",
   },
   {
     id: "nas",
@@ -82,7 +115,7 @@ export const infrastructure: Machine[] = [
         { name: "CPU Model", value: "Intel Xeon E5-2407 v2 @ 2.40GHz", icon: Cpu },
         { name: "Carte mère", value: "Dell PowerEdge R320", icon: Cpu},
         { name: "RAM Type", value: "2x4GB DDR4 ECC", icon: MemoryStick },
-        { name: "Disques de données", value: "4 x 4 TB SATA HDD (RAID-Z1)", icon: HardDrive },
+        { name: "Disques de données", value: "4 x 4TB SATA HDD (RAID-Z1)", icon: HardDrive },
         { name: "Disque Système", value: "128GB SATA SSD", icon: HardDrive },
     ],
     software: [
@@ -118,7 +151,7 @@ export const infrastructure: Machine[] = [
         { name: "GPU Model", value: "NVIDIA GeForce RTX 3090 Founders Edition", icon: Cpu },
         { name: "Stockage Principal", value: "2 TB NVMe SSD (Samsung 970 Evo Plus)", icon: HardDrive },
         { name: "Alimentation", value: "Corsair SF750 Platinum", icon: PlugIcon },
-        { name: "Moniteurs", value: 'Gigabyte G34WQC (UWQHD 3400x1440 / 144hz) || LG 24BK450H (FHD 1920x1080 / 60hz)', icon: Laptop}
+        { name: "Moniteurs", value: 'Gigabyte G34WQC (UWQHD 3400x1440 / 144hz)', icon: Laptop}
     ],
     description: "PC principal, utilisé majoritairement pour jouer, entre autres. Monté entièrement par mes soins, le tout sous refroidissement custom.",
     imageUrl: "/images/sf1.JPG",
@@ -132,7 +165,7 @@ export const infrastructure: Machine[] = [
     purchaseDate: "2021-04-01",
     deviceType: "PC de bureau",
     location: "Bureau personnel",
-    formFactor: "Tour mini-ITX",
+    formFactor: "Tour ATX",
     mobility: "Fixe",
   },
   {
@@ -176,7 +209,7 @@ export const infrastructure: Machine[] = [
   {
     id: "zephyrus",
     name: "Zephyrus",
-    role: "Laptop principal",
+    role: "Station de travail mobile",
     status: "Online",
     os: { name: "Windows 11", icon: Laptop },
     specs: [
@@ -196,8 +229,10 @@ export const infrastructure: Machine[] = [
         { name: "DaVinci Resolve", version: "20", notes: "" },
         { name: "Adobe Photoshop", version: "2022", notes: "" },
         { name: "DJI Studio", version: "", notes: "" },
+        { name: "Rekordbox", version: "", notes: "" },
+        { name: "PreSonus Studio One Pro", version: "7", notes: "" },
     ],
-    description: "Station de travail principale, basée sur la configuration de mon ancien PC remise en service après réparations",
+    description: "Laptop principal, utilisé aussi comme station de travail mobile.",
     imageUrl: "/images/zp1.jpg",
     gallery: [
         "/images/zp1.jpg",
@@ -208,6 +243,37 @@ export const infrastructure: Machine[] = [
     deviceType: "Ordinateur portable",
     location: "Mobile",
     formFactor: "Laptop 16 pouces",
+    mobility: "Portable",
+  },
+  {
+    id: "thinkpad",
+    name: "ThinkPad",
+    role: "Laptop professionnel",
+    status: "Online",
+    os: { name: "CachyOS (Arch Linux)", icon: Laptop },
+    specs: [
+      { name: "CPU", value: "AMD Ryzen 3 Pro 4450U", icon: Cpu },
+      { name: "RAM", value: "8 GB DDR4", icon: MemoryStick },
+    ],
+    moreSpecs: [
+        { name: "Modèle", value: "Lenovo ThinkPad X13 Gen1", icon: Cpu},
+        { name: "CPU Model", value: "AMD Ryzen 3 Pro 4450U (4 Cores / 8 Threads)", icon: Cpu },
+        { name: "RAM Type", value: "2x4GB DDR4 3200MHz", icon: MemoryStick },
+        { name: "Stockage Principal", value: "256 GB NVMe SSD", icon: HardDrive },
+        { name: "Ecran", value: '13.3" IPS Display (FHD 1920x1080 / 60hz)', icon: Laptop}
+    ],
+    software: [
+    ],
+    description: "Laptop de travail, utilisé en déplacement professionnel dans le domaine de l'IT.",
+    imageUrl: "/images/tp1.jpg",
+    gallery: [
+        "/images/tp1.jpg",
+        "/images/tp2.jpg",
+    ],
+    purchaseDate: "2026-05",
+    deviceType: "Ordinateur portable",
+    location: "Mobile",
+    formFactor: "Laptop 13 pouces",
     mobility: "Portable",
   },
 ];

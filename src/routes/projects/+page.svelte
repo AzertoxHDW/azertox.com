@@ -41,7 +41,7 @@
       {
         id: "azertox-website",
         name: "azertox.com",
-        description: "Mon site web personnel",
+        description: "Mon site web personnel.",
         techStack: ["SvelteKit", "TypeScript", "TailwindCSS", "shadcn-svelte"],
         categories: ["dev"],
         status: "active",
@@ -51,12 +51,22 @@
         startDate: "2024-01",
       },
       {
+        id: "rdtech",
+        name: "RDTech",
+        description: "Ma société d'informatique.",
+        categories: ["pro"],
+        status: "active",
+        liveUrl: "https://rdtech.be",
+        imageUrl: "/images/rdtech.png",
+        startDate: "2026-01",
+      },
+      {
         id: "aztone",
         name: "DJ Aztone",
         description: "Mon allias DJ avec lequel je me produis et crée mes sons.",
         categories: ["creative", "pro"],
         status: "active",
-        //liveUrl: "https://aztone.be",
+        liveUrl: "https://soundcloud.com/dj-aztone",
         imageUrl: "/images/logo yt.png",
         startDate: "2022-11",
       },
@@ -66,7 +76,7 @@
         description: "Société d'organisation et gestion évènementielle dont je suis co-créateur.",
         categories: ["pro"],
         status: "active",
-        //liveUrl: "https://welovethenight.event",
+        liveUrl: "https://welovethenight.be",
         imageUrl: "/images/wltn logo 2024 v2.png",
         startDate: "2022-12",
       },
@@ -116,7 +126,7 @@
       Mes projets
     </h1>
     <p class="mt-3 text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-      Une sélection de mes projets personnels et contributions.
+      Une sélection de mes projets personnels et professionnels.
     </p>
   </div>
 
